@@ -27,7 +27,7 @@ class PromotionHistory(models.Model):
 class School(models.Model):
     name = models.CharField(max_length=500)
     code = models.CharField(max_length=50)
-    sms_id = models.CharField(
+    sender_id = models.CharField(
         verbose_name="SMS Sender ID", max_length=11, null=True, blank=True)
     sms_api_key = models.CharField(max_length=200, null=True, blank=True)
     crest = models.FileField(upload_to="uploads/images",

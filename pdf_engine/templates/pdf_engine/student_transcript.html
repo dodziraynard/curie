@@ -1,75 +1,118 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
         integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-
-    <title>Hello, world!</title>
+    <title>{{student.get_full_name}} - ACADEMIC TRANSCRIPT</title>
 </head>
 
 <body>
+    {% if error_message %}
+    <h3 style="color: red">{{error_message}}</h3>
+    {% else %}
+    <div>
+        <h3 class="text text-center">GHANA EDUCATION SERVICE</h3>
+        <h3 class="text text-center">{{request.school.name|upper}}</h3>
+        <p style="text-align: center; padding: 0; margin: 0"><img src="/assets/images/curie_icon.png" alt="crest"
+                height="150"></p>
 
-    <img src="/assets/images/curie_icon.png" alt="" height="200">
-    <h1 class="text text-info">Hello, world! {{student_id}}</h1>
+        <h3 class="text text-center">{{student.get_full_name|upper}}</h3>
+        <h3 class="text text-center">TRANSCRIPT</h3>
 
-    <table class="table table-borderless table-dark">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">First</th>
-                <th scope="col">Last</th>
-                <th scope="col">Handle</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-            </tr>
-            <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-            </tr>
-            <tr>
-                <th scope="row">3</th>
-                <td colspan="2">Larry the Bird</td>
-                <td>@twitter</td>
-            </tr>
-        </tbody>
-    </table>
+        {% for form in forms %}
+        <h4>FORM: {{form}}</h4>
+        {% for semester in semesters %}
+        <h5 style="margin-left: 10px;">Semester: {{semester|upper}}</h5>
+        <p class="text text-center"><strong>CORE SUBJECTS</strong></p>
+        <div class="col-md-12 mx-auto">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">SUBJECT</th>
+                        <th scope="col">GRADE</th>
+                        <th scope="col">REMARK</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in records %}
+                    {% if record.record_class.form == form %}
+                    {% if record.semester == semester and not record.subject.is_elective %}
+                    <tr>
+                        <td>
+                            {{record.subject.name|upper}}
+                        </td>
+                        <td>
+                            {{record.grade}}
+                        </td>
+                        <td>
+                            {{record.remark}}
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
+        <br>
+        <hr>
+        <p class="text text-center"><strong>ELECTIVE SUBJECTS</strong></p>
+        <div class="col-md-12 mx-auto">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">SUBJECT </th>
+                        <th scope="col">GRADE </th>
+                        <th scope="col">REMARK </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in records %}
+                    {% if record.klass.form == form %}
+                    {% if record.semester == semester and record.subject.is_elective %}
+                    <tr>
+                        <td>
+                            {{record.subject.name|upper}}
+                        </td>
+                        <td>
+                            {{record.grade}}
+                        </td>
+                        <td>
+                            {{record.remark}}
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endfor %}
+        {% endfor %}
 
+        <hr>
+        <div style="color: gray;">
+            <p class="text text-center">F.K AZALETEY</p>
+            <p class="text text-center">(ASSISTANT HEADMASTER - ADMINISTRATION)</p>
+        </div>
 
-
-
-
-
-
-
-
-
-
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
-        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
-        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
-        crossorigin="anonymous"></script>
+        <br>
+        <div id="footer_content">
+            <p class="text text-center" style="margin:0">
+                Page 1 of 1 ||
+                <i> &copy; Ketasco Computing Systems.</i>
+            </p>
+            <p class="text text-center" style="margin:0">
+                <i>Printed: {{current_time}}</i>
+            </p>
+        </div>
+    </div>
+    {% endif %}
 </body>
 
 </html>

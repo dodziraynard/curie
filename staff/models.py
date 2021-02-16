@@ -26,7 +26,10 @@ class Staff(models.Model):
         verbose_name_plural = "Staff"
 
     def __str__(self):
-        return self.surname
+        return f"{self.surname} {self.other_names}"
+
+    def get_full_name(self):
+        return f"{self.surname} {self.other_names}"
 
     # def get_number_of_students(self):
     #     number = 0

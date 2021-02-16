@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- {% load static %} -->
+    <link rel="stylesheet" href="{% static '/css/dashboard.css' %}">
+
+    <link rel="stylesheet" href="../../static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <!-- <link rel="stylesheet" href="../../static/css/bootstrap-icons.css"> -->
+    <link rel="stylesheet" href="../../static/css/dashboard.css">
+    <link rel="stylesheet" href="../../static/css/dashboard-res.css">
+    <title>Dashboard</title>
+</head>
+
+<body>
+    <div id="page-container">
+        <div id="sidebar">
+            <div id="header">
+                <div class="logo">
+                    <a href="">
+                        <img src="../../static/curie_icon.png" alt="logo" height="50">
+                    </a>
+                </div>
+            </div>
+
+            <div class="body">
+                <div class="side-bar-item">
+                    <a href="">
+                        <div class="item">
+                            <div class="icon"><i class="bi bi-speedometer2"></i></div>
+                            <div class="title">Dashboard</div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="side-bar-item">
+                    <div class="item">
+                        <div class="icon mr-2"><i class="bi bi-diagram-2"></i></div>
+                        <div class="title"><a>Students</a> </div>
+                        <div class="drop-icon"> &#12297;</div>
+                    </div>
+                    <div class="drop-down">
+                        <a href="">
+                            <div class="drop-item">&#12297; All Students </div>
+                        </a>
+                        <a href="">
+                            <div class="drop-item">&#12297; Records</div>
+                        </a>
+                        <a href="">
+                            <div class="drop-item">&#12297; Promotion </div>
+                        </a>
+                        <a href="">
+                            <div class="drop-item">&#12297; Admission Form </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="side-bar-item">
+                    <div class="item">
+                        <div class="icon mr-2"><i class="bi bi-people"></i></div>
+                        <div class="title"><a>Teachers</a> </div>
+                        <div class="drop-icon"> &#12297;</div>
+                    </div>
+                    <div class="drop-down">
+                        <a href="">
+                            <div class="drop-item">&#12297; All Teachers </div>
+                        </a>
+                        <a href="">
+                            <div class="drop-item">&#12297; Teacher Details </div>
+                        </a>
+                        <a href="">
+                            <div class="drop-item">&#12297; Assign Class</div>
+                        </a>
+                        <a href="">
+                            <div class="drop-item">&#12297; Add New Teacher </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="side-bar-item">
+                    <div class="item">
+                        <div class="icon mr-2"><i class="bi bi-house"></i></div>
+                        <div class="title"><a>Classes</a> </div>
+                        <div class="drop-icon"> &#12297;</div>
+                    </div>
+                    <div class="drop-down">
+                        <a href="">
+                            <div class="drop-item">&#12297; All Classes </div>
+                        </a>
+                        <a href="">
+                            <div class="drop-item">&#12297; Add New Class </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="side-bar-item">
+                    <div class="item">
+                        <div class="icon mr-2"><i class="bi bi-book"></i></div>
+                        <div class="title"><a>Subjects</a> </div>
+                        <div class="drop-icon"> &#12297;</div>
+                    </div>
+                    <div class="drop-down">
+                        <a href="">
+                            <div class="drop-item">&#12297; All Subjects </div>
+                        </a>
+                        <a href="">
+                            <div class="drop-item">&#12297; Add New Subject </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="side-bar-item">
+                    <div class="item">
+                        <div class="icon mr-2"><i class="bi bi-journals"></i></div>
+                        <div class="title"><a>Courses</a> </div>
+                        <div class="drop-icon"> &#12297;</div>
+                    </div>
+                    <div class="drop-down">
+                        <a href="">
+                            <div class="drop-item">&#12297; All Courses </div>
+                        </a>
+                        <a href="">
+                            <div class="drop-item">&#12297; Add New Courses </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="side-bar-item">
+                    <div class="item">
+                        <div class="icon mr-2"><i class="bi bi-patch-check"></i></div>
+                        <div class="title"><a href="">Grading System</a></div>
+                    </div>
+                </div>
+
+                <div class="side-bar-item">
+                    <div class="item">
+                        <div class="icon mr-2"><i class="bi bi-building"></i></div>
+                        <div class="title"><a>House Master</a> </div>
+                        <div class="drop-icon"> &#12297;</div>
+                    </div>
+                    <div class="drop-down">
+                        <a href="">
+                            <div class="drop-item">&#12297; All House Masters </div>
+                        </a>
+                        <a href="">
+                            <div class="drop-item">&#12297; Add New House Master </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="side-bar-item">
+                    <div class="item">
+                        <div class="icon mr-2"><i class="bi bi-envelope"></i></div>
+                        <div class="title"><a>SMS</a> </div>
+                        <div class="drop-icon"> &#12297;</div>
+                    </div>
+                    <div class="drop-down">
+                        <a href="">
+                            <div class="drop-item">&#12297; All Sent SMS </div>
+                        </a>
+                        <a href="">
+                            <div class="drop-item">&#12297; All Failed SMS </div>
+                        </a>
+                        <a href="">
+                            <div class="drop-item">&#12297; Balance</div>
+                        </a>
+                        <a href="">
+                            <div class="drop-item">&#12297; New SMS </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="side-bar-item">
+                    <a href="">
+                        <div class="item">
+                            <div class="icon mr-2"><i class="bi bi-file-earmark"></i></div>
+                            <div class="title">Files</div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="side-bar-item">
+                    <a href="">
+                        <div class="item">
+                            <div class="icon mr-2"><i class="bi bi-card-list"></i></div>
+                            <div class="title">Logs</div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="side-bar-item">
+                    <a href="">
+                        <div class="item">
+                            <div class="icon mr-2"><i class="bi bi-pencil-square"></i></div>
+                            <div class="title">My School</div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="side-bar-item">
+                    <a href="">
+                        <div class="item">
+                            <div class="icon mr-2"><i class="bi bi-info"></i></div>
+                            <div class="title">Info</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div id="main">
+            <nav>
+                <div id="toggler" class="d-md-block d-sm-block d-lg-none">
+                    <div class="line1"></div>
+                    <div class="line2"></div>
+                    <div class="line3"></div>
+                </div>
+
+                <div class="nav-right">
+                    <div class="nav-items">
+                        <div class="nav-item">
+
+                            <div class="item">
+                                <div class="title">
+                                    <p class="m-0 text text-muted">Raynard Dodzi <small> &#9660;</small></p>
+                                    <p class="my-0 mr-3 text text-right">Admin</p>
+                                </div>
+                                <div class="icon ml-1">
+                                    <img class="img-profile" src="../../static/curie_icon.png" height="30">
+                                </div>
+                            </div>
+
+                            <div class="drop-down">
+                                <div class="header bg-primary">Raynard Dodzi</div>
+                                <div class="body">
+                                    <a href="">
+                                        <div class="drop-item">
+                                            <div class="icon mr-2"><i class="bi bi-person"></i></div>
+                                            <div class="title">My Profile</div>
+                                        </div>
+                                    </a>
+
+                                    <a href="">
+                                        <div class="drop-item">
+                                            <div class="icon mr-2"><i class="bi bi-power"></i></div>
+                                            <div class="title">Log Out</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="nav-item">
+
+                            <div class="item">
+                                <div class="icon ml-1">
+                                    <i class="bi bi-bell"></i>
+                                    <strong class="m-0 notification-badge badge">12</strong>
+                                </div>
+                            </div>
+
+                            <div class="drop-down">
+                                <div class="header bg-warning">Notifications</div>
+                                <div class="body">
+                                    <a href="">
+                                        <div class="drop-item">
+                                            <div class="icon mr-2"><i class="bi bi-bell"></i></div>
+                                            <div class="title">
+                                                Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+                                            </div>
+                                        </div>
+                                    </a>
+
+                                    <a href="">
+                                        <div class="drop-item">
+                                            <div class="icon mr-2"><i class="bi bi-bell"></i></div>
+                                            <div class="title">
+                                                Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <main id="content">
+                <!-- Admin Dashboard -->
+                <h4>Admin Dashboard</h4>
+                <div class="link-nav">
+                    <a href="">Home &ThinSpace;</a>
+                    <a>> Admin</a>
+                </div>
+                <br>
+
+                <div class="stat-container">
+                    <div class="bg-white d-flex justify-content-between p-4">
+                        <div class="">
+                            <div class="stat-icon bg-success-light">
+                                <i class="text text-success bi bi-diagram-2"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text text-muted text-right">Students</p>
+                            <p class="text text-right"><strong>13,428</strong></p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white d-flex justify-content-between p-4">
+                        <div class="">
+                            <div class="stat-icon bg-primary-light">
+                                <i class="text text-primary bi bi-people"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text text-muted text-right">Teachers</p>
+                            <p class="text text-right"><strong>142</strong></p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white d-flex justify-content-between p-4">
+                        <div class="">
+                            <div class="stat-icon bg-warning-light">
+                                <i class="text text-warning bi bi-house"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text text-muted text-right">Classes</p>
+                            <p class="text text-right"><strong>58</strong></p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white d-flex justify-content-between p-4">
+                        <div class="">
+                            <div class="stat-icon bg-danger-light">
+                                <i class="text text-danger bi bi-building"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text text-muted text-right">House Masters</p>
+                            <p class="text text-right"><strong>13</strong></p>
+                        </div>
+                    </div>
+                </div>
+
+
+                <br>
+                <br>
+                <br>
+                <br>
+                {% block content %}
+                {% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <script src="../../static/js/dashboard.js"></script>
+</body>
+
+</html>
