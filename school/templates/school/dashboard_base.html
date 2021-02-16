@@ -298,6 +298,7 @@
                 </div>
                 <br>
 
+                <!-- Quick Statistics -->
                 <div class="stat-container">
                     <div class="bg-white d-flex justify-content-between p-4">
                         <div class="">
@@ -348,18 +349,125 @@
                     </div>
                 </div>
 
+                <section class="d-flex flex-wrap my-5 justify-content-between">
+                    <!-- My School -->
+                    <div class="bg-white notification-item col-xs-11 col-sm-11 col-md-4 p-2 rounded m-1">
+                        <header class="p-2 d-flex justify-content-between">
+                            <h5><i class="bi bi-calendar"></i> My School</h5>
 
-                <br>
-                <br>
-                <br>
-                <br>
+                            <div class="dropdown">
+                                <button class="btn" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false">
+                                    <i class="bi bi-three-dots"></i>
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" href=""><i class="bi bi-pencil"></i> Edit</a>
+                                </div>
+                            </div>
+                        </header>
+
+                        <article class="container">
+                            <h6 class="text text-muted my-0">Current Academic Year</h6>
+                            <h6 class="text text-info ml-3 my-0"><strong>2020/2021</strong></h6>
+
+                            <h6 class="text text-muted my-0  mt-3">Current Semester</h6>
+                            <h6 class="text text-info ml-3 my-0"><strong>Semester 1</strong></h6>
+
+                            <h6 class="text text-muted my-0  mt-3">SMS Sender ID</h6>
+                            <h6 class="text text-info ml-3 my-0"><strong>Ketasco</strong></h6>
+                        </article>
+                    </div>
+
+                    <!-- Student & Teacher Ratio -->
+                    <div class="bg-white notification-item col-xs-11 col-sm-11 col-md-3 p-2 rounded m-1">
+                        <header class="p-2 d-flex justify-content-between">
+                            <h6><i class="bi bi-bar-chart-line"></i> Student & Teacher</h6>
+
+                            <div class="dropdown">
+                                <button class="btn" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false">
+                                    <i class="bi bi-three-dots"></i>
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" href=""><i class="bi bi-arrow-repeat"></i> Refresh</a>
+                                </div>
+                            </div>
+                        </header>
+                        <canvas id="myChart" width="300" height="300"></canvas>
+                    </div>
+
+                    <!-- Notificatons -->
+                    <div class="bg-white notification-item col-xs-11 col-sm-11 col-md-4 p-2 rounded m-1">
+                        <header class="p-2 d-flex justify-content-between">
+                            <h5><i class="bi bi-bell"></i> Notificatons</h5>
+
+                            <div class="dropdown">
+                                <button class="btn" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false">
+                                    <i class="bi bi-three-dots"></i>
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" href=""><i class="bi bi-eye"></i> Mark all as
+                                        read.</a>
+                                </div>
+                            </div>
+                        </header>
+
+                        <!-- Items -->
+                        <article>
+                            <span class="badge badge-primary border rounded">16 February 2021.</span>
+                            <div class="container">
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut, amet.
+                                <p class="text text-muted">Admin / 5 min ago</p>
+                            </div>
+                            <hr>
+                        </article>
+
+                        <!-- Items -->
+                        <article>
+                            <span class="badge badge-primary border rounded">16 February 2021.</span>
+                            <div class="container">
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut, amet.
+                                <p class="text text-muted">Admin / 5 min ago</p>
+                            </div>
+                            <hr>
+                        </article>
+
+                        <!-- Items -->
+                        <article>
+                            <span class="badge badge-primary border rounded">16 February 2021.</span>
+                            <div class="container">
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut, amet.
+                                <p class="text text-muted">Admin / 5 min ago</p>
+                            </div>
+                            <hr>
+                        </article>
+
+                    </div>
+                </section>
+
+                <p>© Copyrights Ketasco 2021. All rights reserved.</p>
                 {% block content %}
                 {% endblock %}
             </main>
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
     <script src="../../static/js/dashboard.js"></script>
+    <script src="../../static/js/charts_init.js"></script>
+
+
+    <!-- chartjs -->
 </body>
 
 </html>

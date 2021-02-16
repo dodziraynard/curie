@@ -368,4 +368,16 @@ nav .nav-items .notification-badge {
 .bg-danger-light {
   background-color: rgba(184, 31, 0, 0.1);
 }
+
+.notification-item {
+  height: 25rem;
+  overflow-y: auto;
+}
+
+.notification-item header {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  background-color: white;
+}
 /*# sourceMappingURL=dashboard.css.map */
