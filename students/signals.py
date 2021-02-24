@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from random import sample
-from . models import Student, Record, GradingSystem
+from . models import Student
 from sms.utils import send_sms_student
 
 

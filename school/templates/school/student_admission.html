@@ -21,64 +21,91 @@
                 <i class="bi bi-three-dots"></i>
             </button>
             <div class="dropdown-menu mr-5" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href=""><i class="bi bi-file-earmark-spreadsheet"></i> Upload Sheet</a>
+                <a class="dropdown-item" href="{% url 'school:student_admission_sheet' %}"><i
+                        class="bi bi-file-earmark-spreadsheet"></i> Upload Sheet</a>
             </div>
         </div>
     </header>
 
-    <form action="" class="needs-validation" method="POST">
+    <form action="" class="needs-validation {{was_validated}}" method="POST" novalidate>
+        {% if error_message %}
+        <div class="col-md-7 mx-auto alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error!</strong> {{error_message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endif %}
+        {% csrf_token %}
         <div class="row">
             <div class="col-md-4 col-xs-12 col-sm-12">
                 <div class="form-group">
-                    <input type="text" class="form-control" id="student_id" placeholder="Student ID" name="student_id"
+                    <input value="{% if next_id  %} {{next_id}} {% else %} {{student_id}} {% endif %}" type="text"
+                        class="form-control" id="student_id" placeholder="Student ID" name="student_id" required>
+                    <div class="invalid-feedback">Student ID is required.</div>
+                    <small class="text text-info">Last student ID: {{last_id}}</small>
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-12 col-sm-12">
+                <div class="form-group">
+                    <input value="{{surname}}" type="text" class="form-control" id="surname" placeholder="Surname"
+                        name="surname" required>
+                    <div class="invalid-feedback">Surname is required.</div>
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-12 col-sm-12">
+                <div class="form-group">
+                    <input value="{{other_names}}" type="text" class="form-control" placeholder="Other Names"
+                        name="other_names" required>
+                    <div class="invalid-feedback">Other Names are required.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 col-xs-12 col-sm-12">
+                <div class="form-group">
+                    <input value="{{sms_number}}" type="text" class="form-control" id="sms_number"
+                        placeholder="SMS Number e.g 024*******" name="sms_number" pattern="0[235][0-9]{8}" required>
+                    <div class="invalid-feedback">SMS Number must be a valid Ghanaian mobile number exactly 10 digits.
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-12 col-sm-12">
+                <div class="form-group">
+                    <input value="{{gender}}" type="text" class="form-control" id="gender" placeholder="Gender"
+                        name="gender" required>
+                    <div class="invalid-feedback">Gender is required.</div>
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-12 col-sm-12">
+                <div class="form-group">
+                    <input value="{{house}}" type="text" class="form-control" placeholder="House" name="house" required>
+                    <div class="invalid-feedback">House required.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 col-xs-12 col-sm-12">
+                <div class="form-group">
+                    <input value="{{track}}" type="text" class="form-control" id="track" placeholder="Track"
+                        name="track" required>
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-12 col-sm-12">
+                <div class="form-group">
+                    <input value="{{father}}" type="text" class="form-control" id="father" placeholder="Father's Name"
+                        name="father" required>
+                    <div class="invalid-feedback">Father's Name required.</div>
+
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-12 col-sm-12">
+                <div class="form-group">
+                    <input value="{{mother}}" type="text" class="form-control" placeholder="Mother's Name" name="mother"
                         required>
-                </div>
-            </div>
-            <div class="col-md-4 col-xs-12 col-sm-12">
-                <div class="form-group">
-                    <input type="text" class="form-control" id="surname" placeholder="Surname" name="surname" required>
-                </div>
-            </div>
-            <div class="col-md-4 col-xs-12 col-sm-12">
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Other Names" name="other_names" required>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-4 col-xs-12 col-sm-12">
-                <div class="form-group">
-                    <input type="text" class="form-control" id="sms_number" placeholder="SMS Number e.g 024*******"
-                        name="sms_number" required>
-                </div>
-            </div>
-            <div class="col-md-4 col-xs-12 col-sm-12">
-                <div class="form-group">
-                    <input type="text" class="form-control" id="gender" placeholder="Gender" name="gender">
-                </div>
-            </div>
-            <div class="col-md-4 col-xs-12 col-sm-12">
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="House" name="house" required>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-4 col-xs-12 col-sm-12">
-                <div class="form-group">
-                    <input type="text" class="form-control" id="track" placeholder="Track" name="track" required>
-                </div>
-            </div>
-            <div class="col-md-4 col-xs-12 col-sm-12">
-                <div class="form-group">
-                    <input type="text" class="form-control" id="father" placeholder="Father's Name" name="father">
-                </div>
-            </div>
-            <div class="col-md-4 col-xs-12 col-sm-12">
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Mother's Name" name="mother" required>
+                    <div class="invalid-feedback">Mother's Name required.</div>
                 </div>
             </div>
         </div>
@@ -86,31 +113,36 @@
         <hr>
         <div class="form-group mx-4">
             <label for="class">Class</label>
-            <select class="form-control" name="class" id="class" required>
-                <option value="">General Arts A</option>
-                <option value="">General Arts B</option>
+            <select class="form-control" name="klass" id="class" onchange='getSubjectsForClass(this)' required>
+                <option value="">Choose class.</option>
+                {% for item in classes %}
+                <option value="{{item.class_id}}">{{item.name}}</option>
+                {% endfor %}
             </select>
         </div>
+
         <div class="form-group mx-4">
             <label for="electives">Choose electives:</label>
-            <select class="form-control" name="electives" id="electives" multiple required>
-                <option value="">Geography</option>
-                <option value="">Government</option>
-                <option value="">Economics</option>
-            </select>
+            <div id="elective_container">
+                <select class="form-control" name="electives" id="electives" disabled multiple required>
+                    <option value="">Please choose first class.</option>
+                </select>
+                <p class="text text-info">Press down Ctrl to select multiple *</p>
+            </div>
         </div>
 
         <p class="text text-right">
             <button class="btn btn-info" type="submit">Submit</button>
         </p>
     </form>
-
-
 </div>
 {% endblock %}
 
 <!-- Validation script -->
 {% block scripts %}
+{% load static %}
+<script src="{% static 'js/student_app.js' %}"></script>
+
 <script>
     (function () {
         'use strict';

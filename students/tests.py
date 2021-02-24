@@ -19,39 +19,50 @@ from sheet_engine.functions import (insert_subjects,
 class StudentsTest(TestCase):
     def setUp(self):
         self.BASE_DIR = Path(__file__).resolve().parent.parent
-
-    def test_insert_subjects_from_sheet(self):
+        
+    def insert_subjects_from_sheet(self):
         url = self.BASE_DIR / "sheet_engine/test_sheets/subjects.xlsx"
-        self.assertTrue(insert_subjects(url))
+        self.assertEqual(insert_subjects(url), True)
 
-    def test_insert_courses_from_sheet(self):
+    def insert_courses_from_sheet(self):
         url = self.BASE_DIR / "sheet_engine/test_sheets/courses.xlsx"
-        self.assertTrue(insert_courses(url))
+        self.assertEqual(insert_courses(url), True)
 
-    def test_insert_staff_from_sheet(self):
+    def insert_staff_from_sheet(self):
         url = self.BASE_DIR / "sheet_engine/test_sheets/staff.xlsx"
-        self.assertTrue(insert_staff(url))
+        self.assertEqual(insert_staff(url), True)
 
-    def test_insert_classes_from_sheet(self):
+    def insert_classes_from_sheet(self):
         url = self.BASE_DIR / "sheet_engine/test_sheets/classes.xlsx"
-        self.assertTrue(insert_classes(url))
+        self.assertEqual(insert_classes(url), True)
 
-    def test_insert_students_from_sheet(self):
+    def insert_students_from_sheet(self):
         url = self.BASE_DIR / "sheet_engine/test_sheets/students.xlsx"
-        self.assertTrue(insert_students(url))
+        self.assertEqual(insert_students(url), True)
 
-    def test_insert_subject_staff_combination_from_sheet(self):
+    def insert_subject_staff_combination_from_sheet(self):
         url = self.BASE_DIR / "sheet_engine/test_sheets/generated_subject_staff_combinations.xlsx"
-        self.assertTrue(insert_subject_staff_combination(url))
+        self.assertEqual(insert_subject_staff_combination(url), True)
 
-    def test_insert_records_from_sheet(self):
+    def insert_records_from_sheet(self):
         url = self.BASE_DIR / "sheet_engine/test_sheets/generated_record_sheet.xlsx"
-        self.assertTrue(insert_records(url))
+        self.assertEqual(insert_records(url), True)
 
-    def test_insert_teacher_remarks_from_sheet(self):
+    def insert_teacher_remarks_from_sheet(self):
         url = self.BASE_DIR / "sheet_engine/test_sheets/generated_teacher_remark_sheet.xlsx"
-        self.assertTrue(insert_teacher_remarks(url, "GA11"))
+        self.assertEqual(insert_teacher_remarks(url, "GA11"), True)
 
-    def test_insert_house_master_remarks(self):
+    def insert_house_master_remarks(self):
         url = self.BASE_DIR / "sheet_engine/test_sheets/house_master_remarks.xlsx"
-        self.assertTrue(insert_house_master_remarks(url))
+        self.assertEqual(insert_house_master_remarks(url), True)
+
+    def test_data_insertion_from_sheet(self):
+        self.insert_subjects_from_sheet()
+        self.insert_courses_from_sheet()
+        self.insert_staff_from_sheet()
+        self.insert_classes_from_sheet()
+        self.insert_students_from_sheet()
+        self.insert_subject_staff_combination_from_sheet()
+        self.insert_records_from_sheet()
+        self.insert_teacher_remarks_from_sheet()
+        self.insert_house_master_remarks()

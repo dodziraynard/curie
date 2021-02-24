@@ -4,7 +4,7 @@ from staff.models import Staff
 
 
 def send_sms_student(temporal_pin, number, student_id):
-    student = Student.obects.get(student_id=student_id)
+    student = Student.objects.get(student_id=student_id)
     message = f"""Hello {student.get_full_name().upper()},
                             \nYour login details are:
                             \nUsername: {student_id}
@@ -16,7 +16,7 @@ def send_sms_student(temporal_pin, number, student_id):
 
 
 def send_sms_staff(temporal_pin, number, staff_id):
-    staff = Staff.obects.get(staff_id=staff_id)
+    staff = Staff.objects.get(staff_id=staff_id)
     message = f"""Hello {staff.get_full_name().upper()},
                             \nYour login details are:
                             \nUsername: {staff_id}

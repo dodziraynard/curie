@@ -51,8 +51,8 @@ def insert_courses(url):
                 Q(is_elective=False)
             )
             course, created = Course.objects.get_or_create(
-                course_id=row['COURSE_ID'])
-            course.name = row['NAME']
+                course_id=row['COURSE_ID'].strip())
+            course.name = row['NAME'].strip()
             course.subjects.add(*subjects)
             course.save()
     except (XLRDError, Subject.DoesNotExist) as e:
@@ -131,7 +131,6 @@ def insert_students(url):
             )
             student.electives.add(*electives)
             student.house = row['HOUSE']
-            student.stream = row['STREAM']
             student.track = row['TRACK']
             student.bio = row['BIO']
             student.gender = row['GENDER']
@@ -140,6 +139,7 @@ def insert_students(url):
             student.klass = klass
             student.save()
     except (XLRDError, IntegrityError, Subject.DoesNotExist, Klass.DoesNotExist) as e:
+        print(e)
         return str(e)
     except Exception as e:
         log_system_error("insert_students", str(e))
@@ -310,13 +310,13 @@ def insert_teacher_remarks(url, class_id):
         for index, row in df.iterrows():
             student = Student.objects.get(student_id=row['STUDENT_ID'])
             klass = Klass.objects.get(class_id=class_id)
-            ClassTeacherRemark.objects.get_create(
+            ClassTeacherRemark.objects.get_or_create(
                 student=student,
                 klass=klass,
                 academic_year=row['ACADEMIC_YEAR'],
                 semester=row['SEMESTER'],
-                total_attendence=row['TOTAL_ATTENDANCE'],
-                attendence=row['ATTENDANCE'],
+                total_attendance=row['TOTAL_ATTENDANCE'],
+                attendance=row['ATTENDANCE'],
                 attitude=row['ATTITUDE'],
                 interest=row['INTEREST'],
                 conduct=row['CONDUCT'],
@@ -366,7 +366,7 @@ def insert_house_master_remarks(url):
         df = pd.DataFrame(data)
         for index, row in df.iterrows():
             student = Student.objects.get(student_id=row['STUDENT_ID'])
-            HouseMasterRemark.objects.get_create(
+            HouseMasterRemark.objects.get_or_create(
                 student=student,
                 klass=student.klass,
                 academic_year=row['ACADEMIC_YEAR'],

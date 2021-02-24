@@ -20,7 +20,6 @@ class Student(models.Model):
     gender = models.CharField(max_length=10, null=True, blank=True)
     activated = models.BooleanField(default=False)
     house = models.CharField(max_length=50)
-    stream = models.CharField(max_length=50,null=True, blank=True)
     bio = models.TextField(null=True, blank=True)
     track = models.CharField(max_length=50)
     father = models.CharField(max_length=200, null=True, blank=True)
