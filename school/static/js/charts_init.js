@@ -1,17 +1,30 @@
-var ctx = document.getElementById('myChart').getContext('2d');
+var ctx = document.getElementById('myChart')?.getContext('2d');
 
-data = {
-    labels: ['Students', 'Teachers'],
-    datasets: [{
-        data: [100, 20],
-        backgroundColor: [
-            'indigo',
-            'orange',
-        ],
-    }],
-};
+// Setting up student teacher charts.
+url = "/ajax/student-teacher-count"
+fetch(url)
+    .then(response => response.json())
+    .then(res => {
+        showStudentTeacherChart(res.students, res.teachers)
+    }).catch(err => {
+        showStudentTeacherChart(1, 1)
+    })
 
-var myDoughnutChart = new Chart(ctx, {
-    type: 'doughnut',
-    data: data,
-});
+const showStudentTeacherChart = (students, teachers) => {
+    data = {
+        labels: ['Students', 'Teachers'],
+        datasets: [{
+            data: [students, teachers],
+            backgroundColor: [
+                'indigo',
+                'orange',
+            ],
+        }],
+    };
+    if (ctx)
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: data,
+        });
+}
+

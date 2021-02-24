@@ -1,0 +1,133 @@
+{% extends 'school/dashboard_base.html' %}
+
+{% block title %}Student{% endblock %}
+{% block active_sidebar %}students{% endblock %}
+
+
+{% block content %}
+<h4>Students</h4>
+<div class="link-nav">
+    <a href="/">Home &ThinSpace;</a>
+    <a>> Admission Form</a>
+</div>
+<br>
+
+<div class="bg-white col-md-12 rounded p-1">
+    <header class="p-2 d-flex justify-content-between">
+        <h6><i class="bi bi-list-stars"></i> Admission Form</h6>
+        <div class="dropdown">
+            <button class="btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">
+                <i class="bi bi-three-dots"></i>
+            </button>
+            <div class="dropdown-menu mr-5" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href=""><i class="bi bi-file-earmark-spreadsheet"></i> Upload Sheet</a>
+            </div>
+        </div>
+    </header>
+
+    <form action="" class="needs-validation" method="POST">
+        <div class="row">
+            <div class="col-md-4 col-xs-12 col-sm-12">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="student_id" placeholder="Student ID" name="student_id"
+                        required>
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-12 col-sm-12">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="surname" placeholder="Surname" name="surname" required>
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-12 col-sm-12">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Other Names" name="other_names" required>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 col-xs-12 col-sm-12">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="sms_number" placeholder="SMS Number e.g 024*******"
+                        name="sms_number" required>
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-12 col-sm-12">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="gender" placeholder="Gender" name="gender">
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-12 col-sm-12">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="House" name="house" required>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 col-xs-12 col-sm-12">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="track" placeholder="Track" name="track" required>
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-12 col-sm-12">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="father" placeholder="Father's Name" name="father">
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-12 col-sm-12">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Mother's Name" name="mother" required>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+        <div class="form-group mx-4">
+            <label for="class">Class</label>
+            <select class="form-control" name="class" id="class" required>
+                <option value="">General Arts A</option>
+                <option value="">General Arts B</option>
+            </select>
+        </div>
+        <div class="form-group mx-4">
+            <label for="electives">Choose electives:</label>
+            <select class="form-control" name="electives" id="electives" multiple required>
+                <option value="">Geography</option>
+                <option value="">Government</option>
+                <option value="">Economics</option>
+            </select>
+        </div>
+
+        <p class="text text-right">
+            <button class="btn btn-info" type="submit">Submit</button>
+        </p>
+    </form>
+
+
+</div>
+{% endblock %}
+
+<!-- Validation script -->
+{% block scripts %}
+<script>
+    (function () {
+        'use strict';
+        window.addEventListener('load', function () {
+            // Get the forms we want to add validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
+{% endblock %}

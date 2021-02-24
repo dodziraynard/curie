@@ -18,6 +18,11 @@
   .stat-container {
     grid-template-columns: 1fr;
   }
+
+  nav {
+    position: sticky;
+    top: 0;
+  }
 }
 
 /* Small devices (portrait tablets and large phones, 600px and up) */

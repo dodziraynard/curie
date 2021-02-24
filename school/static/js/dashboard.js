@@ -23,4 +23,9 @@ const sidebar = document.querySelector("#sidebar")
 toggler.addEventListener("click", (e) => {
     sidebar.classList.toggle("fold")
     toggler.classList.toggle("open")
+    $("html, body").animate({ scrollTop: 0 }, "slow");
 })
+
+// Activate current sidebar element
+const activeId = sidebar.dataset.active
+document.getElementById(activeId).classList.add("active")

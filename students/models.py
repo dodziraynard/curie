@@ -20,7 +20,7 @@ class Student(models.Model):
     gender = models.CharField(max_length=10, null=True, blank=True)
     activated = models.BooleanField(default=False)
     house = models.CharField(max_length=50)
-    stream = models.CharField(max_length=50)
+    stream = models.CharField(max_length=50,null=True, blank=True)
     bio = models.TextField(null=True, blank=True)
     track = models.CharField(max_length=50)
     father = models.CharField(max_length=200, null=True, blank=True)
@@ -32,6 +32,9 @@ class Student(models.Model):
     last_promotion_date = models.DateField(null=True, blank=True)
     image = models.FileField(
         upload_to="media/images/profiles", default="/assets/images/avatar.png")
+
+    def my_class(self):
+        return self.klass.name
 
     class Meta:
         db_table = "students"
