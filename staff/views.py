@@ -88,3 +88,22 @@ def edit_staff(request, staff_id):
     context = {**staff}
     context.update({"editing": True})
     return render(request, template_name, context)
+
+
+def delete_staff(request):
+    staff_id = request.POST.get("staff_id")
+    if not staff_id:
+        request.session["error_message"] = "No staff ID found."
+        return redirect("staff:staff")
+    Staff.objects.filter(staff_id=staff_id).delete()
+    request.session["message"] = "Deleted successfully"
+    return redirect("staff:staff")
+
+
+def staff_detail(request, staff_id):
+    template_name = "staff/staff_details.html"
+    staff = get_object_or_404(Staff, staff_id=staff_id)
+    context = {
+        "staff": staff
+    }
+    return render(request, template_name, context)

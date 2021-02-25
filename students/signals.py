@@ -13,6 +13,7 @@ def create_user(sender, instance, created, **kwargs):
         instance.temporal_pin = temporal_pin
         user = User.objects.get_or_create(username=instance.student_id)[0]
         user.student = instance
+        instance.user = user
         user.set_password(temporal_pin)
         user.last_name = instance.surname
         user.first_name = instance.other_names

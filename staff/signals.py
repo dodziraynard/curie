@@ -5,6 +5,7 @@ from random import sample
 from . models import Staff
 from sms.utils import send_sms_staff
 from django.db import transaction
+from logger.utils import log_system_error
 
 
 @receiver(post_save, sender=Staff)
@@ -14,6 +15,7 @@ def create_user(sender, instance, created, **kwargs):
         instance.temporal_pin = temporal_pin
         user = User.objects.get_or_create(username=instance.staff_id)[0]
         user.staff = instance
+        instance.user = user
         user.set_password(temporal_pin)
         user.last_name = instance.surname
         user.first_name = instance.other_names
@@ -24,9 +26,10 @@ def create_user(sender, instance, created, **kwargs):
 
 @receiver(post_delete, sender=Staff)
 def delete_user(sender, instance, **kwargs):
-    if hasattr(instance, "user") and instance.user:
-        try:
+    try:
+        if hasattr(instance, "user") and instance.user:
             with transaction.atomic():
                 instance.user.delete()
-        except User.DoesNotExist:
-            pass
+    except User.DoesNotExist as err:
+        log_system_error("delete_staff_user_signal", str(err))
+        print(err)

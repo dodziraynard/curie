@@ -19,7 +19,7 @@ class Staff(models.Model):
     date = models.DateTimeField(default=timezone.now)
     activated = models.BooleanField(default=False)
     image = models.FileField(upload_to="uploads/images/staff",
-                             default="assets/images/avatar.png")
+                             default="/images/avatar.jpg")
 
     class Meta:
         db_table = "staff"
@@ -31,13 +31,12 @@ class Staff(models.Model):
     def get_full_name(self):
         return f"{self.surname} {self.other_names}"
 
-    # def get_number_of_students(self):
-    #     number = 0
-
-    #     # TODO: Try except
-    #     for teach in self.teaches:
-    #         number += teach.subject.students.all().count()
-    #     return number
+    def get_number_of_students(self):
+        number = 0
+        if hasattr(self, "teaches"):
+            for item in self.teaches.all():
+                number += item.subject.students.all().count()
+        return number
 
 
 class HouseMaster(models.Model):

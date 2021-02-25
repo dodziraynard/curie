@@ -30,7 +30,7 @@ class Student(models.Model):
     date = models.DateField(default=timezone.now)
     last_promotion_date = models.DateField(null=True, blank=True)
     image = models.FileField(
-        upload_to="media/images/profiles", default="/assets/images/avatar.png")
+        upload_to="media/images/students", default="/images/avatar.jpg")
 
     def my_class(self):
         return self.klass.name

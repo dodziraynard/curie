@@ -9,5 +9,6 @@ class CustomMiddleWares(object):
     def __call__(self, request):
         school = School.objects.first()
         request.school = school
-        request.message =  request.session.get("message", "")
+        request.message = request.session.pop("message", "")
+        request.error_message = request.session.pop("error_message", "")
         return self.get_response(request)

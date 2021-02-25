@@ -14,10 +14,28 @@
 
 <div class="bg-white col-md-12 rounded p-1">
     <h5 class="ml-4">All Teachers' Data </h5>
+    {% if error_message %}
+    <div class="col-md-7 mx-auto alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Error!</strong> {{error_message}}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endif %}
+
+    {% if message %}
+    <div class="col-md-7 mx-auto alert alert-info alert-dismissible fade show" role="alert">
+        <strong>Error!</strong> {{message}}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endif %}
     <div style="width: 70vw; overflow-x: auto; margin: auto;">
         <table id="teacher_table" class="table table-striped">
             <thead>
                 <tr>
+                    <th>Actions</th>
                     <th>ID</th>
                     <th>Surname</th>
                     <th>Other Names</th>
@@ -28,6 +46,30 @@
             <tbody>
             </tbody>
         </table>
+    </div>
+</div>
+
+
+<!-- Deletions Modal -->
+<div class="modal fade" id="delete-staff-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-sm bg-danger">
+        <div class="modal-content bg-danger p-2">
+            <form action="{% url 'staff:delete_staff' %}" method="post">
+                {% csrf_token %}
+                <h4 class="text text-white text-center"><i class="bi bi-trash"></i> Delete?</h4>
+                <input name="staff_id" id="input_staff_id" type="hidden" required>
+                <p class="text text-white text-center m-0 p-0">This will delete the staff with id <span
+                        id="span_staff_id"></span> and all related data.</p>
+                <p class="text text-white text-center m-0 p-0">Is that what you mean?</p>
+
+                <div class="form-group mt-3">
+                    <p class="text text-center">
+                        <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> Yes, Delete.</button>
+                    </p>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 {% endblock %}
