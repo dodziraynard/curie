@@ -4,6 +4,7 @@ from django.dispatch import receiver
 from random import sample
 from . models import Staff
 from sms.utils import send_sms_staff
+from django.db import transaction
 
 
 @receiver(post_save, sender=Staff)
@@ -18,11 +19,14 @@ def create_user(sender, instance, created, **kwargs):
         user.first_name = instance.other_names
         user.save()
         instance.save()
-
         send_sms_staff(temporal_pin, instance.sms_number, instance.staff_id)
 
 
 @receiver(post_delete, sender=Staff)
 def delete_user(sender, instance, **kwargs):
     if hasattr(instance, "user") and instance.user:
-        instance.user.delete()
+        try:
+            with transaction.atomic():
+                instance.user.delete()
+        except User.DoesNotExist:
+            pass

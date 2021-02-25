@@ -70,11 +70,10 @@ def insert_staff(url):
         df = pd.DataFrame(data)
         for index, row in df.iterrows():
             staff, created = Staff.objects.get_or_create(
-                staff_id=row['STAFF_ID'],
-                surname=row['SURNAME'],
-                other_names=row['OTHER_NAMES'],
-                sms_number=row['SMS_NUMBER']
-            )
+                staff_id=row['STAFF_ID'])
+            staff.surname = row['SURNAME']
+            staff.other_names = row['OTHER_NAMES']
+            staff.sms_number = row['SMS_NUMBER']
             staff.has_class = "y" in row['HAS_CLASS'].lower()
             staff.gender = row['GENDER']
             staff.save()
@@ -105,9 +104,10 @@ def insert_classes(url):
             klass.class_teacher = class_teacher
             klass.save()
     except (XLRDError, IntegrityError, Course.DoesNotExist, Staff.DoesNotExist) as e:
-        return str(e)
+        error_message = f"Row: {index+1}: "+str(e)
+        return error_message
     except Exception as e:
-        log_system_error("insert_classes", str(e))
+        log_system_error("insert_classes", f"Error: Row: {index+1}: "+str(e))
         return False
     return True
 
@@ -118,13 +118,18 @@ def insert_students(url):
                              skiprows=SHEET_SKIP_ROWS)
         df = pd.DataFrame(data)
         for index, row in df.iterrows():
-            electives = Subject.objects.filter(
+            student_id = row['STUDENT_ID']
+            klass = Klass.objects.get(class_id=row['CLASS_ID'])
+            electives = klass.course.subjects.filter(
                 subject_id__in=row['ELECTIVE_SUBJECT_IDS'].strip().split(),
                 is_elective=True
             )
-            klass = Klass.objects.get(class_id=row['CLASS_ID'])
+            if electives.count() != len(row['ELECTIVE_SUBJECT_IDS'].strip().split()):
+                error_message = f"Error: Student ID: {student_id}: Course  and Subject mismatch."
+                return error_message
+
             student, created = Student.objects.get_or_create(
-                student_id=row['STUDENT_ID'],
+                student_id=student_id,
                 surname=row['SURNAME'],
                 other_names=row['OTHER_NAMES'],
                 sms_number=row['SMS_NUMBER']
@@ -139,10 +144,11 @@ def insert_students(url):
             student.klass = klass
             student.save()
     except (XLRDError, IntegrityError, Subject.DoesNotExist, Klass.DoesNotExist) as e:
-        print(e)
-        return str(e)
+        error_message = f"Error: Student ID: {student_id}: "+str(e)
+        return error_message
     except Exception as e:
-        log_system_error("insert_students", str(e))
+        log_system_error("insert_students",
+                         f"Error: Student ID: {student_id}: "+str(e))
         return False
     return True
 
@@ -156,9 +162,11 @@ def insert_house_masters(url):
             staff = Staff.objects.get(staff_id=row["STAFF_ID"])
             HouseMaster.objects.create(house=row["HOUSE"], staff=staff)
     except (XLRDError, Staff.DoesNotExist) as e:
-        return str(e)
+        error_message = f"Row: {index+1}: "+str(e)
+        return error_message
     except Exception as e:
-        log_system_error("insert_house_masters", str(e))
+        log_system_error("insert_house_masters",
+                         f"Error: Row: {index+1}: "+str(e))
         return False
     return True
 
@@ -197,9 +205,11 @@ def insert_subject_staff_combination(url):
             TeacherClassSubjectCombination.objects.get_or_create(
                 subject=subject, klass=klass, staff=staff)
     except (XLRDError, Subject.DoesNotExist, Klass.DoesNotExist, Staff.DoesNotExist) as e:
-        return str(e)
+        error_message = f"Row: {index+1}: "+str(e)
+        return error_message
     except Exception as e:
-        log_system_error("insert_subject_staff_combination", str(e))
+        log_system_error("insert_subject_staff_combination",
+                         f"Error: Row: {index+1}: "+str(e))
         return False
     return True
 
@@ -235,9 +245,11 @@ def generate_record_sheet(staff_id, academic_year, semester, form, subject_id):
         workbook.save(
             r"D:\CodeLab\Projects\curie\sheet_engine\generated_sheets\generate_record_sheet.xlsx")
     except (XLRDError, Subject.DoesNotExist, Staff.DoesNotExist) as e:
-        return str(e)
+        error_message = f"Row: {index+1}: "+str(e)
+        return error_message
     except Exception as e:
-        log_system_error("generate_record_sheet", str(e))
+        log_system_error("generate_record_sheet",
+                         f"Error: Row: {index+1}: "+str(e))
         return False
     return True
 
@@ -263,9 +275,10 @@ def insert_records(url):
             record.exam_score = row['EXAM_SCORE']
             record.save()
     except (XLRDError, Subject.DoesNotExist, Student.DoesNotExist, Klass.DoesNotExist) as e:
-        return str(e)
+        error_message = f"Row: {index+1}: "+str(e)
+        return error_message
     except Exception as e:
-        log_system_error("insert_records", str(e))
+        log_system_error("insert_records", f"Error: Row: {index+1}: "+str(e))
         return False
     return True
 
@@ -295,9 +308,11 @@ def generate_teacher_remark_sheet(class_id, academic_year, semester, total_atten
             f"sheet_engine/generated_sheets/{class_id}_{academic_year.replace('/','_')}_{semester}_remarks.xlsx"
         workbook.save(output_url)
     except (XLRDError, Klass.DoesNotExist) as e:
-        return str(e)
+        error_message = f"Row: {index+1}: "+str(e)
+        return error_message
     except Exception as e:
-        log_system_error("generate_teacher_remark_sheet", str(e))
+        log_system_error("generate_teacher_remark_sheet",
+                         f"Error: Row: {index+1}: "+str(e))
         return False
     return True
 
@@ -323,9 +338,11 @@ def insert_teacher_remarks(url, class_id):
                 remark=row['REMARK']
             )
     except (XLRDError, Student.DoesNotExist, Klass.DoesNotExist) as e:
-        return str(e)
+        error_message = f"Row: {index+1}: "+str(e)
+        return error_message
     except Exception as e:
-        log_system_error("insert_teacher_remarks", str(e))
+        log_system_error("insert_teacher_remarks",
+                         f"Error: Row: {index+1}: "+str(e))
         return False
     return True
 
@@ -352,9 +369,11 @@ def generate_house_master_remark_sheet(academic_year, semester, house):
             f"sheet_engine/generated_sheets/{house}_{academic_year.replace('/','_')}_{semester}_remarks.xlsx"
         workbook.save(output_url)
     except (XLRDError) as e:
-        return str(e)
+        error_message = f"Row: {index+1}: "+str(e)
+        return error_message
     except Exception as e:
-        log_system_error("generate_house_master_remark_sheet", str(e))
+        log_system_error("generate_house_master_remark_sheet",
+                         f"Error: Row: {index+1}: "+str(e))
         return False
     return True
 
@@ -374,8 +393,10 @@ def insert_house_master_remarks(url):
                 remark=row['REMARK']
             )
     except (XLRDError, Student.DoesNotExist) as e:
-        return str(e)
+        error_message = f"Row: {index+1}: "+str(e)
+        return error_message
     except Exception as e:
-        log_system_error("insert_teacher_remark", str(e))
+        log_system_error("insert_house_master_remarks",
+                         f"Error: Row: {index+1}: "+str(e))
         return False
     return True

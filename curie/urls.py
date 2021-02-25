@@ -5,6 +5,8 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path("", include("school.urls")),
+    path("students/", include("students.urls")),
+    path("staff/", include("staff.urls")),
     path("auth/", include("accounts.urls")),
     path("pdf/", include("pdf_engine.urls")),
     path("ajax/", include("ajax.urls")),

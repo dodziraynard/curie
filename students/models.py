@@ -185,9 +185,3 @@ class GradingSystem(models.Model):
 
     def __str__(self):
         return f"{self.min_score} - {self.grade} - {self.remark}"
-
-
-# df1 = pd.DataFrame([['a', 'b'], ['c', 'd']],
-#                    columns=['col 1', 'col 2'])
-
-# df1.to_excel("output.xlsx", startrow=10)

@@ -1,0 +1,33 @@
+{% extends 'school/dashboard_base.html' %}
+
+{% block title %}Teachers{% endblock %}
+{% block active_sidebar %}teachers{% endblock %}
+
+
+{% block content %}
+<h4>Teachers</h4>
+<div class="link-nav">
+    <a href="/">Home &ThinSpace;</a>
+    <a>> All Teachers</a>
+</div>
+<br>
+
+<div class="bg-white col-md-12 rounded p-1">
+    <h5 class="ml-4">All Teachers' Data </h5>
+    <div style="width: 70vw; overflow-x: auto; margin: auto;">
+        <table id="teacher_table" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Surname</th>
+                    <th>Other Names</th>
+                    <th>SMS Number</th>
+                    <th>Gender</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -47,7 +47,7 @@
                         <div class="drop-icon"> &#12297;</div>
                     </div>
                     <div class="drop-down">
-                        <a href="{% url 'school:students' %}">
+                        <a href="{% url 'students:students' %}">
                             <div class="drop-item">&#12297; All Students </div>
                         </a>
                         <a href="">
@@ -56,7 +56,7 @@
                         <a href="">
                             <div class="drop-item">&#12297; Promotion </div>
                         </a>
-                        <a href="{% url 'school:student_admission' %}">
+                        <a href="{% url 'students:student_admission' %}">
                             <div class="drop-item">&#12297; Admission Form </div>
                         </a>
                     </div>
@@ -69,7 +69,7 @@
                         <div class="drop-icon"> &#12297;</div>
                     </div>
                     <div class="drop-down">
-                        <a href="">
+                        <a href="{% url 'staff:staff' %}">
                             <div class="drop-item">&#12297; All Teachers </div>
                         </a>
                         <a href="">
@@ -78,7 +78,7 @@
                         <a href="">
                             <div class="drop-item">&#12297; Assign Class</div>
                         </a>
-                        <a href="">
+                        <a href="{% url 'staff:staff_admission' %}">
                             <div class="drop-item">&#12297; Add New Teacher </div>
                         </a>
                     </div>

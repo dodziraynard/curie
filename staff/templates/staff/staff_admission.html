@@ -1,33 +1,34 @@
 {% extends 'school/dashboard_base.html' %}
 
-{% block title %}Student{% endblock %}
-{% block active_sidebar %}students{% endblock %}
+{% block title %}Teacher{% endblock %}
+{% block active_sidebar %}teachers{% endblock %}
 
 
 {% block content %}
-<h4>Students</h4>
+<h4>Teachers</h4>
 <div class="link-nav">
     <a href="/">Home &ThinSpace;</a>
-    <a>> Admission Form</a>
+    <a>> Staff Form</a>
 </div>
 <br>
 
 <div class="bg-white col-md-12 rounded p-1">
     <header class="p-2 d-flex justify-content-between">
-        <h6><i class="bi bi-list-stars"></i> Admission Form</h6>
+        <h6><i class="bi bi-list-stars"></i> Staff Form</h6>
         <div class="dropdown">
             <button class="btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                 aria-expanded="false">
                 <i class="bi bi-three-dots"></i>
             </button>
             <div class="dropdown-menu mr-5" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="{% url 'school:student_admission_sheet' %}"><i
+                <a class="dropdown-item" href="{% url 'staff:staff_admission_sheet' %}"><i
                         class="bi bi-file-earmark-spreadsheet"></i> Upload Sheet</a>
             </div>
         </div>
     </header>
 
-    <form action="" class="needs-validation {{was_validated}}" method="POST" novalidate>
+    <form action="{% url 'staff:staff_admission' %}" class="needs-validation" method="POST" novalidate>
+        <input type="hidden" name="editing" value="{{editing}}">
         {% if error_message %}
         <div class="col-md-7 mx-auto alert alert-danger alert-dismissible fade show" role="alert">
             <strong>Error!</strong> {{error_message}}
@@ -40,10 +41,11 @@
         <div class="row">
             <div class="col-md-4 col-xs-12 col-sm-12">
                 <div class="form-group">
-                    <input value="{% if next_id  %} {{next_id}} {% else %} {{student_id}} {% endif %}" type="text"
-                        class="form-control" id="student_id" placeholder="Student ID" name="student_id" required>
-                    <div class="invalid-feedback">Student ID is required.</div>
-                    <small class="text text-info">Last student ID: {{last_id}}</small>
+                    <input value="{% if next_id  %}{{next_id}}{% else %}{{staff_id}}{% endif %}" type="text"
+                        id="staff_id" {% if editing %} readonly {% endif %} class="form-control"
+                        placeholder="Teacher ID" name="staff_id" required>
+                    <div class="invalid-feedback">Teacher ID is required.</div>
+                    <small class="text text-info">Last staff ID: {{last_id}}</small>
                 </div>
             </div>
             <div class="col-md-4 col-xs-12 col-sm-12">
@@ -78,56 +80,15 @@
                     <div class="invalid-feedback">Gender is required.</div>
                 </div>
             </div>
+
             <div class="col-md-4 col-xs-12 col-sm-12">
                 <div class="form-group">
-                    <input value="{{house}}" type="text" class="form-control" placeholder="House" name="house" required>
-                    <div class="invalid-feedback">House required.</div>
+                    <label for="has_class">This teacher will have class
+                        <input type="checkbox" class="checkbox" {% if has_class %} checked {% endif %} name="has_class"
+                            id="has_class">
+                        <div class="invalid-feedback">House required.</div>
+                    </label>
                 </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-4 col-xs-12 col-sm-12">
-                <div class="form-group">
-                    <input value="{{track}}" type="text" class="form-control" id="track" placeholder="Track"
-                        name="track" required>
-                </div>
-            </div>
-            <div class="col-md-4 col-xs-12 col-sm-12">
-                <div class="form-group">
-                    <input value="{{father}}" type="text" class="form-control" id="father" placeholder="Father's Name"
-                        name="father" required>
-                    <div class="invalid-feedback">Father's Name required.</div>
-
-                </div>
-            </div>
-            <div class="col-md-4 col-xs-12 col-sm-12">
-                <div class="form-group">
-                    <input value="{{mother}}" type="text" class="form-control" placeholder="Mother's Name" name="mother"
-                        required>
-                    <div class="invalid-feedback">Mother's Name required.</div>
-                </div>
-            </div>
-        </div>
-
-        <hr>
-        <div class="form-group mx-4">
-            <label for="class">Class</label>
-            <select class="form-control" name="klass" id="class" onchange='getSubjectsForClass(this)' required>
-                <option value="">Choose class.</option>
-                {% for item in classes %}
-                <option value="{{item.class_id}}">{{item.name}}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <div class="form-group mx-4">
-            <label for="electives">Choose electives:</label>
-            <div id="elective_container">
-                <select class="form-control" name="electives" id="electives" disabled multiple required>
-                    <option value="">Please choose first class.</option>
-                </select>
-                <p class="text text-info">Press down Ctrl to select multiple *</p>
             </div>
         </div>
 
@@ -141,7 +102,7 @@
 <!-- Validation script -->
 {% block scripts %}
 {% load static %}
-<script src="{% static 'js/student_app.js' %}"></script>
+<script src="{% static 'js/staff_app.js' %}"></script>
 
 <script>
     (function () {

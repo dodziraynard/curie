@@ -19,6 +19,7 @@ def send_sms(numbers, message):
     for number in numbers:
         url = f"https://sms.arkesel.com/sms/api?action=send-sms&api_key={SMS_API_KEY}&to={number}&from={sender_id}&sms={message}"
         try:
-            response = requests.get(url)
+            # response = requests.get(url)
+            pass
         except ConnectionError as e:
             print(response)
