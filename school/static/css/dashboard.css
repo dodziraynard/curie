@@ -150,7 +150,7 @@ body,
 }
 
 .side-bar-item .drop-down {
-  height: 0px;
+  max-height: 0px;
   overflow-y: hidden;
   background-color: var(--pmcv);
   -webkit-transition: all 0.4s ease-in-out;
@@ -177,7 +177,7 @@ body,
 }
 
 .side-bar-item.active .drop-down {
-  height: 200px;
+  max-height: 400px;
   padding: 5px 5px 10px 30px;
 }
 

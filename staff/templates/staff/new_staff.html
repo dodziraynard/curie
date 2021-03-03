@@ -8,26 +8,26 @@
 <h4>Teachers</h4>
 <div class="link-nav">
     <a href="/">Home &ThinSpace;</a>
-    <a>> Staff Form</a>
+    <a>> New Staff</a>
 </div>
 <br>
 
 <div class="bg-white col-md-12 rounded p-1">
     <header class="p-2 d-flex justify-content-between">
-        <h6><i class="bi bi-list-stars"></i> Staff Form</h6>
+        <h6><i class="bi bi-list-stars"></i> New Staff</h6>
         <div class="dropdown">
             <button class="btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                 aria-expanded="false">
                 <i class="bi bi-three-dots"></i>
             </button>
             <div class="dropdown-menu mr-5" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="{% url 'staff:staff_admission_sheet' %}"><i
+                <a class="dropdown-item" href="{% url 'staff:new_staff_sheet' %}"><i
                         class="bi bi-file-earmark-spreadsheet"></i> Upload Sheet</a>
             </div>
         </div>
     </header>
 
-    <form action="{% url 'staff:staff_admission' %}" class="needs-validation" method="POST" novalidate>
+    <form action="{% url 'staff:new_staff' %}" class="needs-validation" method="POST" novalidate>
         <input type="hidden" name="editing" value="{{editing}}">
         {% if error_message %}
         <div class="col-md-7 mx-auto alert alert-danger alert-dismissible fade show" role="alert">

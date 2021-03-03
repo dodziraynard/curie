@@ -1,0 +1,131 @@
+{% extends 'school/dashboard_base.html' %}
+
+{% block title %}Class{% endblock %}
+{% block active_sidebar %}classes{% endblock %}
+
+
+{% block content %}
+<h4>Classs</h4>
+<div class="link-nav">
+    <a href="/">Home &ThinSpace;</a>
+    <a>> New Class</a>
+</div>
+<br>
+
+<div class="bg-white col-md-12 rounded p-1">
+    <header class="p-2 d-flex justify-content-between">
+        <h6><i class="bi bi-list-stars"></i> New Class</h6>
+        <div class="dropdown">
+            <button class="btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">
+                <i class="bi bi-three-dots"></i>
+            </button>
+            <div class="dropdown-menu mr-5" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href=""><i class="bi bi-file-earmark-spreadsheet"></i> Upload Sheet</a>
+            </div>
+        </div>
+    </header>
+
+    <form action="{% url 'students:new_class' %}" class="needs-validation" method="POST" novalidate>
+        <input type="hidden" name="editing" value="{{editing}}">
+        {% if error_message %}
+        <div class="col-md-7 mx-auto alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error!</strong> {{error_message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endif %}
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-4 col-xs-12 col-sm-12">
+                <div class="form-group">
+                    <input value="{{class_id}}" type="text" id="class_id" {% if editing %} readonly {% endif %}
+                        class="form-control" placeholder="Class ID" pattern="[A-Za-z0-9]{1,}" name="class_id" required>
+                    <div class="invalid-feedback">Class ID is required and it must be only numbers and alphabets</div>
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-12 col-sm-12">
+                <div class="form-group">
+                    <input value="{{name}}" type="text" class="form-control" id="name"
+                        pattern="([A-Za-z0-9]{1,}\s?){1,}" placeholder="Name" name="name" required>
+                    <div class="invalid-feedback">Name is required and must be alphanumeric.</div>
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-12 col-sm-12">
+                <div class="form-group">
+                    <input value="{{form}}" type="text" pattern="[1-9]{1}" class="form-control" placeholder="Form"
+                        name="form" required>
+                    <div class="invalid-feedback">Form is required and it must be a digit.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 col-xs-12 col-sm-12">
+                <div class="form-group">
+                    <input value="{{stream}}" type="text" class="form-control" id="stream" placeholder="Stream"
+                        name="stream" pattern="[A-Z]{1}" required>
+                    <div class="invalid-feedback">Stream is required and it must be an upper case letter.</div>
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-12 col-sm-12">
+                <div class="form-group">
+                    <select class="form-control" name="course_id" id="course_id" required>
+                        <option value="">Choose course.</option>
+                        {% for item in courses %}
+                        <option {% if item.course_id == course_id %} selected {% endif %} value="{{item.course_id}}">
+                            {{item.name}}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <div class="invalid-feedback">Course is required</div>
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-12 col-sm-12">
+                <div class="form-group">
+                    <select class="form-control" name="staff_id" id="staff_id" required>
+                        <option value="">Choose class teacher.</option>
+                        {% for teacher in teachers %}
+                        <option value="{{teacher.staff_id}}" {% if teacher.staff_id == staff_id %} selected {% endif %}>
+                            {{teacher.get_full_name}}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <div class="invalid-feedback">Class teacher is required</div>
+                </div>
+            </div>
+        </div>
+
+        <p class="text text-right">
+            <button class="btn btn-info" type="submit">Submit</button>
+        </p>
+    </form>
+</div>
+{% endblock %}
+
+<!-- Validation script -->
+{% block scripts %}
+{% load static %}
+<script src="{% static 'js/class_app.js' %}"></script>
+
+<script>
+    (function () {
+        'use strict';
+        window.addEventListener('load', function () {
+            // Get the forms we want to add validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
+{% endblock %}

@@ -13,8 +13,8 @@ def staff(request):
     return render(request, template_name, context)
 
 
-def staff_admission(request):
-    template_name = "staff/staff_admission.html"
+def new_staff(request):
+    template_name = "staff/new_staff.html"
     last_staff = Staff.objects.last()
     next_id = int(last_staff.staff_id) + \
         1 if last_staff and last_staff.staff_id.isnumeric() else ""
@@ -49,7 +49,7 @@ def staff_admission(request):
                 context.update(
                     {"error_message": f"Staff with {staff_id} already exists."})
             else:
-                log_system_error("staff_admission", str(err))
+                log_system_error("new_staff", str(err))
                 context.update(
                     {"error_message": "Oops, an unknown error occurred."})
             context.update({
@@ -59,8 +59,8 @@ def staff_admission(request):
         return redirect("staff:staff")
 
 
-def staff_admission_sheet(request):
-    template_name = "staff/staff_admission_sheet.html"
+def new_staff_sheet(request):
+    template_name = "staff/new_staff_sheet.html"
     context = {}
     if request.method == "GET":
         return render(request, template_name, context)
@@ -83,7 +83,7 @@ def staff_admission_sheet(request):
 
 
 def edit_staff(request, staff_id):
-    template_name = "staff/staff_admission.html"
+    template_name = "staff/new_staff.html"
     staff = Staff.objects.values().get(staff_id=staff_id)
     context = {**staff}
     context.update({"editing": True})

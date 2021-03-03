@@ -1,7 +1,12 @@
+// Toggling sidebar.
 const sideBarItems = document.querySelectorAll(".side-bar-item")
 const navBarItems = document.querySelectorAll(".nav-item")
 sideBarItems.forEach(item => {
     item.addEventListener("click", (e) => {
+        document.querySelectorAll(".side-bar-item.active").forEach(e=>{
+            if (e !== item)
+            e.classList.remove("active")
+        })
         item.classList.toggle("active")
     })
 })

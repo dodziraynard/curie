@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from students.models import Student, Subject
+from students.models import Student, Subject, Klass
 from staff.models import Staff
 
 
@@ -23,4 +23,10 @@ class SubjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Subject
-        fields = ["subject_id", "name"]
+        fields = ["subject_id", "name", "is_elective", "student_count"]
+
+class ClassSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Klass
+        fields = ["class_id", "name", "stream", "form", "course_name", "class_teacher_name"]

@@ -1,4 +1,4 @@
-$(document).ready(function () {
+const loadStudentsIntoTable = () => {
     // Load all students into the table
     $('#student_table')?.DataTable({
         ajax: {
@@ -15,7 +15,7 @@ $(document).ready(function () {
                             <a class="badge badge-primary text text-white" href='/students/student-detail/${data}'>
                                 <i class="bi bi-eye"></i> 
                             </a> 
-                            <span class="badge badge-primary text text-white" onClick="deleteStudent(${data})">
+                            <span class="badge badge-primary text text-white" onClick="deleteStudent('${data}')">
                                 <i class="bi bi-trash"></i> 
                             </span> `
                 }
@@ -28,7 +28,9 @@ $(document).ready(function () {
             { data: 'house' }
         ]
     });
+}
 
+const loadTeachersIntoTable = () => {
     // Load all teachers into the table
     $('#teacher_table')?.DataTable({
         ajax: {
@@ -38,14 +40,14 @@ $(document).ready(function () {
         columns: [
             {
                 data: 'staff_id',
-                render: function (data, type) {
+                render: (data, type) => {
                     return `<a class="badge badge-primary text text-white" href='/staff/staff-edit/${data}'>
                                 <i class="bi bi-pencil"></i> 
                             </a>
                             <a class="badge badge-primary text text-white" href='/staff/staff-detail/${data}'>
                                 <i class="bi bi-eye"></i> 
                             </a> 
-                            <span class="badge badge-primary text text-white" onClick="deleteStaff(${data})">
+                            <span class="badge badge-primary text text-white" onClick="deleteStaff('${data}')">
                                 <i class="bi bi-trash"></i> 
                             </a> `
                 }
@@ -59,6 +61,76 @@ $(document).ready(function () {
             { data: 'gender' }
         ]
     });
+}
+
+const loadClassesIntoTable = () => {
+    // Load all classes into the table
+    $('#class_table')?.DataTable({
+        ajax: {
+            url: "/ajax/classes",
+            dataSrc: 'classes'
+        },
+        columns: [
+            {
+                data: 'class_id',
+                render: (data, type) => {
+                    return `<a class="badge badge-primary text text-white" href='/students/class-edit/${data}'>
+                                <i class="bi bi-pencil"></i> 
+                            </a>
+                            <a class="badge badge-primary text text-white" href='/students/class-detail/${data}'>
+                                <i class="bi bi-eye"></i> 
+                            </a> 
+                            <span class="badge badge-primary text text-white" onClick="deleteClass('${data}')">
+                                <i class="bi bi-trash"></i> 
+                            </span> `
+                }
+            },
+            { data: 'class_id' },
+            { data: 'name' },
+            { data: 'stream' },
+            { data: 'form' },
+            { data: 'course_name' },
+            { data: 'class_teacher_name' }
+        ]
+    });
+}
+
+const loadSubjectsIntoTable = () => {
+    // Load all subjects into the table
+    $('#subject_table')?.DataTable({
+        ajax: {
+            url: "/ajax/subjects",
+            dataSrc: 'subjects'
+        },
+        columns: [
+            {
+                data: 'subject_id',
+                render: (data, type) => {
+                    return `<a class="badge badge-primary text text-white" href='/students/subject-edit/${data}'>
+                                <i class="bi bi-pencil"></i> 
+                            </a>
+                            <a class="badge badge-primary text text-white" href='/students/subject-detail/${data}'>
+                                <i class="bi bi-eye"></i> 
+                            </a> 
+                            <span class="badge badge-primary text text-white" onClick="deleteSubject('${data}')">
+                                <i class="bi bi-trash"></i> 
+                            </span> `
+                }
+            },
+            { data: 'subject_id' },
+            { data: 'name' },
+            { data: 'is_elective' },
+            { data: 'student_count' },
+        ]
+    });
+}
+
+// Load tables when page is done loading.
+$(document).ready(() => {
+    loadStudentsIntoTable()
+    loadTeachersIntoTable()
+    loadClassesIntoTable()
+    loadSubjectsIntoTable()
 });
 
 const deleteStudent = (student_id) => {
@@ -71,4 +143,16 @@ const deleteStaff = (staff_id) => {
     document.querySelector('#input_staff_id').value = staff_id
     document.querySelector('#span_staff_id').innerText = staff_id
     $('#delete-staff-modal').modal('show')
+}
+
+const deleteClass = (class_id) => {
+    document.querySelector('#input_class_id').value = class_id
+    document.querySelector('#span_class_id').innerText = class_id
+    $('#delete-class-modal').modal('show')
+}
+
+const deleteSubject = (subject_id) => {
+    document.querySelector('#input_subject_id').value = subject_id
+    document.querySelector('#span_subject_id').innerText = subject_id
+    $('#delete-subject-modal').modal('show')
 }

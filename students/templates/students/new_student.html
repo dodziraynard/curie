@@ -8,26 +8,26 @@
 <h4>Students</h4>
 <div class="link-nav">
     <a href="/">Home &ThinSpace;</a>
-    <a>> Admission Form</a>
+    <a>> New Student</a>
 </div>
 <br>
 
 <div class="bg-white col-md-12 rounded p-1">
     <header class="p-2 d-flex justify-content-between">
-        <h6><i class="bi bi-list-stars"></i> Admission Form</h6>
+        <h6><i class="bi bi-list-stars"></i> New Student</h6>
         <div class="dropdown">
             <button class="btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                 aria-expanded="false">
                 <i class="bi bi-three-dots"></i>
             </button>
             <div class="dropdown-menu mr-5" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="{% url 'students:student_admission_sheet' %}"><i
+                <a class="dropdown-item" href="{% url 'students:new_student_sheet' %}"><i
                         class="bi bi-file-earmark-spreadsheet"></i> Upload Sheet</a>
             </div>
         </div>
     </header>
 
-    <form action="{% url 'students:student_admission' %}" class="needs-validation" method="POST" novalidate>
+    <form action="{% url 'students:new_student' %}" class="needs-validation" method="POST" novalidate>
         <input type="hidden" name="editing" value="{{editing}}">
         {% if error_message %}
         <div class="col-md-7 mx-auto alert alert-danger alert-dismissible fade show" role="alert">
@@ -93,6 +93,7 @@
                 <div class="form-group">
                     <input value="{{track}}" type="text" class="form-control" id="track" placeholder="Track"
                         name="track" required>
+                    <div class="invalid-feedback">Track is required.</div>
                 </div>
             </div>
             <div class="col-md-4 col-xs-12 col-sm-12">

@@ -3,7 +3,7 @@ from students.models import Student, Klass, Subject
 from staff.models import Staff
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from . serializers import StudentSerializer, SubjectSerializer, StaffSerializer
+from . serializers import StudentSerializer, SubjectSerializer, StaffSerializer, ClassSerializer
 
 
 def get_student_teacher_count(request):
@@ -26,10 +26,22 @@ class ListTeachersAPI(APIView):
         return Response({"teachers": data})
 
 
-class ListSubjectsAPI(APIView):
+class ListClassSubjectsAPI(APIView):
     def get(self, request):
         filters = {k: v for k, v in request.GET.items()}
         klass = Klass.objects.get(**filters)
         subjects = klass.course.subjects.filter(is_elective=True)
         data = SubjectSerializer(subjects, many=True).data
         return Response({"subjects": data})
+
+class ListAllSubjectsAPI(APIView):
+    def get(self, request):
+        subjects = Subject.objects.all()
+        data = SubjectSerializer(subjects, many=True).data
+        return Response({"subjects": data})
+
+class ListClassesAPI(APIView):
+    def get(self, request):
+        classes = Klass.objects.exclude(class_teacher=None)
+        data = ClassSerializer(classes, many=True).data
+        return Response({"classes": data})

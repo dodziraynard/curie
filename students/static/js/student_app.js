@@ -7,7 +7,7 @@ const getSubjectsForClass = (element) => {
 
     selector.setAttribute("disabled", true)
 
-    url = "/ajax/subjects"
+    url = "/ajax/class-subjects"
     $.get(url, { class_id: classId }, (data, status) => {
         if (status == "success") {
             selector.innerHTML = ""

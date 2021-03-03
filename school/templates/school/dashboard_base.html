@@ -44,20 +44,20 @@
                     <div class="item">
                         <div class="icon mr-2"><i class="bi bi-diagram-2"></i></div>
                         <div class="title"><a>Students</a> </div>
-                        <div class="drop-icon"> &#12297;</div>
+                        <div class="drop-icon"><i class="bi bi-chevron-right"></i></div>
                     </div>
                     <div class="drop-down">
                         <a href="{% url 'students:students' %}">
-                            <div class="drop-item">&#12297; All Students </div>
+                            <div class="drop-item"><i class="bi bi-caret-right"></i> All Students </div>
                         </a>
                         <a href="">
-                            <div class="drop-item">&#12297; Records</div>
+                            <div class="drop-item"><i class="bi bi-caret-right"></i> Records</div>
                         </a>
                         <a href="">
-                            <div class="drop-item">&#12297; Promotion </div>
+                            <div class="drop-item"><i class="bi bi-caret-right"></i> Promotion </div>
                         </a>
-                        <a href="{% url 'students:student_admission' %}">
-                            <div class="drop-item">&#12297; Admission Form </div>
+                        <a href="{% url 'students:new_student' %}">
+                            <div class="drop-item"><i class="bi bi-caret-right"></i> New Student </div>
                         </a>
                     </div>
                 </div>
@@ -66,20 +66,20 @@
                     <div class="item">
                         <div class="icon mr-2"><i class="bi bi-people"></i></div>
                         <div class="title"><a>Teachers</a> </div>
-                        <div class="drop-icon"> &#12297;</div>
+                        <div class="drop-icon"><i class="bi bi-chevron-right"></i></div>
                     </div>
                     <div class="drop-down">
                         <a href="{% url 'staff:staff' %}">
-                            <div class="drop-item">&#12297; All Teachers </div>
+                            <div class="drop-item"><i class="bi bi-caret-right"></i> All Teachers </div>
                         </a>
                         <a href="">
-                            <div class="drop-item">&#12297; Make Request </div>
+                            <div class="drop-item"><i class="bi bi-caret-right"></i> Make Request </div>
                         </a>
                         <a href="">
-                            <div class="drop-item">&#12297; Assign Class</div>
+                            <div class="drop-item"><i class="bi bi-caret-right"></i> Assign Class</div>
                         </a>
-                        <a href="{% url 'staff:staff_admission' %}">
-                            <div class="drop-item">&#12297; Add New Teacher </div>
+                        <a href="{% url 'staff:new_staff' %}">
+                            <div class="drop-item"><i class="bi bi-caret-right"></i> New Teacher </div>
                         </a>
                     </div>
                 </div>
@@ -88,14 +88,14 @@
                     <div class="item">
                         <div class="icon mr-2"><i class="bi bi-house"></i></div>
                         <div class="title"><a>Classes</a> </div>
-                        <div class="drop-icon"> &#12297;</div>
+                        <div class="drop-icon"><i class="bi bi-chevron-right"></i></div>
                     </div>
                     <div class="drop-down">
-                        <a href="">
-                            <div class="drop-item">&#12297; All Classes </div>
+                        <a href="{% url 'students:classes' %}">
+                            <div class="drop-item"><i class="bi bi-caret-right"></i> All Classes </div>
                         </a>
-                        <a href="">
-                            <div class="drop-item">&#12297; Add New Class </div>
+                        <a href="{% url 'students:new_class' %}">
+                            <div class="drop-item"><i class="bi bi-caret-right"></i> New Class </div>
                         </a>
                     </div>
                 </div>
@@ -104,14 +104,14 @@
                     <div class="item">
                         <div class="icon mr-2"><i class="bi bi-book"></i></div>
                         <div class="title"><a>Subjects</a> </div>
-                        <div class="drop-icon"> &#12297;</div>
+                        <div class="drop-icon"><i class="bi bi-chevron-right"></i></div>
                     </div>
                     <div class="drop-down">
-                        <a href="">
-                            <div class="drop-item">&#12297; All Subjects </div>
+                        <a href="{% url 'students:subjects' %}">
+                            <div class="drop-item"><i class="bi bi-caret-right"></i> All Subjects </div>
                         </a>
-                        <a href="">
-                            <div class="drop-item">&#12297; Add New Subject </div>
+                        <a href="{% url 'students:new_subject' %}">
+                            <div class="drop-item"><i class="bi bi-caret-right"></i> New Subject </div>
                         </a>
                     </div>
                 </div>
@@ -120,14 +120,14 @@
                     <div class="item">
                         <div class="icon mr-2"><i class="bi bi-journals"></i></div>
                         <div class="title"><a>Courses</a> </div>
-                        <div class="drop-icon"> &#12297;</div>
+                        <div class="drop-icon"><i class="bi bi-chevron-right"></i></div>
                     </div>
                     <div class="drop-down">
                         <a href="">
-                            <div class="drop-item">&#12297; All Courses </div>
+                            <div class="drop-item"><i class="bi bi-caret-right"></i> All Courses </div>
                         </a>
                         <a href="">
-                            <div class="drop-item">&#12297; Add New Courses </div>
+                            <div class="drop-item"><i class="bi bi-caret-right"></i> New Courses </div>
                         </a>
                     </div>
                 </div>
@@ -143,14 +143,14 @@
                     <div class="item">
                         <div class="icon mr-2"><i class="bi bi-building"></i></div>
                         <div class="title"><a>House Master</a> </div>
-                        <div class="drop-icon"> &#12297;</div>
+                        <div class="drop-icon"><i class="bi bi-chevron-right"></i></div>
                     </div>
                     <div class="drop-down">
                         <a href="">
-                            <div class="drop-item">&#12297; All House Masters </div>
+                            <div class="drop-item"><i class="bi bi-caret-right"></i> All House Masters </div>
                         </a>
                         <a href="">
-                            <div class="drop-item">&#12297; Add New House Master </div>
+                            <div class="drop-item"><i class="bi bi-caret-right"></i> New House Master </div>
                         </a>
                     </div>
                 </div>
@@ -159,20 +159,20 @@
                     <div class="item">
                         <div class="icon mr-2"><i class="bi bi-envelope"></i></div>
                         <div class="title"><a>SMS</a> </div>
-                        <div class="drop-icon"> &#12297;</div>
+                        <div class="drop-icon"><i class="bi bi-chevron-right"></i></div>
                     </div>
                     <div class="drop-down">
                         <a href="">
-                            <div class="drop-item">&#12297; All Sent SMS </div>
+                            <div class="drop-item"><i class="bi bi-caret-right"></i> All Sent SMS </div>
                         </a>
                         <a href="">
-                            <div class="drop-item">&#12297; All Failed SMS </div>
+                            <div class="drop-item"><i class="bi bi-caret-right"></i> All Failed SMS </div>
                         </a>
                         <a href="">
-                            <div class="drop-item">&#12297; Balance</div>
+                            <div class="drop-item"><i class="bi bi-caret-right"></i> Balance</div>
                         </a>
                         <a href="">
-                            <div class="drop-item">&#12297; New SMS </div>
+                            <div class="drop-item"><i class="bi bi-caret-right"></i> New SMS </div>
                         </a>
                     </div>
                 </div>

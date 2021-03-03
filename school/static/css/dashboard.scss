@@ -136,7 +136,7 @@ body,
   }
 
   .drop-down {
-    height: 0px;
+    max-height: 0px;
     overflow-y: hidden;
     background-color: $pmcv;
     transition: all 0.4s ease-in-out;
@@ -160,7 +160,7 @@ body,
     transform: rotate(90deg);
   }
   .drop-down {
-    height: 200px;
+    max-height: 400px;
     padding: 5px 5px 10px 30px;
   }
 }

@@ -84,14 +84,25 @@ class HouseMasterRemark(models.Model):
 class Klass(models.Model):
     class_id = models.CharField(max_length=50, unique=True)
     name = models.CharField(max_length=50, unique=True)
-    class_teacher = models.OneToOneField(
-        Staff, related_name="staff", null=True, on_delete=models.SET_NULL)
+    class_teacher = models.OneToOneField(Staff, related_name="klass", null=True, on_delete=models.SET_NULL)
     form = models.IntegerField(default=1)
     stream = models.CharField(max_length=5)
     course = models.ForeignKey(
         "Course", related_name="classes", on_delete=models.CASCADE)
 
+    @property
+    def course_name(self):
+        return self.course.name
+    
+    @property
+    def class_teacher_name(self):
+        return self.class_teacher.get_full_name() or "None"
+    
+    def get_student_count(self):
+        return Student.objects.filter(completed=False, klass=self).count()
+
     class Meta:
+        db_table = "classes"
         verbose_name_plural = "Classes"
         verbose_name = "Class"
 
@@ -107,6 +118,9 @@ class Course(models.Model):
     name = models.CharField(max_length=100, unique=True)
     subjects = models.ManyToManyField("Subject", related_name="courses")
 
+    class Meta:
+        db_table = "courses"
+
     def __str__(self):
         return self.name
 
@@ -118,6 +132,15 @@ class Subject(models.Model):
     subject_id = models.CharField(max_length=50, unique=True)
     name = models.CharField(max_length=100, unique=True)
     is_elective = models.BooleanField()
+
+    class Meta:
+        db_table = "subjects"
+
+    @property
+    def student_count(self):
+        if self.is_elective:
+            return Student.objects.filter(completed=False, electives=self).count()
+        return Student.objects.filter(completed=False).count()
 
     def __str__(self):
         return self.name
@@ -141,6 +164,9 @@ class Record(models.Model):
     date = models.DateField(default=timezone.now)
     roll_no = models.IntegerField(blank=True, null=True)
     rank = models.CharField(max_length=20, blank=True, null=True)
+
+    class Meta:
+        db_table = "academic_records"
 
     def __str__(self):
         return self.student.get_full_name()
@@ -170,6 +196,9 @@ class TeacherClassSubjectCombination(models.Model):
         "Klass", verbose_name="Class", related_name="combinations", on_delete=models.CASCADE)
     staff = models.ForeignKey(Staff, related_name="teaches",
                               verbose_name="Staff", on_delete=models.CASCADE)
+    
+    class Meta:
+        db_table = "teacher_class_subject_combination"
 
     def __str__(self):
         if self.subject and self.staff:
@@ -182,6 +211,9 @@ class GradingSystem(models.Model):
     min_score = models.IntegerField()
     grade = models.CharField(max_length=5)
     remark = models.CharField(max_length=50)
+
+    class Meta:
+        db_table = "grading_systems"
 
     def __str__(self):
         return f"{self.min_score} - {self.grade} - {self.remark}"

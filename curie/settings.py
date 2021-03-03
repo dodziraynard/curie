@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 
     'accounts',
     'pdf_engine',
+    'sheet_engine',
     'ajax',
     'staff',
     'students',
@@ -139,10 +140,10 @@ USE_TZ = True
 
 
 #  Add configuration for static files storage using whitenoise
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'static'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 # STATICFILES_DIRS = [
 #     BASE_DIR / "static"
 # ]
