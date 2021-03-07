@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from students.models import Student, Klass, Subject, Course
-from staff.models import Staff
+from staff.models import Staff, HouseMaster
 from sheet_engine.functions import *
+from django.db.models import Q
 from django.db.utils import IntegrityError
 from logger.utils import log_system_error
 
@@ -298,5 +299,218 @@ def subject_detail(request, subject_id):
     context = {
         "subject": subject,
         "teaches": teaches,
+    }
+    return render(request, template_name, context)
+
+
+def courses(request):
+    template_name = "courses/courses.html"
+    context = {
+    }
+    return render(request, template_name, context)
+
+
+def new_course(request):
+    template_name = "courses/new_course.html"
+     
+    context = {
+        "electives":Subject.objects.filter(is_elective=True),
+    }
+    if request.method == "GET":
+        return render(request, template_name, context)
+
+    elif request.method == "POST":
+        post_data = request.POST.copy()
+        post_data.pop("csrfmiddlewaretoken")
+        electives_id = post_data.pop("electives") 
+
+        electives = Subject.objects.filter(
+                Q(subject_id__in=electives_id) |
+                Q(is_elective=False)
+            )
+
+        # Is the course info being edited?
+        editing = post_data.pop("editing")[0]
+
+        course_data = {k: v.strip() for k, v in post_data.items()}
+        course_id = course_data.get("course_id")
+
+        try:
+            if editing:
+                Course.objects.filter(course_id=course_id).update(**course_data)
+                course = get_object_or_404(Course, course_id=course_id)
+            else:
+                course = Course.objects.create(**course_data)
+        except IntegrityError as err:
+            if "UNIQUE constraint failed" in str(err):
+                context.update(
+                    {"error_message": f"Subject with {course_id} already exists."})
+            else:
+                log_system_error("new_course", str(err))
+                context.update(
+                    {"error_message": "Oops, an unknown error occurred."})
+            context.update({
+                k: v for k, v in request.POST.items()
+            })
+            return render(request, template_name, context)
+        course.subjects.set(electives)
+        course.save()
+        return redirect("students:courses")
+
+
+def new_course_sheet(request):
+    template_name = "courses/new_course_sheet.html"
+    context = {}
+    if request.method == "GET":
+        return render(request, template_name, context)
+    if request.method == "POST":
+        file = request.FILES.get("file")
+        if not file:
+            context.update({"error_message": "No file selected"})
+            return render(request, template_name, context)
+
+        # Returns True for success and string if error.
+        res = insert_courses(file.file)
+        if res == True:
+            request.session["message"] = "Sucessfully added courses."
+            return redirect("students:courses")
+        elif isinstance(res, str):
+            context.update({"error_message": res})
+        else:
+            context.update({"error_message": "An unknown error occured."})
+        return render(request, template_name, context)
+
+def edit_course(request, course_id):
+    template_name = "courses/new_course.html"
+    course = Course.objects.values().get(course_id=course_id)
+    
+    context = {**course}
+    context.update({
+        "editing": True,
+        "course_electives":Course.objects.get(course_id=course_id).subjects.filter(is_elective=True),
+        "electives":Subject.objects.filter(is_elective=True),
+    })
+    return render(request, template_name, context)
+
+def delete_course(request):
+    course_id = request.POST.get("course_id")
+    if not course_id:
+        request.session["error_message"] = "No course ID found."
+        return redirect("students:courses")
+    Course.objects.filter(course_id=course_id).delete()
+    request.session["message"] = "Deleted successfully"
+    return redirect("students:courses")
+
+
+def course_detail(request, course_id):
+    template_name = "courses/course_details.html"
+    course = get_object_or_404(Course, course_id=course_id)
+    context = {
+        "course": course,
+        "electives": course.subjects.filter(is_elective=True),
+    }
+    return render(request, template_name, context)
+
+# House Master Views
+def house_masters(request):
+    template_name = "house_masters/house_masters.html"
+    context = {
+    }
+    return render(request, template_name, context)
+
+
+def new_house_master(request):
+    template_name = "house_masters/new_house_master.html"
+     
+    context = {
+        "teachers":Staff.objects.filter(has_left=False),
+    }
+    if request.method == "GET":
+        return render(request, template_name, context)
+
+    elif request.method == "POST":
+        post_data = request.POST.copy()
+        post_data.pop("csrfmiddlewaretoken")
+        staff_id = post_data.pop("staff_id")[0]
+        house = post_data.get("house") 
+        staff = get_object_or_404(Staff, staff_id=staff_id)
+
+        # Is the house_master info being edited?
+        editing = post_data.pop("editing")[0]
+
+        house_master_data = {k: v.strip() for k, v in post_data.items()}
+        house_master_data.update({"staff":staff})
+
+        try:
+            if editing:
+                HouseMaster.objects.filter(house=house).update(**house_master_data)
+                house_master = get_object_or_404(HouseMaster, house=house)
+            else:
+                house_master = HouseMaster.objects.create(**house_master_data)
+        except IntegrityError as err:
+            if "UNIQUE constraint failed" in str(err):
+                context.update(
+                    {"error_message": f"Staff is already a house master."})
+            else:
+                log_system_error("new_house_master", str(err))
+                context.update(
+                    {"error_message": "Oops, an unknown error occurred."})
+            context.update({
+                k: v for k, v in request.POST.items()
+            })
+            return render(request, template_name, context)
+        return redirect("students:house_masters")
+
+
+def new_house_master_sheet(request):
+    template_name = "house_masters/new_house_master_sheet.html"
+    context = {}
+    if request.method == "GET":
+        return render(request, template_name, context)
+    if request.method == "POST":
+        file = request.FILES.get("file")
+        if not file:
+            context.update({"error_message": "No file selected"})
+            return render(request, template_name, context)
+
+        # Returns True for success and string if error.
+        res = insert_house_masters(file.file)
+        if res == True:
+            request.session["message"] = "Sucessfully added house_masters."
+            return redirect("students:house_masters")
+        elif isinstance(res, str):
+            context.update({"error_message": res})
+        else:
+            context.update({"error_message": "An unknown error occured."})
+        return render(request, template_name, context)
+
+def edit_house_master(request, house):
+    template_name = "house_masters/new_house_master.html"
+    house_master = HouseMaster.objects.values().get(house=house)
+    
+    context = {**house_master}
+    context.update({
+        "editing": True,
+        "teachers": Staff.objects.all(),
+        "house_master": HouseMaster.objects.get(house=house),
+    })
+    return render(request, template_name, context)
+
+def delete_house_master(request):
+    house = request.POST.get("house")
+    if not house:
+        request.session["error_message"] = "No house master found."
+        return redirect("students:house_masters")
+    HouseMaster.objects.filter(house=house).delete()
+    request.session["message"] = "Deleted successfully"
+    return redirect("students:house_masters")
+
+
+def house_master_detail(request, house_master_id):
+    template_name = "house_masters/house_master_details.html"
+    house_master = get_object_or_404(Course, house_master_id=house_master_id)
+    context = {
+        "house_master": house_master,
+        "electives": house_master.subjects.filter(is_elective=True),
     }
     return render(request, template_name, context)

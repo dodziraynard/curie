@@ -1,9 +1,9 @@
 from django.http import JsonResponse
-from students.models import Student, Klass, Subject
-from staff.models import Staff
+from students.models import Student, Klass, Subject, Course
+from staff.models import Staff, HouseMaster
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from . serializers import StudentSerializer, SubjectSerializer, StaffSerializer, ClassSerializer
+from . serializers import *
 
 
 def get_student_teacher_count(request):
@@ -45,3 +45,17 @@ class ListClassesAPI(APIView):
         classes = Klass.objects.exclude(class_teacher=None)
         data = ClassSerializer(classes, many=True).data
         return Response({"classes": data})
+
+class ListCoursesAPI(APIView):
+    def get(self, request):
+        courses = Course.objects.all()
+        data = CourseSerializer(courses, many=True).data
+        return Response({"courses": data})
+
+
+        
+class LisHouseMastersAPI(APIView):
+    def get(self, request):
+        house_masters = HouseMaster.objects.all()
+        data = HouseMasterSerializer(house_masters, many=True).data
+        return Response({"house_masters": data})

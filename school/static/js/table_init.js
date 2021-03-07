@@ -125,12 +125,85 @@ const loadSubjectsIntoTable = () => {
     });
 }
 
+
+const loadCoursesIntoTable = () => {
+    // Load all courses into the table
+    $('#course_table')?.DataTable({
+        ajax: {
+            url: "/ajax/courses",
+            dataSrc: 'courses'
+        },
+        columns: [
+            {
+                data: 'course_id',
+                render: (data, type) => {
+                    return `<a class="badge badge-primary text text-white" href='/students/course-edit/${data}'>
+                                <i class="bi bi-pencil"></i> 
+                            </a>
+                            <a class="badge badge-primary text text-white" href='/students/course-detail/${data}'>
+                                <i class="bi bi-eye"></i> 
+                            </a> 
+                            <span class="badge badge-primary text text-white" onClick="deleteCourse('${data}')">
+                                <i class="bi bi-trash"></i> 
+                            </span> `
+                }
+            },
+            { data: 'course_id' },
+            { data: 'name' },
+            { data: 'subjects',
+              render: (data, type) => {
+                  let subjects = ""
+                  for (let subject of data){
+                    if (!subject.is_elective) continue
+                    subjects += `<p class="text m-0">${subject.name} (${subject.subject_id})</p>`
+                  }
+                    return subjects
+                }
+            }
+        ]
+    });
+}
+
+
+const loadHouseMastersIntoTable = () => {
+    // Load all courses into the table
+    $('#house_master_table')?.DataTable({
+        ajax: {
+            url: "/ajax/house-masters",
+            dataSrc: 'house_masters'
+        },
+        columns: [
+            {
+                data: 'house',
+                render: (data, type) => {
+                    return `<a class="badge badge-primary text text-white" href='/students/house-master-edit/${data}'>
+                                <i class="bi bi-pencil"></i> 
+                            </a>
+                            <a class="badge badge-primary text text-white" href='/students/house-master-detail/${data}'>
+                                <i class="bi bi-eye"></i> 
+                            </a> 
+                            <span class="badge badge-primary text text-white" onClick="deleteHouseMaster('${data}')">
+                                <i class="bi bi-trash"></i> 
+                            </span> `
+                }
+            },
+            { data: 'id' },
+            { data: 'house' },
+            { data: 'house_master'}
+        ]
+    });
+}
+
+
+
 // Load tables when page is done loading.
 $(document).ready(() => {
     loadStudentsIntoTable()
     loadTeachersIntoTable()
     loadClassesIntoTable()
     loadSubjectsIntoTable()
+    loadCoursesIntoTable()
+    loadHouseMastersIntoTable()
 });
 
 const deleteStudent = (student_id) => {
@@ -155,4 +228,16 @@ const deleteSubject = (subject_id) => {
     document.querySelector('#input_subject_id').value = subject_id
     document.querySelector('#span_subject_id').innerText = subject_id
     $('#delete-subject-modal').modal('show')
+}
+
+const deleteCourse = (course_id) => {
+    document.querySelector('#input_course_id').value = course_id
+    document.querySelector('#span_course_id').innerText = course_id
+    $('#delete-course-modal').modal('show')
+}
+
+const deleteHouseMaster = (house) => {
+    document.querySelector('#input_house_master_id').value = house
+    document.querySelector('#span_house_master_id').innerText = house
+    $('#delete-house-master-modal').modal('show')
 }

@@ -124,8 +124,12 @@ class Course(models.Model):
     def __str__(self):
         return self.name
 
+    @property
     def get_number_of_students(self):
-        return self.students.all().count()
+        num = 0
+        for klass in self.classes.all():
+            num += klass.get_student_count()
+        return num
 
 
 class Subject(models.Model):

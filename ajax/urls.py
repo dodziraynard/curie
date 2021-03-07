@@ -9,4 +9,6 @@ urlpatterns = [
     path("subjects", api.ListAllSubjectsAPI.as_view()),
     path("teachers", api.ListTeachersAPI.as_view()),
     path("classes", api.ListClassesAPI.as_view()),
+    path("courses", api.ListCoursesAPI.as_view()),
+    path("house-masters", api.LisHouseMastersAPI.as_view()),
 ]

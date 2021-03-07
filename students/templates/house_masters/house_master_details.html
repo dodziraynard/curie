@@ -1,0 +1,103 @@
+{% extends 'school/dashboard_base.html' %}
+
+{% block title %}Courses{% endblock %}
+{% block active_sidebar %}courses{% endblock %}
+
+
+{% block content %}
+<h4>Courses</h4>
+<div class="link-nav">
+    <a href="/">Home &ThinSpace;</a>
+    <a>> Details</a>
+</div>
+<br>
+
+<div class="bg-white col-md-12 rounded p-1">
+    <header class="p-2 d-flex justify-content-between">
+        <h6><i class="bi bi-list-stars"></i> Details </h6>
+        <div class="dropdown">
+            <button class="btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">
+                <i class="bi bi-three-dots"></i>
+            </button>
+            <div class="dropdown-menu mr-5" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="{% url 'students:edit_course' course.course_id %}"><i
+                        class="bi bi-pencil"></i>
+                    Edit</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="row">
+        <div class="col-md-3 pr-3">
+        </div>
+        <div class="col-md-9">
+            <h4 class="text ml-3 mb-4">{{course.name}}</h4>
+            <div class="row my-1">
+                <div class="col-md-3 mr-1">
+                    <h6 class="text text-muted">Subject ID:</h6>
+                </div>
+                <div class="col-md-8">
+                    <h6 class="text">{{course.course_id}}</h6>
+                </div>
+            </div>
+
+            <div class="row my-1">
+                <div class="col-md-3 mr-1">
+                    <h6 class="text text-muted">Name:</h6>
+                </div>
+                <div class="col-md-8">
+                    <h6 class="text">{{course.name}}</h6>
+                </div>
+            </div>
+
+            <div class="row my-1">
+                <div class="col-md-3 mr-1">
+                    <h6 class="text text-muted">No of Students:</h6>
+                </div>
+                <div class="col-md-8">
+                    <h6 class="text">{{course.get_number_of_students}}</h6>
+                </div>
+            </div>
+
+            <hr>
+            <div class="my-1 ml-3">
+                <h6>Electives</h6>
+                {% if not electives %}
+                    <strong class="text text-danger"><i class="bi bi-info"></i> No teachers found for this course.</strong>
+                {% endif %}
+                {% for item in electives %}
+                <p class="text text-muted m-0">{{item.name}} ({{item.subject_id}})</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+<!-- Validation script -->
+{% block scripts %}
+{% load static %}
+<script src="{% static 'js/student_app.js' %}"></script>
+
+<script>
+    (function () {
+        'use strict';
+        window.addEventListener('load', function () {
+            // Get the forms we want to add validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
+{% endblock %}

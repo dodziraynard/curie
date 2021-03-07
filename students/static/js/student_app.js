@@ -3,9 +3,8 @@ const selector = electiveContainer?.querySelector("select")
 
 const getSubjectsForClass = (element) => {
     const classId = element.value;
-    if (classId === "" || classId === null) return
-
     selector.setAttribute("disabled", true)
+    if (classId === "" || classId === null) return
 
     url = "/ajax/class-subjects"
     $.get(url, { class_id: classId }, (data, status) => {

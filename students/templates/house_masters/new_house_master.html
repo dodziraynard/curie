@@ -1,36 +1,34 @@
 {% extends 'school/dashboard_base.html' %}
 
-{% block title %}Subject{% endblock %}
-{% block active_sidebar %}subjects{% endblock %}
-
-{% load static %}
+{% block title %}House Master{% endblock %}
+{% block active_sidebar %}house-masters{% endblock %}
 
 
 {% block content %}
-<h4>Subjects</h4>
+<h4>House Masters</h4>
 <div class="link-nav">
     <a href="/">Home &ThinSpace;</a>
-    <a>> New Subject</a>
+    <a>> New House Master</a>
 </div>
 <br>
 
 <div class="bg-white col-md-12 rounded p-1">
     <header class="p-2 d-flex justify-content-between">
-        <h6><i class="bi bi-list-stars"></i> Insert Subjects from Sheet</h6>
+        <h6><i class="bi bi-list-stars"></i> New House Master</h6>
         <div class="dropdown">
             <button class="btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                 aria-expanded="false">
                 <i class="bi bi-three-dots"></i>
             </button>
             <div class="dropdown-menu mr-5" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="{% url 'students:new_subject' %}"><i class="bi bi-pencil"></i> Fill
-                    online</a>
+                <a class="dropdown-item" href="{% url 'students:new_house_master_sheet' %}"><i
+                        class="bi bi-file-earmark-spreadsheet"></i> Upload Sheet</a>
             </div>
         </div>
     </header>
 
-    <form action="{% url 'students:new_subject_sheet' %}" class="needs-validation {{was_validated}}" method="POST"
-        enctype="multipart/form-data" novalidate>
+    <form action="{% url 'students:new_house_master' %}" class="needs-validation" method="POST" novalidate>
+        <input type="hidden" name="editing" value="{{editing}}">
         {% if error_message %}
         <div class="col-md-7 mx-auto alert alert-danger alert-dismissible fade show" role="alert">
             <strong>Error!</strong> {{error_message}}
@@ -40,22 +38,30 @@
         </div>
         {% endif %}
         {% csrf_token %}
-
-        <div class="row col-md-10 col-xs-12 col-sm-12">
-            <div class="col-md-10 my-0 form-group">
-                <p class="text text-warning"><i class="bi bi-info"></i> Repeated subject IDs will automatically be
-                    overwritten.</p>
-            </div>
-            <div class="col-md-10 form-group">
-                <input type="file" class="form-control" name="file" accept=".xlsx" required>
-                <div class="invalid-feedback">Excel file containing subject data is required.</div>
-            </div>
-
-            <div class="col-md-2 form-group">
-                <a href="{% static 'template_sheets/subjects.xlsx' %}" class="text text-white btn btn-primary"><i
-                        class="bi bi-save"></i> Download template</a>
+        <div class="row">
+            <div class="col-md-4 col-xs-12 col-sm-12">
+                <div class="form-group">
+                    <input value="{{house}}" pattern="([A-Za-z0-9]{1,}\s?){1,}" type="text" class="form-control"
+                        id="house" placeholder="Name of the house" name="house" {% if editing %} readonly {% endif %} required>
+                    <div class="invalid-feedback">Name is required. It must be alphanumeric.</div>
+                </div>
             </div>
         </div>
+
+        <hr>
+        <div class="col-md-4 col-xs-12 col-sm-12">
+            <div class="form-group">
+                <label for="staff_id">House Master</label>
+                <select class="form-control" name="staff_id" id="staff_id" required>
+                    <option value="">Select house master</option>
+                    {% for teacher in teachers %}
+                    <option value="{{teacher.staff_id}}" {% if teacher == house_master.staff %} selected {% endif %}>
+                        {{teacher.get_full_name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
         <p class="text text-right">
             <button class="btn btn-info" type="submit">Submit</button>
         </p>
@@ -65,6 +71,7 @@
 
 <!-- Validation script -->
 {% block scripts %}
+{% load static %}
 <script src="{% static 'js/student_app.js' %}"></script>
 
 <script>

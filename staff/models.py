@@ -44,6 +44,10 @@ class HouseMaster(models.Model):
         "Staff", related_name="housemaster", on_delete=models.CASCADE)
     house = models.CharField(max_length=50)
 
+    @property
+    def house_master(self):
+        return self.staff.get_full_name()
+
     def save(self, *args, **kwargs):
         self.house = self.house.title()
         super(HouseMaster, self).save(*args, **kwargs)
