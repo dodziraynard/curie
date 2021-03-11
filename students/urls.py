@@ -3,13 +3,14 @@ from . import views
 
 app_name = "students"
 urlpatterns = [
-     # Url patterns for classes
+     # Url patterns for students
      path("", views.students, name="students"),
      path("new-student", views.new_student, name="new_student"),
      path("new-student-sheet", views.new_student_sheet, name="new_student_sheet"),
      path("student-edit/<str:student_id>", views.edit_student, name="edit_student"),
      path("delete-student", views.delete_student, name="delete_student"),
      path("student-detail/<str:student_id>", views.student_detail, name="student_detail"),
+     path("promotion", views.promotion, name="promotion"),
 
      # Url patterns for classes
      path("classes", views.classes, name="classes"),

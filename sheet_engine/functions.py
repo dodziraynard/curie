@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 def insert_subjects(url):
     try:
         data = pd.read_excel(url, sheet_name="subjects",
-                             skiprows=SHEET_SKIP_ROWS)
+                             skiprows=SHEET_SKIP_ROWS,  dtype = str)
         df = pd.DataFrame(data)
         for index, row in df.iterrows():
             is_elective = 'y' in row['IS_ELECTIVE(Y/N)'].lower()
@@ -43,7 +43,7 @@ def insert_subjects(url):
 def insert_courses(url):
     try:
         data = pd.read_excel(url, sheet_name="courses",
-                             skiprows=SHEET_SKIP_ROWS)
+                             skiprows=SHEET_SKIP_ROWS,  dtype = str)
         df = pd.DataFrame(data)
         for index, row in df.iterrows():
             subjects = Subject.objects.filter(
@@ -66,7 +66,7 @@ def insert_courses(url):
 def insert_staff(url):
     try:
         data = pd.read_excel(url, sheet_name="staff",
-                             skiprows=SHEET_SKIP_ROWS)
+                             skiprows=SHEET_SKIP_ROWS,  dtype = str)
         df = pd.DataFrame(data)
         for index, row in df.iterrows():
             staff, created = Staff.objects.get_or_create(
@@ -88,7 +88,7 @@ def insert_staff(url):
 def insert_classes(url):
     try:
         data = pd.read_excel(url, sheet_name="classes",
-                             skiprows=SHEET_SKIP_ROWS)
+                             skiprows=SHEET_SKIP_ROWS,  dtype = str)
         df = pd.DataFrame(data)
         for index, row in df.iterrows():
             course = Course.objects.get(course_id=row['COURSE_ID'])
@@ -115,7 +115,7 @@ def insert_classes(url):
 def insert_students(url):
     try:
         data = pd.read_excel(url, sheet_name="students",
-                             skiprows=SHEET_SKIP_ROWS)
+                             skiprows=SHEET_SKIP_ROWS,  dtype = str)
         df = pd.DataFrame(data)
         for index, row in df.iterrows():
             student_id = row['STUDENT_ID']
@@ -156,7 +156,7 @@ def insert_students(url):
 def insert_house_masters(url):
     try:
         data = pd.read_excel(url, sheet_name="house_masters",
-                             skiprows=SHEET_SKIP_ROWS)
+                             skiprows=SHEET_SKIP_ROWS,  dtype = str)
         df = pd.DataFrame(data)
         for index, row in df.iterrows():
             staff = Staff.objects.get(staff_id=row["STAFF_ID"])
@@ -171,7 +171,8 @@ def insert_house_masters(url):
     return True
 
 
-def generate_subject_staff_combinations(url="./test_sheets/teacher_subjects.xlsx"):
+def generate_subject_staff_combinations():
+    url = BASE_DIR / "sheet_engine/static/template_sheets/teacher_subjects.xlsx"
     workbook = load_workbook(filename=url)
     worksheet = workbook["teacher_subjects"]
     subjects = Subject.objects.all()
@@ -180,6 +181,10 @@ def generate_subject_staff_combinations(url="./test_sheets/teacher_subjects.xlsx
     for subject in subjects:
         for course in subject.courses.all():
             for klass in course.classes.all():
+                combination = TeacherClassSubjectCombination.objects.filter(
+                    subject = subject,
+                    klass = klass,
+                ).first()
                 worksheet.cell(column=column_index, row=row_index,
                                value=subject.subject_id)
                 worksheet.cell(column=column_index+1,
@@ -188,34 +193,43 @@ def generate_subject_staff_combinations(url="./test_sheets/teacher_subjects.xlsx
                                row=row_index, value=klass.class_id)
                 worksheet.cell(column=column_index+3,
                                row=row_index, value=klass.name)
+                if combination:
+                    worksheet.cell(column=column_index+4,
+                                row=row_index, value=combination.staff.staff_id)
+                    worksheet.cell(column=column_index+5,
+                                row=row_index, value=combination.staff.get_full_name())
                 row_index += 1
-    workbook.save(
-        r"D:\CodeLab\Projects\curie\sheet_engine\generated_sheets\generate_subject_staff_combinations.xlsx")
+    workbook.save(BASE_DIR / "sheet_engine/static/generated_sheets/generate_subject_staff_combinations.xlsx")
+    return "/static/generated_sheets/generate_subject_staff_combinations.xlsx"
+
 
 
 def insert_subject_staff_combination(url):
+    op_index = 0
     try:
         data = pd.read_excel(url, sheet_name="teacher_subjects",
-                             skiprows=SHEET_SKIP_ROWS)
+                             skiprows=SHEET_SKIP_ROWS,  dtype = str)
         df = pd.DataFrame(data)
         for index, row in df.iterrows():
+            op_index = index
             subject = Subject.objects.get(subject_id=row['SUBJECT_ID'])
             klass = Klass.objects.get(class_id=row['CLASS_ID'])
             staff = Staff.objects.get(staff_id=row['STAFF_ID'])
             TeacherClassSubjectCombination.objects.get_or_create(
                 subject=subject, klass=klass, staff=staff)
     except (XLRDError, Subject.DoesNotExist, Klass.DoesNotExist, Staff.DoesNotExist) as e:
-        error_message = f"Row: {index+1}: "+str(e)
+        error_message = f"Row: {op_index+1}: "+str(e)
         return error_message
     except Exception as e:
         log_system_error("insert_subject_staff_combination",
-                         f"Error: Row: {index+1}: "+str(e))
+                         f"Error: Row: {op_index+1}: "+str(e))
         return False
     return True
 
 
 def generate_record_sheet(staff_id, academic_year, semester, form, subject_id):
     url = r"D:\CodeLab\Projects\curie\sheet_engine\test_sheets\academic_records.xlsx"
+    url = BASE_DIR/"sheet_engine/template_sheets/academic_records.xlsx"
     column_index = 1
     row_index = 12
     try:
@@ -242,8 +256,10 @@ def generate_record_sheet(staff_id, academic_year, semester, form, subject_id):
                            value=student.student_id)
             worksheet.cell(column=column_index+6,
                            row=row_index, value=f"{student.surname} {student.other_names}")
-        workbook.save(
-            r"D:\CodeLab\Projects\curie\sheet_engine\generated_sheets\generate_record_sheet.xlsx")
+      
+        workbook.save(BASE_DIR / "sheet_engine/static/generated_sheets/generate_record_sheet.xlsx")   
+        # workbook.save(
+        #     r"D:\CodeLab\Projects\curie\sheet_engine\generated_sheets\generate_record_sheet.xlsx")
     except (XLRDError, Subject.DoesNotExist, Staff.DoesNotExist) as e:
         error_message = f"Row: {index+1}: "+str(e)
         return error_message
@@ -257,7 +273,7 @@ def generate_record_sheet(staff_id, academic_year, semester, form, subject_id):
 def insert_records(url):
     try:
         data = pd.read_excel(url, sheet_name="records",
-                             skiprows=SHEET_SKIP_ROWS)
+                             skiprows=SHEET_SKIP_ROWS,  dtype = str)
         df = pd.DataFrame(data)
         for index, row in df.iterrows():
             subject = Subject.objects.get(subject_id=row["SUBJECT_ID"])
@@ -305,7 +321,7 @@ def generate_teacher_remark_sheet(class_id, academic_year, semester, total_atten
             worksheet.cell(column=column_index+4, row=row_index,
                            value=total_attendance)
         output_url = BASE_DIR / \
-            f"sheet_engine/generated_sheets/{class_id}_{academic_year.replace('/','_')}_{semester}_remarks.xlsx"
+            f"sheet_engine/static/generated_sheets/{class_id}_{academic_year.replace('/','_')}_{semester}_remarks.xlsx"
         workbook.save(output_url)
     except (XLRDError, Klass.DoesNotExist) as e:
         error_message = f"Row: {index+1}: "+str(e)
@@ -320,7 +336,7 @@ def generate_teacher_remark_sheet(class_id, academic_year, semester, total_atten
 def insert_teacher_remarks(url, class_id):
     try:
         data = pd.read_excel(url, sheet_name="class_teacher_remarks",
-                             skiprows=SHEET_SKIP_ROWS)
+                             skiprows=SHEET_SKIP_ROWS,  dtype = str)
         df = pd.DataFrame(data)
         for index, row in df.iterrows():
             student = Student.objects.get(student_id=row['STUDENT_ID'])
@@ -366,7 +382,7 @@ def generate_house_master_remark_sheet(academic_year, semester, house):
             worksheet.cell(column=column_index+3,
                            row=row_index, value=student.get_full_name())
         output_url = BASE_DIR / \
-            f"sheet_engine/generated_sheets/{house}_{academic_year.replace('/','_')}_{semester}_remarks.xlsx"
+            f"sheet_engine/static/generated_sheets/{house}_{academic_year.replace('/','_')}_{semester}_remarks.xlsx"
         workbook.save(output_url)
     except (XLRDError) as e:
         error_message = f"Row: {index+1}: "+str(e)
@@ -381,7 +397,7 @@ def generate_house_master_remark_sheet(academic_year, semester, house):
 def insert_house_master_remarks(url):
     try:
         data = pd.read_excel(url, sheet_name="house_master_remarks",
-                             skiprows=SHEET_SKIP_ROWS)
+                             skiprows=SHEET_SKIP_ROWS,  dtype = str)
         df = pd.DataFrame(data)
         for index, row in df.iterrows():
             student = Student.objects.get(student_id=row['STUDENT_ID'])

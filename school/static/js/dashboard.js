@@ -1,3 +1,5 @@
+'use strict';
+
 // Toggling sidebar.
 const sideBarItems = document.querySelectorAll(".side-bar-item")
 const navBarItems = document.querySelectorAll(".nav-item")
@@ -34,3 +36,4 @@ toggler.addEventListener("click", (e) => {
 // Activate current sidebar element
 const activeId = sidebar.dataset.active
 document.getElementById(activeId).classList.add("active")
+

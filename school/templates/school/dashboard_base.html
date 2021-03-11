@@ -53,7 +53,7 @@
                         <a href="">
                             <div class="drop-item"><i class="bi bi-caret-right"></i> Records</div>
                         </a>
-                        <a href="">
+                        <a href="{% url 'students:promotion' %}">
                             <div class="drop-item"><i class="bi bi-caret-right"></i> Promotion </div>
                         </a>
                         <a href="{% url 'students:new_student' %}">
@@ -75,8 +75,8 @@
                         <a href="">
                             <div class="drop-item"><i class="bi bi-caret-right"></i> Make Request </div>
                         </a>
-                        <a href="">
-                            <div class="drop-item"><i class="bi bi-caret-right"></i> Assign Class</div>
+                        <a href="{% url 'staff:teachers_subjects' %}">
+                            <div class="drop-item"><i class="bi bi-caret-right"></i> Teachers and Their Subjects</div>
                         </a>
                         <a href="{% url 'staff:new_staff' %}">
                             <div class="drop-item"><i class="bi bi-caret-right"></i> New Teacher </div>

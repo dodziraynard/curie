@@ -28,12 +28,23 @@ class Student(models.Model):
     user = models.OneToOneField(
         User, related_name="student", on_delete=models.CASCADE, null=True, blank=True)
     date = models.DateField(default=timezone.now)
-    last_promotion_date = models.DateField(null=True, blank=True)
+    last_promotion_date = models.DateField(default=timezone.now)
     image = models.FileField(
         upload_to="media/images/students", default="/images/avatar.jpg")
 
     def my_class(self):
         return self.klass.name
+    
+    def promote(self):
+        final_form = Klass.objects.order_by("-form").first().form
+        self.last_promotion_date = timezone.now()
+        if self.klass.form >= final_form:
+            self.completed = True
+        else:
+            next_form = self.klass.form + 1
+            next_class = Klass.objects.get(form=next_form, stream=self.klass.stream, course=self.klass.course)
+            self.klass = next_class
+        self.save()
 
     class Meta:
         db_table = "students"
@@ -203,6 +214,16 @@ class TeacherClassSubjectCombination(models.Model):
     
     class Meta:
         db_table = "teacher_class_subject_combination"
+
+    def subject_name(self):
+        return self.subject.name
+
+    def class_name(self):
+        return self.klass.name
+    
+    def teacher(self):
+        return self.staff.get_full_name()
+
 
     def __str__(self):
         if self.subject and self.staff:

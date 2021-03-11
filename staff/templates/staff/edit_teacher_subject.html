@@ -1,0 +1,101 @@
+{% extends 'school/dashboard_base.html' %}
+
+{% block title %}Teachers and Their Subjects{% endblock %}
+{% block active_sidebar %}staff{% endblock %}
+
+
+{% block content %}
+<h4>Teachers and Their Subjects</h4>
+<div class="link-nav">
+    <a href="/">Home &ThinSpace;</a>
+    <a>> Teachers and Their Subjects</a>
+</div>
+<br>
+
+<div class="bg-white col-md-12 rounded p-1">
+    <header class="p-2 d-flex justify-content-between">
+        <h6><i class="bi bi-list-stars"></i> Edit Combination</h6>
+    </header>
+
+    <form action="" class="needs-validation" method="POST" novalidate enctype="multipart/form-data">
+        <input type="hidden" name="editing" value="{{editing}}">
+        {% if request.message %}
+        <div class="col-md-7 mx-auto alert alert-info alert-dismissible fade show" role="alert">
+            <strong>Info!</strong> {{request.message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endif %}
+
+        {% if request.error_message %}
+        <div class="col-md-7 mx-auto alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error! </strong> {{request.error_message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endif %}
+        {% csrf_token %}
+
+        <hr>
+        <div class="form-group row mx-4">
+            <div class="col-md-3">
+                <label for="file">Subject</label>
+                <selec class="form-control" disabled="disabled">
+                    <option value="{{teacher_subject.subject.name}}">{{teacher_subject.subject.name}}</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="file">Class</label>
+                <selec class="form-control" disabled="disabled">
+                    <option value="{{teacher_subject.klass.name}}">{{teacher_subject.klass.name}}</option>
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label for="staff_id">Teacher</label>
+                <select class="form-control" name="staff_id" id="staff_id">
+                    {% for teacher in teachers %}
+                    <option {% if teacher.staff_id == teacher_subject.staff.staff_id %} selected {% endif %}  value="{{teacher.staff_id}}" >
+                        {{teacher.get_full_name}}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group mx-4">
+            <p class="text text-right">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </p>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% load static %}
+<script src="{% static 'js/student_app.js' %}"></script>
+
+<script>
+
+    // Bootstrap form validation
+    (function () {
+        window.addEventListener('load', function () {
+            // Get the forms we want to add validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
+{% endblock %}

@@ -11,4 +11,5 @@ urlpatterns = [
     path("classes", api.ListClassesAPI.as_view()),
     path("courses", api.ListCoursesAPI.as_view()),
     path("house-masters", api.LisHouseMastersAPI.as_view()),
+    path("teachers-subjects", api.TeacherClassSubjectCombinationsAPI.as_view()),
 ]

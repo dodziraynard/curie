@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from students.models import Student, Klass, Subject, Course
+from students.models import Student, Klass, Subject, Course, TeacherClassSubjectCombination
 from staff.models import Staff, HouseMaster
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -52,10 +52,16 @@ class ListCoursesAPI(APIView):
         data = CourseSerializer(courses, many=True).data
         return Response({"courses": data})
 
-
         
 class LisHouseMastersAPI(APIView):
     def get(self, request):
         house_masters = HouseMaster.objects.all()
         data = HouseMasterSerializer(house_masters, many=True).data
         return Response({"house_masters": data})
+
+
+class TeacherClassSubjectCombinationsAPI(APIView):
+    def get(self, request):
+        teachers_subjects = TeacherClassSubjectCombination.objects.all()
+        data = TeacherClassSubjectCombinationSerializer(teachers_subjects, many=True).data
+        return Response({"teachers_subjects": data})

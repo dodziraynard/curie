@@ -21,5 +21,17 @@ const getSubjectsForClass = (element) => {
             alert("Unknown error occured.")
         }
     });
-
 }
+
+
+document.querySelector("#all_classes")?.addEventListener("change", (e) => {
+    if (e.target.checked) {
+        $("#promotion-class").slideUp(500, function () {
+            $("#promotion-class").slideUp(500);
+        });
+    } else{
+        $("#promotion-class").slideDown(500, function () {
+            $("#promotion-class").slideDown(500);
+        });
+    }
+})

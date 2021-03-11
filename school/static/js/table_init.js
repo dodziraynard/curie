@@ -195,6 +195,31 @@ const loadHouseMastersIntoTable = () => {
 }
 
 
+const loadTeahcerSubjectsIntoTable = () => {
+    $('#teacher_subject_table')?.DataTable({
+        ajax: {
+            url: "/ajax/teachers-subjects",
+            dataSrc: 'teachers_subjects'
+        },
+        columns: [
+            {
+                data: 'id',
+                render: (data, type) => {
+                    return `<a class="badge badge-primary text text-white" href='/staff/teachers-subjects-edit/${data}'>
+                                <i class="bi bi-pencil"></i> 
+                            </a>
+                            <span class="badge badge-primary text text-white" onClick="deleteTeacherSubject('${data}')">
+                                <i class="bi bi-trash"></i> 
+                            </span> `
+                }
+            },
+            { data: 'id' },
+            { data: 'subject_name' },
+            { data: 'class_name' },
+            { data: 'teacher'}
+        ]
+    });
+}
 
 // Load tables when page is done loading.
 $(document).ready(() => {
@@ -204,6 +229,7 @@ $(document).ready(() => {
     loadSubjectsIntoTable()
     loadCoursesIntoTable()
     loadHouseMastersIntoTable()
+    loadTeahcerSubjectsIntoTable()
 });
 
 const deleteStudent = (student_id) => {
@@ -241,3 +267,10 @@ const deleteHouseMaster = (house) => {
     document.querySelector('#span_house_master_id').innerText = house
     $('#delete-house-master-modal').modal('show')
 }
+
+const deleteTeacherSubject = (id) => {
+    document.querySelector('#input_id').value = id
+    $('#delete-teacher-subject-modal').modal('show')
+}
+
+

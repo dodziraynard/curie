@@ -3,7 +3,10 @@ from staff.models import Staff
 from sheet_engine.functions import *
 from django.db.utils import IntegrityError
 from logger.utils import log_system_error
-
+from sheet_engine.functions import (generate_subject_staff_combinations,
+                                    insert_subject_staff_combination,
+                            )
+from students.models import TeacherClassSubjectCombination
 
 def staff(request):
     template_name = "staff/staff.html"
@@ -107,3 +110,51 @@ def staff_detail(request, staff_id):
         "staff": staff
     }
     return render(request, template_name, context)
+
+def teachers_subjects(request):
+    template_name = "staff/teachers_subjects.html"
+    if request.method == "GET":
+        url = generate_subject_staff_combinations()
+        context = {
+            "url":url,
+        }
+        return render(request, template_name, context)
+    elif request.method == "POST":
+        file = request.FILES.get("file")
+        if not file:
+            request.session["error_message"] = "No file selected."
+            return redirect("staff:teachers_subjects")
+
+        res = insert_subject_staff_combination(file.file)
+        if isinstance(res, str):
+            request.session["error_message"] = res
+        elif res == False:
+            request.session['error_message'] = "Something went wrong. We will fix it."
+        else:
+            request.session["message"] = "Records updated successfully."
+        return redirect("staff:teachers_subjects")
+
+def edit_teacher_subject(request, id):
+    template_name = "staff/edit_teacher_subject.html"
+    teacher_subject = get_object_or_404(TeacherClassSubjectCombination, id=id)
+    teachers = Staff.objects.filter(has_left=False)
+    context = {
+        "teacher_subject":teacher_subject,
+        'teachers':teachers
+    }
+    if request.method == "GET":
+        return render(request, template_name, context)
+    elif request.method == "POST":
+        staff_id = request.POST.get("staff_id")
+        staff = get_object_or_404(Staff, staff_id=staff_id)
+        teacher_subject.staff = staff
+        teacher_subject.save()
+        request.session['message'] = "Update successful."
+        return redirect("staff:teachers_subjects")
+
+    
+
+def delete_teacher_subject(request):
+    id = request.POST.get("id")
+    TeacherClassSubjectCombination.objects.filter(id=id).delete()
+    return redirect("staff:teachers_subjects")

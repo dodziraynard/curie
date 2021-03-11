@@ -5,6 +5,9 @@ from sheet_engine.functions import *
 from django.db.models import Q
 from django.db.utils import IntegrityError
 from logger.utils import log_system_error
+from asgiref.sync import sync_to_async
+from . utils import promote_students
+import asyncio
 
 
 def students(request):
@@ -514,3 +517,24 @@ def house_master_detail(request, house_master_id):
         "electives": house_master.subjects.filter(is_elective=True),
     }
     return render(request, template_name, context)
+
+
+async def promotion(request):
+    template_name = "students/promotion.html"
+    if request.method == "GET":
+        order_by = await sync_to_async(Student.objects.order_by)("-last_promotion_date")
+        student = await sync_to_async(order_by.first)()
+        context = {
+            "promotion_year": int(str(student.last_promotion_date).split("-")[0]) + 1,
+        }
+        return render(request, template_name, context)
+    else:
+        promotion_year = request.POST.get("promotion_year")
+        loop = asyncio.get_event_loop()
+        loop.create_task(sync_to_async(promote_students)(promotion_year))
+
+        students = await sync_to_async(Student.objects.filter)(last_promotion_date__year__lt=promotion_year, completed=False)
+        student_count = await sync_to_async(students.count)()
+
+        request.session["message"] = f"Promotion tasks initiated. {student_count} students are affected."
+        return redirect("students:promotion")

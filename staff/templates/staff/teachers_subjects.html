@@ -1,0 +1,122 @@
+{% extends 'school/dashboard_base.html' %}
+
+{% block title %}Teachers and Their Subjects{% endblock %}
+{% block active_sidebar %}staff{% endblock %}
+
+
+{% block content %}
+<h4>Teachers and Their Subjects</h4>
+<div class="link-nav">
+    <a href="/">Home &ThinSpace;</a>
+    <a>> Teachers and Their Subjects</a>
+</div>
+<br>
+
+<div class="bg-white col-md-12 rounded p-1">
+    <header class="p-2 d-flex justify-content-between">
+        <h6><i class="bi bi-list-stars"></i> Teachers and Their Subjects</h6>
+        <p class="text text-right">
+            <a href="{{url}}" class="btn btn-success text text-white"><i class="bi bi-download"></i> Template</a>
+        </p>
+    </header>
+
+    {% if request.message %}
+    <div class="col-md-7 mx-auto alert alert-info alert-dismissible fade show" role="alert">
+        <strong>Info!</strong> {{request.message}}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endif %}
+
+    {% if request.error_message %}
+    <div class="col-md-7 mx-auto alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Error! </strong> {{request.error_message}}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endif %}
+
+    
+    <div style="width: 70vw; overflow-x: auto; margin: auto;">
+        <table id="teacher_subject_table" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Actions</th>
+                    <th>ID</th>
+                    <th>Subject</th>
+                    <th>Class</th>
+                    <th>Teacher</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <form action="{% url 'staff:teachers_subjects' %}" class="needs-validation" method="POST" novalidate enctype="multipart/form-data">
+        {% csrf_token %}
+        <hr>
+        <div class="form-group mx-4">
+            <label for="file">Upload New Sheet to Update.</label>
+            <input class="form-control" type="file" name="file" id="file" required>
+            <div class="invalid-feedback">Please choose file to upload.</div>
+        </div>
+
+        <div class="form-group mx-4">
+            <p class="text text-right">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </p>
+        </div>
+    </form>
+</div>
+
+
+
+<!-- Deletion Modal -->
+<div class="modal fade" id="delete-teacher-subject-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-sm bg-danger">
+        <div class="modal-content bg-danger p-2">
+            <form action="{% url 'staff:delete_teacher_subject' %}" method="post">
+                {% csrf_token %}
+                <h4 class="text text-white text-center"><i class="bi bi-trash"></i> Delete?</h4>
+                <input name="id" id="input_id" type="hidden" required>
+                <p class="text text-white text-center m-0 p-0">Comfirm Deletion</p>
+                <div class="form-group mt-3">
+                    <p class="text text-center">
+                        <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> Delete.</button>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% load static %}
+<script src="{% static 'js/student_app.js' %}"></script>
+
+<script>
+
+    // Bootstrap form validation
+    (function () {
+        window.addEventListener('load', function () {
+            // Get the forms we want to add validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
+{% endblock %}
