@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from students.models import Student, Subject, Klass, Course, TeacherClassSubjectCombination
+from students.models import *
 from staff.models import Staff, HouseMaster
 
 
@@ -49,3 +49,8 @@ class TeacherClassSubjectCombinationSerializer(serializers.ModelSerializer):
     class Meta:
         model = TeacherClassSubjectCombination
         fields = ["id", "subject_name", "class_name", 'teacher']
+
+class GradingSystemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GradingSystem
+        fields = "__all__"

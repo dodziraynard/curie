@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from students.models import Student, Klass, Subject, Course, TeacherClassSubjectCombination
+from students.models import *
 from staff.models import Staff, HouseMaster
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -75,4 +75,10 @@ class ListSubjectsOfATeacher(APIView):
         data = TeacherClassSubjectCombinationSerializer(teaches, many=True).data
         return Response({"subjects": data})
 
-        
+
+
+class GradingSystemAPI(APIView):
+    def get(self, request):
+        grading_systems =  GradingSystem.objects.all()
+        data = GradingSystemSerializer(grading_systems, many=True).data
+        return Response({"grading_systems": data})

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
-from students.models import Student, Klass, Subject, Course
+from students.models import Student, Klass, Subject, Course, GradingSystem
 from staff.models import Staff, HouseMaster
 from sheet_engine.functions import *
 from django.db.models import Q
@@ -642,3 +642,50 @@ def edit_record(request):
             record.save()        
         request.session['message'] = f"{len(record_dict)} Records updated."
         return redirect(request.META.get("HTTP_REFERER"))
+
+
+# Grading system views
+
+def grading_systems(request):
+    template_name = "grading_systems/grading_systems.html"
+    return render(request, template_name)
+
+
+def new_grading_system(request):
+    template_name = "grading_systems/new_grading_system.html"
+    if request.method == "GET":
+        return render(request, template_name)
+
+    elif request.method == "POST":
+        post_data = request.POST.copy()
+        post_data.pop("csrfmiddlewaretoken")
+
+        # Is the grading_system info being edited?
+        editing = post_data.pop("editing")[0]
+
+        grading_system_data = {k: v.strip() for k, v in post_data.items()}
+        id = grading_system_data.pop("id")
+        
+        if editing:
+            GradingSystem.objects.filter(id=id).update(**grading_system_data)
+        else:
+            GradingSystem.objects.get_or_create(**grading_system_data)
+        return redirect("students:grading_systems")
+
+def edit_grading_system(request, id):
+    template_name = "grading_systems/new_grading_system.html"
+    system = GradingSystem.objects.values().get(id=id)
+    context = {**system}
+    context.update({
+        "editing": True,
+    })
+    return render(request, template_name, context)
+
+def delete_grading_system(request):
+    grading_system_id = request.POST.get("grading_system_id")
+    if not grading_system_id:
+        request.session["error_message"] = "No grading_system ID found."
+        return redirect("students:grading_systems")
+    GradingSystem.objects.filter(id=grading_system_id).delete()
+    request.session["message"] = "Deleted successfully"
+    return redirect("students:grading_systems")

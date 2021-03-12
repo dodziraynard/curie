@@ -49,4 +49,16 @@ urlpatterns = [
      path("download-generated-record-sheet", views.download_generated_record_sheet, name="download_generated_record_sheet"),
      path("upload-record-sheet", views.upload_record_sheet, name="upload_record_sheet"),
      path("edit-record", views.edit_record, name="edit_record"),
+     
+     # Url patterns for grading systems
+     path("grading-systems", views.grading_systems, name="grading_systems"),
+     path("new-grading-system", views.new_grading_system, name="new_grading_system"),
+     path("grading-system-edit/<int:id>", views.edit_grading_system, name="edit_grading_system"),
+     path("delete-grading-system", views.delete_grading_system, name="delete_grading_system"),
 ]
+
+
+
+
+
+

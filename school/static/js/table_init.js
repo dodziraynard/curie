@@ -15,7 +15,7 @@ const loadStudentsIntoTable = () => {
                             <a class="badge badge-primary text text-white" href='/students/student-detail/${data}'>
                                 <i class="bi bi-eye"></i> 
                             </a> 
-                            <span class="badge badge-danger text text-white" onClick="deleteStudent('${data}')">
+                            <span class="badge badgedanger text text-white" onClick="deleteStudent('${data}')">
                                 <i class="bi bi-trash"></i> 
                             </span> `
                 }
@@ -47,7 +47,7 @@ const loadTeachersIntoTable = () => {
                             <a class="badge badge-primary text text-white" href='/staff/staff-detail/${data}'>
                                 <i class="bi bi-eye"></i> 
                             </a> 
-                            <span class="badge badge-primary text text-white" onClick="deleteStaff('${data}')">
+                            <span class="badge badge-danger text text-white" onClick="deleteStaff('${data}')">
                                 <i class="bi bi-trash"></i> 
                             </a> `
                 }
@@ -80,7 +80,7 @@ const loadClassesIntoTable = () => {
                             <a class="badge badge-primary text text-white" href='/students/class-detail/${data}'>
                                 <i class="bi bi-eye"></i> 
                             </a> 
-                            <span class="badge badge-primary text text-white" onClick="deleteClass('${data}')">
+                            <span class="badge badge-danger text text-white" onClick="deleteClass('${data}')">
                                 <i class="bi bi-trash"></i> 
                             </span> `
                 }
@@ -112,7 +112,7 @@ const loadSubjectsIntoTable = () => {
                             <a class="badge badge-primary text text-white" href='/students/subject-detail/${data}'>
                                 <i class="bi bi-eye"></i> 
                             </a> 
-                            <span class="badge badge-primary text text-white" onClick="deleteSubject('${data}')">
+                            <span class="badge badge-danger text text-white" onClick="deleteSubject('${data}')">
                                 <i class="bi bi-trash"></i> 
                             </span> `
                 }
@@ -143,7 +143,7 @@ const loadCoursesIntoTable = () => {
                             <a class="badge badge-primary text text-white" href='/students/course-detail/${data}'>
                                 <i class="bi bi-eye"></i> 
                             </a> 
-                            <span class="badge badge-primary text text-white" onClick="deleteCourse('${data}')">
+                            <span class="badge badge-danger text text-white" onClick="deleteCourse('${data}')">
                                 <i class="bi bi-trash"></i> 
                             </span> `
                 }
@@ -182,7 +182,7 @@ const loadHouseMastersIntoTable = () => {
                             <a class="badge badge-primary text text-white" href='/students/house-master-detail/${data}'>
                                 <i class="bi bi-eye"></i> 
                             </a> 
-                            <span class="badge badge-primary text text-white" onClick="deleteHouseMaster('${data}')">
+                            <span class="badge badge-danger text text-white" onClick="deleteHouseMaster('${data}')">
                                 <i class="bi bi-trash"></i> 
                             </span> `
                 }
@@ -195,7 +195,7 @@ const loadHouseMastersIntoTable = () => {
 }
 
 
-const loadTeahcerSubjectsIntoTable = () => {
+const loadTeacherSubjectsIntoTable = () => {
     $('#teacher_subject_table')?.DataTable({
         ajax: {
             url: "/ajax/teachers-subjects",
@@ -208,7 +208,7 @@ const loadTeahcerSubjectsIntoTable = () => {
                     return `<a class="badge badge-primary text text-white" href='/staff/teachers-subjects-edit/${data}'>
                                 <i class="bi bi-pencil"></i> 
                             </a>
-                            <span class="badge badge-primary text text-white" onClick="deleteTeacherSubject('${data}')">
+                            <span class="badge badge-danger text text-white" onClick="deleteTeacherSubject('${data}')">
                                 <i class="bi bi-trash"></i> 
                             </span> `
                 }
@@ -221,6 +221,33 @@ const loadTeahcerSubjectsIntoTable = () => {
     });
 }
 
+
+const loadGradingSystemsIntoTable = () => {
+    $('#grading_system_table')?.DataTable({
+        ajax: {
+            url: "/ajax/grading-systems",
+            dataSrc: 'grading_systems'
+        },
+        columns: [
+            {
+                data: 'id',
+                render: (data, type) => {
+                    return `<a class="badge badge-primary text text-white" href='/students/grading-system-edit/${data}'>
+                                <i class="bi bi-pencil"></i> 
+                            </a>
+                            <span class="badge badge-danger text text-white" onClick="deleteGradingSytem('${data}')">
+                                <i class="bi bi-trash"></i> 
+                            </span> `
+                }
+            },
+            { data: 'id' },
+            { data: 'min_score' },
+            { data: 'grade' },
+            { data: 'remark'}
+        ]
+    });
+}
+
 // Load tables when page is done loading.
 $(document).ready(() => {
     loadStudentsIntoTable()
@@ -229,9 +256,11 @@ $(document).ready(() => {
     loadSubjectsIntoTable()
     loadCoursesIntoTable()
     loadHouseMastersIntoTable()
-    loadTeahcerSubjectsIntoTable()
+    loadTeacherSubjectsIntoTable()
 
     $('#edit_record_table').DataTable();
+
+    loadGradingSystemsIntoTable()
 });
 
 const deleteStudent = (student_id) => {
@@ -275,4 +304,7 @@ const deleteTeacherSubject = (id) => {
     $('#delete-teacher-subject-modal').modal('show')
 }
 
-
+const deleteGradingSytem = (id) => {
+    document.querySelector('#input_grading_system_id').value = id
+    $('#delete-grading-system-modal').modal('show')
+}

@@ -72,9 +72,6 @@
                         <a href="{% url 'staff:staff' %}">
                             <div class="drop-item"><i class="bi bi-caret-right"></i> All Teachers </div>
                         </a>
-                        <a href="">
-                            <div class="drop-item"><i class="bi bi-caret-right"></i> Make Request </div>
-                        </a>
                         <a href="{% url 'staff:teachers_subjects' %}">
                             <div class="drop-item"><i class="bi bi-caret-right"></i> Teachers and Their Subjects</div>
                         </a>
@@ -132,10 +129,10 @@
                     </div>
                 </div>
 
-                <div class="side-bar-item" id="grading-system">
+                <div class="side-bar-item" id="grading-systems">
                     <div class="item">
                         <div class="icon mr-2"><i class="bi bi-patch-check"></i></div>
-                        <div class="title"><a href="">Grading System</a></div>
+                        <div class="title"><a href="{% url 'students:grading_systems' %}">Grading System</a></div>
                     </div>
                 </div>
 
