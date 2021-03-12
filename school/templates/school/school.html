@@ -1,0 +1,125 @@
+{% extends 'school/dashboard_base.html' %}
+
+{% block title %}School{% endblock %}
+{% block active_sidebar %}my-school{% endblock %}
+
+
+{% block content %}
+<h4>School</h4>
+<div class="link-nav">
+    <a href="/">Home &ThinSpace;</a>
+    <a>> Update School Info</a>
+</div>
+<br>
+
+<div class="bg-white col-md-12 rounded p-1">
+    <header class="p-2 d-flex justify-content-between">
+        <h6><i class="bi bi-list-stars"></i> Update School Info</h6>
+    </header>
+
+    <form action="" class="needs-validation" method="POST" novalidate>
+        {% if error_message %}
+        <div class="col-md-7 mx-auto alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error!</strong> {{error_message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endif %}
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-7 col-xs-12 col-sm-12">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input value="{{request.school.name}}" type="text" id="name"
+                        class="form-control" placeholder="School Name" name="name" pattern="([A-Za-z0-9]{1,}\s?){1,}"
+                        required>
+                    <div class="invalid-feedback">School Name is required. It must be alphanumeric.</div>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-xs-12 col-sm-12">
+                <div class="form-group">
+                    <label for="code">Short Name</label>
+                    <input value="{{request.school.code}}" pattern="[A-Za-z0-9]{1,}" type="text" class="form-control"
+                        id="code" placeholder="School Code" name="code" required>
+                    <div class="invalid-feedback">School Code is required. It must be alphanumeric.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-7 col-xs-12 col-sm-12">
+                <div class="form-group">
+                    <label for="sms_api_key">SMS Key</label>
+                    <input value="{{request.school.sms_api_key}}" type="text" class="form-control"
+                        id="sms_api_key" placeholder="SMS API Key" name="sms_api_key" required>
+                    <div class="invalid-feedback">API Key is required.</div>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-xs-12 col-sm-12">
+                <div class="form-group">
+                    <label for="sender_id">SMS Sender ID</label>
+                    <input value="{{request.school.sender_id}}" type="text" id="sender_id"
+                        class="form-control" placeholder="SMS Sender ID" name="sender_id" pattern="([A-Za-z0-9]{1,}\s?){1,11}"
+                        required>
+                    <div class="invalid-feedback">This is required and must not be more than 11 characters.</div>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+        <div class="row">
+            <div class="col-md-7 col-xs-12 col-sm-12">
+                <div class="form-group">
+                    <label for="sms_api_key">Current Academic Year</label>
+                    <input value="{{request.school.current_academic_year}}" type="text" class="form-control"
+                        id="current_academic_year" placeholder="Current Academic Year" name="current_academic_year" required>
+                    <div class="invalid-feedback">Current Academic Year is required.</div>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-xs-12 col-sm-12">
+                <div class="form-group">
+                    <label for="sms_api_key">Current Semester</label>
+                    <input value="{{request.school.current_semester}}" type="text" id="current_semester"
+                        class="form-control" placeholder="Current Semester" name="current_semester" pattern="[1-9]{1}"
+                        required>
+                    <div class="invalid-feedback">Please enter a digit.</div>
+                </div>
+            </div>
+        </div>
+
+        <p class="text text-right">
+            <button class="btn btn-info" type="submit">Submit</button>
+        </p>
+    </form>
+</div>
+{% endblock %}
+
+<!-- Validation script -->
+{% block scripts %}
+{% load static %}
+<script src="{% static 'js/student_app.js' %}"></script>
+
+<script>
+    (function () {
+        'use strict';
+        window.addEventListener('load', function () {
+            // Get the forms we want to add validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
+{% endblock %}

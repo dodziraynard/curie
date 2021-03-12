@@ -92,39 +92,13 @@
             </div>
 
             <div class="my-4">
-                <form action="" method="POST">
+                <form id="update-record-form" action="" method="POST">
                     {% csrf_token %}
                     <textarea class="d-none" name="record_data" id="record_data"></textarea>
                     <button id="export-btn" class="btn btn-primary">Update</button>
                 </form>
             </div>
         </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     </div>
     {% endblock %}
@@ -134,13 +108,9 @@
     <script src="{% static 'js/student_app.js' %}"></script>
 
     <script>
-
-
         var $TABLE = $('#table');
         var $BTN = $('#export-btn');
         var $EXPORT_DATA = $('#record_data');
-
-
 
         $('.table-add').click(function () {
             var $clone = $TABLE.find('tr.hide').clone(true).removeClass('hide table-line');
@@ -189,29 +159,16 @@
                 data.push(h);
             });
 
-            // Enter the data into the textarea.
-            $EXPORT_DATA.text(JSON.stringify(data));
+            if (!data[0].id.includes("No data available in table")) {
+                // Enter the data into the textarea.            
+                $EXPORT_DATA.text(JSON.stringify(data))
+            }
         });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        $("#update-record-form").submit((e) => {
+            if ($EXPORT_DATA.text() === "")
+                e.preventDefault()
+        })
 
     </script>
     {% endblock %}

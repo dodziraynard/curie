@@ -73,7 +73,7 @@
                             <div class="drop-item"><i class="bi bi-caret-right"></i> All Teachers </div>
                         </a>
                         <a href="{% url 'staff:teachers_subjects' %}">
-                            <div class="drop-item"><i class="bi bi-caret-right"></i> Teachers and Their Subjects</div>
+                            <div class="drop-item"><i class="bi bi-caret-right"></i> Subject Mappings</div>
                         </a>
                         <a href="{% url 'staff:new_staff' %}">
                             <div class="drop-item"><i class="bi bi-caret-right"></i> New Teacher </div>
@@ -193,7 +193,7 @@
                 </div>
 
                 <div class="side-bar-item" id="my-school">
-                    <a href="">
+                    <a href="{% url 'school:school' %}">
                         <div class="item">
                             <div class="icon mr-2"><i class="bi bi-pencil-square"></i></div>
                             <div class="title">My School</div>
