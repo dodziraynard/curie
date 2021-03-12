@@ -1,0 +1,40 @@
+{% extends 'school/dashboard_base.html' %}
+
+{% block title %}Student Records{% endblock %}
+{% block active_sidebar %}students{% endblock %}
+
+
+{% block content %}
+<h4>Records</h4>
+<div class="link-nav">
+    <a href="/">Home &ThinSpace;</a>
+    <a href="{% url 'students:records' %}">> Records</a>
+    <a href="{% url 'students:generate_record_sheet' %}">> Generate Record Sheet</a>
+    <a>> Download Generated Record Sheet</a>
+</div>
+<br>
+
+<div class="bg-white col-md-12 rounded p-1">
+    <header class="p-2 d-flex justify-content-between">
+        <h6><i class="bi bi-list-stars"></i> Download Generated Record Sheet</h6>
+    </header>
+
+    <h6 class="text text-info text text-center">{{student_count}} Students found.</h6>
+
+    <p class="text text-center m-3">
+        <a href="{{download_link}}" class="btn btn-success text text-white"> <i class="bi bi-download"></i> Download</a>
+    </p>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% load static %}
+<script src="{% static 'js/student_app.js' %}"></script>
+
+<script>
+
+
+
+</script>
+{% endblock %}

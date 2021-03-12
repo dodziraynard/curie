@@ -15,7 +15,7 @@ const loadStudentsIntoTable = () => {
                             <a class="badge badge-primary text text-white" href='/students/student-detail/${data}'>
                                 <i class="bi bi-eye"></i> 
                             </a> 
-                            <span class="badge badge-primary text text-white" onClick="deleteStudent('${data}')">
+                            <span class="badge badge-danger text text-white" onClick="deleteStudent('${data}')">
                                 <i class="bi bi-trash"></i> 
                             </span> `
                 }
@@ -230,6 +230,8 @@ $(document).ready(() => {
     loadCoursesIntoTable()
     loadHouseMastersIntoTable()
     loadTeahcerSubjectsIntoTable()
+
+    $('#edit_record_table').DataTable();
 });
 
 const deleteStudent = (student_id) => {

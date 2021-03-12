@@ -42,4 +42,11 @@ urlpatterns = [
      path("delete-house-master", views.delete_house_master, name="delete_house_master"),
      path("house-master-detail/<str:house>", views.house_master_detail, name="house_master_detail"),
      path("house-master-edit/<str:house>", views.edit_house_master, name="edit_house_master"),
+
+     # Url patterns for records
+     path("records", views.records, name="records"),
+     path("generate-record-sheet", views.generate_record_sheet, name="generate_record_sheet"),
+     path("download-generated-record-sheet", views.download_generated_record_sheet, name="download_generated_record_sheet"),
+     path("upload-record-sheet", views.upload_record_sheet, name="upload_record_sheet"),
+     path("edit-record", views.edit_record, name="edit_record"),
 ]

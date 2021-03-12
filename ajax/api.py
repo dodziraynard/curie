@@ -65,3 +65,14 @@ class TeacherClassSubjectCombinationsAPI(APIView):
         teachers_subjects = TeacherClassSubjectCombination.objects.all()
         data = TeacherClassSubjectCombinationSerializer(teachers_subjects, many=True).data
         return Response({"teachers_subjects": data})
+
+class ListSubjectsOfATeacher(APIView):
+    def get(self, request, staff_id):
+        staff = Staff.objects.get(staff_id=staff_id)
+        # teaches = staff.teaches.order_by("subject").distinct("subject")
+        teaches = staff.teaches.order_by("subject").distinct()
+
+        data = TeacherClassSubjectCombinationSerializer(teaches, many=True).data
+        return Response({"subjects": data})
+
+        

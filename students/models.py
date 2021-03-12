@@ -170,6 +170,7 @@ class Record(models.Model):
     class_score = models.IntegerField(default=0, blank=True, null=True)
     total = models.IntegerField(default=0, blank=True, null=True)
     subject = models.ForeignKey("Subject", on_delete=models.PROTECT)
+    staff = models.ForeignKey(Staff, related_name="records", on_delete=models.PROTECT)
     klass = models.ForeignKey("Klass", on_delete=models.SET_NULL, null=True)
     grade = models.CharField(max_length=5, blank=True, null=True)
     remark = models.CharField(max_length=20, blank=True, null=True)

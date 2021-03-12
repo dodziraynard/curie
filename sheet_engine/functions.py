@@ -1,4 +1,5 @@
 import pandas as pd
+import math
 from pathlib import Path
 from django.db.models import Q
 from openpyxl import load_workbook
@@ -113,11 +114,13 @@ def insert_classes(url):
 
 
 def insert_students(url):
+    op_index = 0
     try:
         data = pd.read_excel(url, sheet_name="students",
                              skiprows=SHEET_SKIP_ROWS,  dtype = str)
         df = pd.DataFrame(data)
         for index, row in df.iterrows():
+            op_index = index
             student_id = row['STUDENT_ID']
             klass = Klass.objects.get(class_id=row['CLASS_ID'])
             electives = klass.course.subjects.filter(
@@ -144,11 +147,11 @@ def insert_students(url):
             student.klass = klass
             student.save()
     except (XLRDError, IntegrityError, Subject.DoesNotExist, Klass.DoesNotExist) as e:
-        error_message = f"Error: Student ID: {student_id}: "+str(e)
+        error_message = f"Error: Student ID: {op_index}: "+str(e)
         return error_message
     except Exception as e:
         log_system_error("insert_students",
-                         f"Error: Student ID: {student_id}: "+str(e))
+                         f"Error: Student ID: {op_index}: "+str(e))
         return False
     return True
 
@@ -205,7 +208,7 @@ def generate_subject_staff_combinations():
 
 
 def insert_subject_staff_combination(url):
-    op_index = 0
+    op_index = -1
     try:
         data = pd.read_excel(url, sheet_name="teacher_subjects",
                              skiprows=SHEET_SKIP_ROWS,  dtype = str)
@@ -228,10 +231,10 @@ def insert_subject_staff_combination(url):
 
 
 def generate_record_sheet(staff_id, academic_year, semester, form, subject_id):
-    url = r"D:\CodeLab\Projects\curie\sheet_engine\test_sheets\academic_records.xlsx"
-    url = BASE_DIR/"sheet_engine/template_sheets/academic_records.xlsx"
+    url = BASE_DIR/"sheet_engine/static/template_sheets/academic_records.xlsx"
     column_index = 1
     row_index = 12
+    op_index = -1
     try:
         workbook = load_workbook(filename=url)
         worksheet = workbook["records"]
@@ -240,9 +243,10 @@ def generate_record_sheet(staff_id, academic_year, semester, form, subject_id):
         subject = Subject.objects.get(subject_id=subject_id)
         teaches = staff.teaches.filter(subject=subject, klass__form=form)
         classes = [item.klass for item in teaches]
-        students = Student.objects.filter(klass__in=classes)
+        students = Student.objects.filter(klass__in=classes, completed=False)
+
         for index, student in enumerate(students):
-            row_index += index
+            op_index = index
             worksheet.cell(column=column_index, row=row_index, value=staff_id)
             worksheet.cell(column=column_index+1,
                            row=row_index, value=academic_year)
@@ -256,29 +260,40 @@ def generate_record_sheet(staff_id, academic_year, semester, form, subject_id):
                            value=student.student_id)
             worksheet.cell(column=column_index+6,
                            row=row_index, value=f"{student.surname} {student.other_names}")
-      
-        workbook.save(BASE_DIR / "sheet_engine/static/generated_sheets/generate_record_sheet.xlsx")   
-        # workbook.save(
-        #     r"D:\CodeLab\Projects\curie\sheet_engine\generated_sheets\generate_record_sheet.xlsx")
+            
+            row_index += 1
+            
+        ac_year = str(academic_year).replace("/", "")
+        new_file = f"sheet_engine/static/generated_sheets/{ac_year}_{subject_id}_{form}_{staff_id}_generate_record_sheet.xlsx"
+        workbook.save(BASE_DIR / new_file)   
+        return True, f"/static/generated_sheets/{ac_year}_{subject_id}_{form}_{staff_id}_generate_record_sheet.xlsx", students.count()
+        
     except (XLRDError, Subject.DoesNotExist, Staff.DoesNotExist) as e:
-        error_message = f"Row: {index+1}: "+str(e)
+        error_message = f"Row: {op_index+1}: "+str(e)
         return error_message
     except Exception as e:
         log_system_error("generate_record_sheet",
-                         f"Error: Row: {index+1}: "+str(e))
+                         f"Error: Row: {op_index+1}: "+str(e))
         return False
-    return True
 
 
 def insert_records(url):
+    op_index = -1
     try:
         data = pd.read_excel(url, sheet_name="records",
                              skiprows=SHEET_SKIP_ROWS,  dtype = str)
         df = pd.DataFrame(data)
         for index, row in df.iterrows():
+            op_index = index
             subject = Subject.objects.get(subject_id=row["SUBJECT_ID"])
             student = Student.objects.get(student_id=row["STUDENT_ID"])
             klass = Klass.objects.get(class_id=row["CLASS_ID"])
+
+            subject_teacher = TeacherClassSubjectCombination.objects.get(subject=subject, klass=klass)
+
+            if math.isnan(float(row['EXAM_SCORE'])) or math.isnan(float(row['CLASS_SCORE'])):
+                row['EXAM_SCORE'] = 0
+                row['CLASS_SCORE'] = 0
 
             record, created = Record.objects.get_or_create(
                 academic_year=row['ACADEMIC_YEAR'],
@@ -286,17 +301,20 @@ def insert_records(url):
                 subject=subject,
                 klass=klass,
                 student=student,
+                staff=subject_teacher.staff,
             )
             record.class_score = row['CLASS_SCORE']
             record.exam_score = row['EXAM_SCORE']
             record.save()
+        return True, op_index + 1
+
     except (XLRDError, Subject.DoesNotExist, Student.DoesNotExist, Klass.DoesNotExist) as e:
-        error_message = f"Row: {index+1}: "+str(e)
+        error_message = f"Row: {op_index+1}: "+str(e)
         return error_message
+
     except Exception as e:
-        log_system_error("insert_records", f"Error: Row: {index+1}: "+str(e))
+        log_system_error("insert_records", f"Error: Row: {op_index+1}: "+str(e))
         return False
-    return True
 
 
 def generate_teacher_remark_sheet(class_id, academic_year, semester, total_attendance):

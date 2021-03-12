@@ -7,7 +7,11 @@ from django.db.utils import IntegrityError
 from logger.utils import log_system_error
 from asgiref.sync import sync_to_async
 from . utils import promote_students
+from sheet_engine.functions import (generate_record_sheet as get_record_sheet,
+                                    insert_records,
+                            )
 import asyncio
+import json
 
 
 def students(request):
@@ -538,3 +542,103 @@ async def promotion(request):
 
         request.session["message"] = f"Promotion tasks initiated. {student_count} students are affected."
         return redirect("students:promotion")
+
+def records(request):
+    template_name = "students/records.html"
+    context = {
+        "staff":Staff.objects.filter(has_left=False)
+    }
+    return render(request, template_name, context)
+    
+
+def generate_record_sheet(request):
+    template_name = "students/generate_record_sheet.html"
+    context = {
+        "staff":Staff.objects.filter(has_left=False)
+    }
+    return render(request, template_name, context)
+
+def download_generated_record_sheet(request):
+    template_name = "students/download_generated_record_sheet.html"
+    if request.method == "GET":
+        return redirect("students:generate_record_sheet")
+    else:
+        staff_id  = request.POST.get("staff_id")
+        subject_name = request.POST.get("subject_name")
+        subject = get_object_or_404(Subject, name=subject_name)
+        staff = get_object_or_404(Staff, staff_id=staff_id)
+
+        form = request.POST.get("form")
+        academic_year = request.POST.get("academic_year")
+        semester = request.POST.get("semester")
+        res = get_record_sheet(staff.staff_id, academic_year, semester, form, subject.subject_id)
+        if isinstance(res, tuple) and res[0] == True:
+            request.session['message'] = "Sheet generated successfully."
+            context = {
+                "download_link":res[1],
+                "student_count":res[2]
+            }
+            return render(request, template_name, context)
+        elif isinstance(res, str):
+            request.session['error_message'] = res
+        else:
+            request.session['error_message'] = "Something unexpected happened. We will fix it."
+        return redirect("students:generate_record_sheet")
+
+def upload_record_sheet(request):
+    template_name = "students/upload_record_sheet.html"
+    if request.method == "GET":
+        return render(request, template_name)
+    else:
+        file  = request.FILES.get("file")
+        res = insert_records(file.file)
+        if isinstance(res, tuple) and res[0] == True:
+            request.session['message'] = str(res[1]) + " Records inserted successfully."
+            return redirect("students:upload_record_sheet")
+            
+        elif isinstance(res, str):
+            request.session['error_message'] = res
+        else:
+            request.session['error_message'] = "Something unexpected happened. We will fix it."
+        return redirect("students:upload_record_sheet")
+       
+
+def edit_record(request):
+    template_name = "students/edit_record_data.html"
+    template_name_editable = "students/edit_record.html"
+    if request.method == "GET":
+        staff_id  = request.GET.get("staff_id")
+        if staff_id:
+            subject_name = request.GET.get("subject_name")
+            subject = get_object_or_404(Subject, name=subject_name)
+            staff = get_object_or_404(Staff, staff_id=staff_id)
+
+            form = request.GET.get("form")
+            academic_year = request.GET.get("academic_year")
+            semester = request.GET.get("semester")
+            
+            records = Record.objects.filter(subject=subject,
+                                    klass__form=form,
+                                    academic_year=academic_year,
+                                    semester = semester,
+                                    staff=staff
+                                )
+            context = {"records":records}
+            return render(request, template_name_editable, context)
+
+        context = {"staff":Staff.objects.filter(has_left=False)}
+        return render(request, template_name, context)
+
+    else:
+        record_data  = request.POST.get("record_data").strip()
+        record_dict = json.loads(record_data)
+        for item in record_dict:
+            id = item.get("id")
+            class_score = item.get("class score (100%)")
+            exam_score = item.get("exam score (100%)")
+            record = get_object_or_404(Record, id=id)
+            record.class_score = class_score
+            record.exam_score = exam_score
+            record.save()        
+        request.session['message'] = f"{len(record_dict)} Records updated."
+        return redirect(request.META.get("HTTP_REFERER"))

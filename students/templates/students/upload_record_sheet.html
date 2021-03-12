@@ -1,0 +1,85 @@
+{% extends 'school/dashboard_base.html' %}
+
+{% block title %}Student Records{% endblock %}
+{% block active_sidebar %}students{% endblock %}
+
+
+{% block content %}
+<h4>Records</h4>
+<div class="link-nav">
+    <a href="/">Home &ThinSpace;</a>
+    <a href="{% url 'students:records' %}">> Records</a>
+    <a>> Upload Record Sheet</a>
+</div>
+<br>
+
+<div class="bg-white col-md-12 rounded p-1">
+    <header class="p-2 d-flex justify-content-between">
+        <h6><i class="bi bi-list-stars"></i> Upload Sheet Records</h6>
+    </header>
+
+    <form action="" class="needs-validation {{was_validated}}" method="POST"
+        enctype="multipart/form-data" novalidate>
+        {% if request.error_message %}
+        <div class="col-md-7 mx-auto alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error!</strong> {{request.error_message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endif %}
+
+        {% if request.message %}
+        <div class="col-md-7 mx-auto alert alert-info alert-dismissible fade show" role="alert">
+            <strong>Info!</strong> {{request.message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endif %}
+
+        {% csrf_token %}
+
+        <div class="row col-md-10 col-xs-12 col-sm-12">
+            <div class="col-md-10 my-0 form-group">
+                <p class="text text-info"><i class="bi bi-info"></i> Already existing records will be overwritten</p>
+            </div>
+            <div class="col-md-10 form-group">
+                <input type="file" class="form-control" name="file" accept=".xlsx" required>
+                <div class="invalid-feedback">Excel file containing record data is required.</div>
+            </div>
+
+        </div>
+
+        <p class="text text-right">
+            <button class="btn btn-info" type="submit">Submit</button>
+        </p>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% load static %}
+<script src="{% static 'js/student_app.js' %}"></script>
+
+<script>
+
+    // Bootstrap form validation
+    (function () {
+        window.addEventListener('load', function () {
+            // Get the forms we want to add validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
+{% endblock %}

@@ -32,10 +32,8 @@ class School(models.Model):
     sms_api_key = models.CharField(max_length=200, null=True, blank=True)
     crest = models.FileField(upload_to="uploads/images",
                              default="/assets/images/crest.png")
-    current_semester = models.CharField(
-        max_length=50, default="First Semester")
-    current_academic_year = models.CharField(
-        max_length=20, default="2020/2021")
+    current_semester = models.IntegerField(default="1")
+    current_academic_year = models.CharField(max_length=20, default="2020/2021")
 
     def __str__(self):
         return self.name

@@ -35,3 +35,40 @@ document.querySelector("#all_classes")?.addEventListener("change", (e) => {
         });
     }
 })
+
+const fetchSubjectsByStaff = (element) => {
+    const staffId = element.value;
+    const selector = element.parentElement.parentElement.querySelector("#subject_name")
+    selector.setAttribute("disabled", true)
+    if (staffId === "" || staffId === null) return
+
+    url = `/ajax/subjects-by-teacher/${staffId}`
+    $.get(url, (data, status) => {
+        if (status == "success") {
+            // Putting subjects in a set to remove duplicates.
+            const subjects = new Set()
+            selector.innerHTML = ""
+            for (subject of data.subjects) {
+                subjects.add(subject.subject_name)
+            }
+
+            // Instruction text.
+            const option = document.createElement("option")
+            option.setAttribute("value", "")
+            option.innerText = "Select subjects."
+            selector.append(option)
+
+            // Creating option lists out of the unique subjects.
+            for (subject of subjects) {
+                const option = document.createElement("option")
+                option.setAttribute("value", subject)
+                option.innerText = subject
+                selector.append(option)
+            }
+
+            selector.removeAttribute("disabled")
+        } else {
+            alert("Unknown error occured.")
+        }
+    });
+}
