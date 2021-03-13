@@ -1,0 +1,117 @@
+{% extends 'school/dashboard_base.html' %}
+
+{% block title %}Student Records{% endblock %}
+{% block active_sidebar %}students{% endblock %}
+
+
+{% block content %}
+<h4>Records</h4>
+<div class="link-nav">
+    <a href="/">Home &ThinSpace;</a>
+    <a href="{% url 'students:records' %}">> Records</a>
+    <a>> Generate End of Semester Report</a>
+</div>
+<br>
+
+<div class="bg-white col-md-12 rounded p-1">
+    <header class="p-2 d-flex justify-content-between">
+        <h6><i class="bi bi-list-stars"></i> Records</h6>
+    </header>
+
+    <div class="mx-4 mb-4">
+        <h3>Select class or enter student ID</h3>
+    </div>
+
+    <form action="{% url 'pdf_engine:generate_semester_reports' %}" class="needs-validation" method="POST" novalidate>
+        {% if request.message %}
+        <div class="col-md-7 mx-auto alert alert-info alert-dismissible fade show" role="alert">
+            <strong>Info!</strong> {{request.message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endif %}
+
+        {% if request.error_message %}
+        <div class="col-md-7 mx-auto alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error!</strong> {{request.error_message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endif %}
+
+        {% csrf_token %}
+
+        <div class="row  mx-2">
+            <div class="form-group col-md-6">
+                <label for="academic_year">Academic Year</label>
+                <input class="form-control" pattern="[0-9/]{1,}" placeholder="Academic Year" type="text" name="academic_year"
+                    id="academic_year" required>
+                <div class="invalid-feedback">Please academic year is required.</div>
+            </div>
+
+            <div class="form-group col-md-6">
+                <label for="semester">Semester</label>
+                <input class="form-control" pattern="[1-9]{1}" placeholder="Semester" type="text" name="semester" id="semester" required>
+                <div class="invalid-feedback">Semester is required.</div>
+            </div>
+        </div>
+        <div class="form-group mx-4">
+            <label for="class_id">Generate for a student or a class </label>
+            <select class="form-control" name="class_id" id="class_id" onchange="toggleStudentIdSelection(this)">
+                <option value="">A Student</option>
+                {% for item in classes %}
+                <option value="{{item.class_id}}">{{item.name}}</option>
+                {% endfor %}
+            </select>
+            <div class="invalid-feedback">Please select class.</div>
+        </div>
+
+        <div class="form-group mx-4">
+            <label for="student_id">Student ID</label>
+            <input class="form-control" placeholder="Student ID" type="text" name="student_id" id="student_id" required>
+            <div class="invalid-feedback">Please enter a student ID.</div>
+        </div>
+
+        <p class="text text-right m-2">
+            <button type="submit" class="btn btn-info" type="submit">Generate</button>
+        </p>
+
+    </form>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% load static %}
+<script src="{% static 'js/student_app.js' %}"></script>
+
+<script>
+    const toggleStudentIdSelection = (element) => {
+        if (element.value) {
+            document.querySelector("#student_id").setAttribute("disabled", true)
+        } else {
+            document.querySelector("#student_id").removeAttribute("disabled")
+        }
+    }
+
+    // Bootstrap form validation
+    (function () {
+        window.addEventListener('load', function () {
+            // Get the forms we want to add validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
+{% endblock %}

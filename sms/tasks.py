@@ -1,5 +1,5 @@
 from school.models import School
-from curie.local_settings import SMS_API_KEY
+from curie.settings import SMS_API_KEY
 from celery import shared_task
 import requests
 

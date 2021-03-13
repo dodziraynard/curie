@@ -17,7 +17,7 @@
         <h6><i class="bi bi-list-stars"></i> Update School Info</h6>
     </header>
 
-    <form action="" class="needs-validation" method="POST" novalidate>
+    <form action="" class="needs-validation" method="POST" enctype="multipart/form-data" novalidate>
         {% if error_message %}
         <div class="col-md-7 mx-auto alert alert-danger alert-dismissible fade show" role="alert">
             <strong>Error!</strong> {{error_message}}
@@ -31,9 +31,8 @@
             <div class="col-md-7 col-xs-12 col-sm-12">
                 <div class="form-group">
                     <label for="name">Full Name</label>
-                    <input value="{{request.school.name}}" type="text" id="name"
-                        class="form-control" placeholder="School Name" name="name" pattern="([A-Za-z0-9]{1,}\s?){1,}"
-                        required>
+                    <input value="{{request.school.name}}" type="text" id="name" class="form-control"
+                        placeholder="School Name" name="name" pattern="([A-Za-z0-9]{1,}\s?){1,}" required>
                     <div class="invalid-feedback">School Name is required. It must be alphanumeric.</div>
                 </div>
             </div>
@@ -52,8 +51,8 @@
             <div class="col-md-7 col-xs-12 col-sm-12">
                 <div class="form-group">
                     <label for="sms_api_key">SMS Key</label>
-                    <input value="{{request.school.sms_api_key}}" type="text" class="form-control"
-                        id="sms_api_key" placeholder="SMS API Key" name="sms_api_key" required>
+                    <input value="{{request.school.sms_api_key}}" type="text" class="form-control" id="sms_api_key"
+                        placeholder="SMS API Key" name="sms_api_key" required>
                     <div class="invalid-feedback">API Key is required.</div>
                 </div>
             </div>
@@ -61,9 +60,8 @@
             <div class="col-md-3 col-xs-12 col-sm-12">
                 <div class="form-group">
                     <label for="sender_id">SMS Sender ID</label>
-                    <input value="{{request.school.sender_id}}" type="text" id="sender_id"
-                        class="form-control" placeholder="SMS Sender ID" name="sender_id" pattern="([A-Za-z0-9]{1,}\s?){1,11}"
-                        required>
+                    <input value="{{request.school.sender_id}}" type="text" id="sender_id" class="form-control"
+                        placeholder="SMS Sender ID" name="sender_id" pattern="([A-Za-z0-9]{1,}\s?){1,11}" required>
                     <div class="invalid-feedback">This is required and must not be more than 11 characters.</div>
                 </div>
             </div>
@@ -75,7 +73,8 @@
                 <div class="form-group">
                     <label for="sms_api_key">Current Academic Year</label>
                     <input value="{{request.school.current_academic_year}}" type="text" class="form-control"
-                        id="current_academic_year" placeholder="Current Academic Year" name="current_academic_year" required>
+                        id="current_academic_year" placeholder="Current Academic Year" name="current_academic_year"
+                        required>
                     <div class="invalid-feedback">Current Academic Year is required.</div>
                 </div>
             </div>
@@ -87,6 +86,26 @@
                         class="form-control" placeholder="Current Semester" name="current_semester" pattern="[1-9]{1}"
                         required>
                     <div class="invalid-feedback">Please enter a digit.</div>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+        <div class="row">
+            <div class="col-md-7 col-xs-12 col-sm-12">
+                <div class="form-group">
+                    <label for="crest">Currently: <a
+                            href="{{request.school.crest.url}}">{{request.school.crest.url}}</a></label>
+                    <p class="m-0">
+                        <img src="{{request.school.crest.url}}" alt="crest" height="80">
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-5 col-xs-12 col-sm-12">
+                <div class="form-group">
+                    <label for="crest">Change Crest</label>
+                    <input type="file" id="crest" name="crest" class="form-control">
                 </div>
             </div>
         </div>

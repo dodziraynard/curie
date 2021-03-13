@@ -5,22 +5,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200&family=Redressed&family=Roboto:wght@100&display=swap" rel="stylesheet">    
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
         integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <title>{{student.get_full_name}} - ACADEMIC TRANSCRIPT</title>
 </head>
 
+<style>
+    body{
+        font-family:'Redressed', cursive;
+    }
+</style>
+
 <body>
     {% if error_message %}
     <h3 style="color: red">{{error_message}}</h3>
     {% else %}
+
+    {% if not records %}
+    <h3 style="color: red">No Records found.</h3>
+    {% endif %}
     <div>
+        <div>
         <h3 class="text text-center">GHANA EDUCATION SERVICE</h3>
         <h3 class="text text-center">{{request.school.name|upper}}</h3>
-        <p style="text-align: center; padding: 0; margin: 0"><img src="/assets/images/curie_icon.png" alt="crest"
+        <p style="text-align: center; padding: 0; margin: 0"><img src="{{request.school.crest.url}}" alt="crest"
                 height="150"></p>
+            </div>
+        <h3 class="text text-center mb-0">{{student.get_full_name|upper}}</h3>
+        <p class="text text-center mt-0">{{student.student_id}}</p>
 
-        <h3 class="text text-center">{{student.get_full_name|upper}}</h3>
         <h3 class="text text-center">TRANSCRIPT</h3>
 
         {% for form in forms %}
@@ -39,7 +55,7 @@
                 </thead>
                 <tbody>
                     {% for record in records %}
-                    {% if record.record_class.form == form %}
+                    {% if record.klass.form == form %}
                     {% if record.semester == semester and not record.subject.is_elective %}
                     <tr>
                         <td>

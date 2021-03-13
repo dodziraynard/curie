@@ -11,22 +11,17 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
-from . import local_settings
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+# # Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
+# # Quick-start development settings - unsuitable for production
+# # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = local_settings.SECRET_KEY
+# # SECURITY WARNING: keep the secret key used in production secret!
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = local_settings.DEBUG
-
-ALLOWED_HOSTS = local_settings.ALLOWED_HOSTS
+# # SECURITY WARNING: don't run with debug turned on in production!
 
 
 # Application definition
@@ -90,16 +85,7 @@ WSGI_APPLICATION = 'curie.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': local_settings.DATABASE_ENGINE,
-        'NAME': local_settings.DATABASE_NAME,
-        'USER': local_settings.DATABASE_USER,
-        'PASSWORD': local_settings.DATABASE_PASSWORD,
-        'HOST': local_settings.DATABASE_HOST,
-        'PORT': local_settings.DATABASE_PORT,
-    }
-}
+# DATABASES = settings.DATABASES
 
 
 # Password validation
@@ -150,7 +136,3 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_ROOT = BASE_DIR / 'assets'
 MEDIA_URL = '/assets/'
-
-
-# Celery
-CELERY_BROKER_URL = local_settings.CELERY_BROKER_URL
