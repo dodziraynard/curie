@@ -348,3 +348,12 @@ nav {
     background-color: white;
   }
 }
+
+.max-line-2 {
+  max-width: 30em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* number of lines to show */
+  -webkit-box-orient: vertical;
+}

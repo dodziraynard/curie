@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from students.models import *
+from sms.models import SMS
 from staff.models import Staff, HouseMaster
 
 
@@ -54,3 +55,8 @@ class GradingSystemSerializer(serializers.ModelSerializer):
     class Meta:
         model = GradingSystem
         fields = "__all__"
+
+class SMSSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SMS
+        fields = ['id', 'number', 'message', 'status', 'f_date']

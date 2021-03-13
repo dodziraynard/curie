@@ -3,7 +3,6 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from random import sample
 from . models import Student
-from sms.utils import send_sms_student
 
 
 @receiver(post_save, sender=Student)
@@ -19,10 +18,6 @@ def create_user(sender, instance, created, **kwargs):
         user.first_name = instance.other_names
         user.save()
         instance.save()
-
-        send_sms_student(temporal_pin, instance.sms_number,
-                         instance.student_id)
-
 
 @receiver(post_delete, sender=Student)
 def delete_user(sender, instance, **kwargs):

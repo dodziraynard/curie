@@ -150,13 +150,14 @@ const loadCoursesIntoTable = () => {
             },
             { data: 'course_id' },
             { data: 'name' },
-            { data: 'subjects',
-              render: (data, type) => {
-                  let subjects = ""
-                  for (let subject of data){
-                    if (!subject.is_elective) continue
-                    subjects += `<p class="text m-0">${subject.name} (${subject.subject_id})</p>`
-                  }
+            {
+                data: 'subjects',
+                render: (data, type) => {
+                    let subjects = ""
+                    for (let subject of data) {
+                        if (!subject.is_elective) continue
+                        subjects += `<p class="text m-0">${subject.name} (${subject.subject_id})</p>`
+                    }
                     return subjects
                 }
             }
@@ -189,7 +190,7 @@ const loadHouseMastersIntoTable = () => {
             },
             { data: 'id' },
             { data: 'house' },
-            { data: 'house_master'}
+            { data: 'house_master' }
         ]
     });
 }
@@ -216,7 +217,7 @@ const loadTeacherSubjectsIntoTable = () => {
             { data: 'id' },
             { data: 'subject_name' },
             { data: 'class_name' },
-            { data: 'teacher'}
+            { data: 'teacher' }
         ]
     });
 }
@@ -243,7 +244,51 @@ const loadGradingSystemsIntoTable = () => {
             { data: 'id' },
             { data: 'min_score' },
             { data: 'grade' },
-            { data: 'remark'}
+            { data: 'remark' }
+        ]
+    });
+}
+
+
+const loadSMSMssagesIntoTable = () => {
+    // Load all courses into the table
+    $('#sms_table')?.DataTable({
+        ajax: {
+            url: "/ajax/sms",
+            dataSrc: 'sms'
+        },
+        columns: [
+            {
+                data: 'id',
+                render: (data, type) => {
+                    return `<a class="badge badge-primary text text-white" href='/sms/resend-sms?sms_id=${data}'>
+                                <i class="bi bi-arrow-repeat"></i> 
+                            </a>`
+                }
+            },
+            { data: 'id' },
+            { data: 'number' },
+            {
+                data: 'message',
+                render: (data, type) => {
+                    return `<p class="bg-secondary card p-1 text text-white max-line-2">${data}</p>`
+                }
+            },
+            {
+                data: 'status',
+                render: (data, type) => {
+                    if (data.includes("sent")) {
+                        return `<span class="badge badge-success">${data}</span>`
+                    }
+                    else if (data.includes("pending")) {
+                        return `<span class="badge badge-primary">${data}</span>`
+                    }
+                    else {
+                        return `<span class="badge badge-danger">${data}</span>`
+                    }
+                }
+            },
+            { data: 'f_date' },
         ]
     });
 }
@@ -261,6 +306,7 @@ $(document).ready(() => {
     $('#edit_record_table').DataTable();
 
     loadGradingSystemsIntoTable()
+    loadSMSMssagesIntoTable()
 });
 
 const deleteStudent = (student_id) => {

@@ -1,0 +1,28 @@
+{% extends 'school/dashboard_base.html' %}
+
+{% block title %}Balance{% endblock %}
+{% block active_sidebar %}sms{% endblock %}
+
+
+{% block content %}
+<h4>Balance</h4>
+<div class="link-nav">
+    <a href="/">Home &ThinSpace;</a>
+    <a>>Balance</a>
+</div>
+<br>
+
+<div class="bg-white col-md-12 rounded p-1">
+    <div class="d-flex justify-content-between">
+        <h5 class="ml-4">Balance</h5>
+        <p class="text text-right">
+            <a href="{% url 'sms:balance' %}" class="btn btn-primary text text-white">Refresh</a>
+        </p>
+    </div>
+
+    <div class="m-5">
+        <h4>Your SMS Balance is: {{balance}} Messages.</h4>
+    </div>
+
+</div>
+{% endblock %}

@@ -159,16 +159,16 @@
                         <div class="drop-icon"><i class="bi bi-chevron-right"></i></div>
                     </div>
                     <div class="drop-down">
-                        <a href="">
-                            <div class="drop-item"><i class="bi bi-caret-right"></i> All Sent SMS </div>
+                        <a href="{% url 'sms:messages' %}">
+                            <div class="drop-item"><i class="bi bi-caret-right"></i> Messages </div>
                         </a>
-                        <a href="">
-                            <div class="drop-item"><i class="bi bi-caret-right"></i> All Failed SMS </div>
+                        <a href="{% url 'sms:forward_credentials' %}">
+                            <div class="drop-item"><i class="bi bi-caret-right"></i> Forward Credentials</div>
                         </a>
-                        <a href="">
+                        <a href="{% url 'sms:balance' %}">
                             <div class="drop-item"><i class="bi bi-caret-right"></i> Balance</div>
                         </a>
-                        <a href="">
+                        <a href="{% url 'sms:new_sms' %}">
                             <div class="drop-item"><i class="bi bi-caret-right"></i> New SMS </div>
                         </a>
                     </div>

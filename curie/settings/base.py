@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'students',
     'school',
     'logger',
+    'sms',
 ]
 
 

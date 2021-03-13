@@ -3,7 +3,6 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from random import sample
 from . models import Staff
-from sms.utils import send_sms_staff
 from django.db import transaction
 from logger.utils import log_system_error
 
@@ -21,7 +20,6 @@ def create_user(sender, instance, created, **kwargs):
         user.first_name = instance.other_names
         user.save()
         instance.save()
-        send_sms_staff(temporal_pin, instance.sms_number, instance.staff_id)
 
 
 @receiver(post_delete, sender=Staff)

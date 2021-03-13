@@ -66,6 +66,7 @@ class TeacherClassSubjectCombinationsAPI(APIView):
         data = TeacherClassSubjectCombinationSerializer(teachers_subjects, many=True).data
         return Response({"teachers_subjects": data})
 
+
 class ListSubjectsOfATeacher(APIView):
     def get(self, request, staff_id):
         staff = Staff.objects.get(staff_id=staff_id)
@@ -76,9 +77,15 @@ class ListSubjectsOfATeacher(APIView):
         return Response({"subjects": data})
 
 
-
 class GradingSystemAPI(APIView):
     def get(self, request):
         grading_systems =  GradingSystem.objects.all()
         data = GradingSystemSerializer(grading_systems, many=True).data
         return Response({"grading_systems": data})
+
+
+class ListSMSAPI(APIView):
+    def get(self, request):
+        sms =  SMS.objects.all().order_by("date")
+        data = SMSSerializer(sms, many=True).data
+        return Response({"sms": data})

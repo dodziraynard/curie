@@ -10,6 +10,7 @@ urlpatterns = [
     path("auth/", include("accounts.urls")),
     path("pdf/", include("pdf_engine.urls")),
     path("ajax/", include("ajax.urls")),
+    path("sms/", include("sms.urls")),
     path('admin/', admin.site.urls),
 ]
 

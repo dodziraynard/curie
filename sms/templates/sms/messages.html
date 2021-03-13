@@ -1,0 +1,56 @@
+{% extends 'school/dashboard_base.html' %}
+
+{% block title %}Message{% endblock %}
+{% block active_sidebar %}sms{% endblock %}
+
+
+{% block content %}
+<h4>Messages</h4>
+<div class="link-nav">
+    <a href="/">Home &ThinSpace;</a>
+    <a>> All Messages</a>
+</div>
+<br>
+
+<div class="bg-white col-md-12 rounded p-1">
+    <h5 class="ml-4">All Messages </h5>
+
+    {% if request.error_message %}
+    <div class="col-md-7 mx-auto alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Error!</strong> {{request.error_message}}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endif %}
+
+    {% if request.message %}
+    <div class="col-md-7 mx-auto alert alert-info alert-dismissible fade show" role="alert">
+        <strong>Info!</strong> {{request.message}}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endif %}
+
+
+    <div style="width: 70vw; overflow-x: auto; margin: auto;">
+        <table id="sms_table" class="table display table-striped">
+            <thead>
+                <tr>
+                    <th>Actions</th>
+                    <th>ID</th>
+                    <th>Number</th>
+                    <th>Message</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<p class="max-line-2">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maiores officiis vitae cumque autem! Itaque nemo, distinctio quas deleniti recusandae corrupti reiciendis exercitationem nobis veritatis explicabo accusamus soluta pariatur in quibusdam a velit. Ipsam deleniti accusantium ea pariatur. Perferendis pariatur esse itaque a, nam eius. Sint obcaecati tempore vel nulla numquam dolorum dicta, consectetur vero laboriosam quod adipisci harum ullam repellendus, quas ab eligendi ratione libero, enim a soluta cum quibusdam quis? Atque provident voluptate iusto iste mollitia repellendus dolorum aut iure accusamus eum sunt excepturi, fugiat facilis nostrum optio consequatur, quae corporis quam aliquam. Velit nesciunt cupiditate unde libero rem.</p>
+{% endblock %}

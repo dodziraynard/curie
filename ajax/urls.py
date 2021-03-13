@@ -15,4 +15,6 @@ urlpatterns = [
     
     path("subjects-by-teacher/<str:staff_id>", api.ListSubjectsOfATeacher.as_view()),
     path("grading-systems", api.GradingSystemAPI.as_view()),
+
+    path("sms", api.ListSMSAPI.as_view()),
 ]
