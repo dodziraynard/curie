@@ -1,7 +1,7 @@
 from django.db import models
 from students.models import Klass, Subject
 from django.utils import timezone
-from django.contrib.auth.models import User
+from accounts.models import User
 from . utils import time_left as tl
 
 

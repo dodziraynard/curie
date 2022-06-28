@@ -1,0 +1,40 @@
+{% extends 'accounts/base_template.html' %}
+{% block pagetitle %}Login{% endblock %}
+{% load static %}
+
+{% block content %}
+<div class="col-md-3 col-10 mx-auto p-5 my-5 bg-white d-flex align-items-center" style="height: 100vh;">
+    <form class="form-signin" method="POST">
+        {% csrf_token %}
+        <img class="mx-auto d-block" src="{% static 'images/logo.jpeg' %}" alt="Site Logo" height="100">
+        <h4 class="text text-center my-3">Please sign in</h4>
+
+        <!-- message -->
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{message}}
+        </div>
+        {% endfor %}
+        {% endif %}
+        <div class="form-group">
+            <input type="text" id="username" name="username" value="{{username}}" class="form-control py-2"
+                placeholder="Username" required autofocus>
+        </div>
+        <div class="form-group">
+            <input type="password" id="password" name="password" value="{{password}}" class="form-control py-2"
+                placeholder="Password" required>
+        </div>
+
+        <div class="form-group my-3">
+            <button class="btn btn-primary" type="submit" style="width: 100%;">Sign in</button>
+        </div>
+
+        <div class="form-group mt-5">
+            <p>Copyright &copy;
+                <script>document.write(new Date().getFullYear())</script> All Rights Reserved
+            </p>
+        </div>
+    </form>
+</div>
+{% endblock %}

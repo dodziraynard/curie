@@ -1,6 +1,6 @@
 from django.db import models
 from staff.models import Staff
-from django.contrib.auth.models import User
+from accounts.models import User
 from django.conf import settings
 from random import sample
 from django.utils import timezone
@@ -12,10 +12,13 @@ class Student(models.Model):
     surname = models.CharField(max_length=100)
     other_names = models.CharField(max_length=100)
     sms_number = models.CharField(max_length=10)
-    klass = models.ForeignKey("Klass", related_name="students",
-                              on_delete=models.SET_NULL, null=True)
-    electives = models.ManyToManyField(
-        "Subject", related_name="students", blank=True)
+    klass = models.ForeignKey("Klass",
+                              related_name="students",
+                              on_delete=models.SET_NULL,
+                              null=True)
+    electives = models.ManyToManyField("Subject",
+                                       related_name="students",
+                                       blank=True)
     temporal_pin = models.CharField(max_length=10, null=True, blank=True)
     gender = models.CharField(max_length=10, null=True, blank=True)
     activated = models.BooleanField(default=False)
@@ -25,16 +28,19 @@ class Student(models.Model):
     father = models.CharField(max_length=200, null=True, blank=True)
     mother = models.CharField(max_length=200, null=True, blank=True)
     completed = models.BooleanField(default=False)
-    user = models.OneToOneField(
-        User, related_name="student", on_delete=models.CASCADE, null=True, blank=True)
+    user = models.OneToOneField(User,
+                                related_name="student",
+                                on_delete=models.CASCADE,
+                                null=True,
+                                blank=True)
     date = models.DateField(default=timezone.now)
     last_promotion_date = models.DateField(default=timezone.now)
-    image = models.FileField(
-        upload_to="media/images/students", default="/images/avatar.jpg")
+    image = models.FileField(upload_to="media/images/students",
+                             default="/images/avatar.jpg")
 
     def my_class(self):
         return self.klass.name
-    
+
     def promote(self):
         final_form = Klass.objects.order_by("-form").first().form
         self.last_promotion_date = timezone.now()
@@ -42,7 +48,9 @@ class Student(models.Model):
             self.completed = True
         else:
             next_form = self.klass.form + 1
-            next_class = Klass.objects.get(form=next_form, stream=self.klass.stream, course=self.klass.course)
+            next_class = Klass.objects.get(form=next_form,
+                                           stream=self.klass.stream,
+                                           course=self.klass.course)
             self.klass = next_class
         self.save()
 
@@ -82,8 +90,10 @@ class HouseMasterRemark(models.Model):
     academic_year = models.CharField(max_length=50)
     remark = models.CharField(max_length=200)
     date = models.DateField(default=timezone.now)
-    klass = models.ForeignKey(
-        "klass", on_delete=models.SET_NULL, null=True, blank=True)
+    klass = models.ForeignKey("klass",
+                              on_delete=models.SET_NULL,
+                              null=True,
+                              blank=True)
 
     class Meta:
         db_table = "house_master_remarks"
@@ -95,20 +105,24 @@ class HouseMasterRemark(models.Model):
 class Klass(models.Model):
     class_id = models.CharField(max_length=50, unique=True)
     name = models.CharField(max_length=50, unique=True)
-    class_teacher = models.OneToOneField(Staff, related_name="klass", null=True, on_delete=models.SET_NULL)
+    class_teacher = models.OneToOneField(Staff,
+                                         related_name="klass",
+                                         null=True,
+                                         on_delete=models.SET_NULL)
     form = models.IntegerField(default=1)
     stream = models.CharField(max_length=5)
-    course = models.ForeignKey(
-        "Course", related_name="classes", on_delete=models.CASCADE)
+    course = models.ForeignKey("Course",
+                               related_name="classes",
+                               on_delete=models.CASCADE)
 
     @property
     def course_name(self):
         return self.course.name
-    
+
     @property
     def class_teacher_name(self):
         return self.class_teacher.get_full_name() or "None"
-    
+
     def get_student_count(self):
         return Student.objects.filter(completed=False, klass=self).count()
 
@@ -154,7 +168,8 @@ class Subject(models.Model):
     @property
     def student_count(self):
         if self.is_elective:
-            return Student.objects.filter(completed=False, electives=self).count()
+            return Student.objects.filter(completed=False,
+                                          electives=self).count()
         return Student.objects.filter(completed=False).count()
 
     def __str__(self):
@@ -170,7 +185,9 @@ class Record(models.Model):
     class_score = models.IntegerField(default=0, blank=True, null=True)
     total = models.IntegerField(default=0, blank=True, null=True)
     subject = models.ForeignKey("Subject", on_delete=models.PROTECT)
-    staff = models.ForeignKey(Staff, related_name="records", on_delete=models.PROTECT)
+    staff = models.ForeignKey(Staff,
+                              related_name="records",
+                              on_delete=models.PROTECT)
     klass = models.ForeignKey("Klass", on_delete=models.SET_NULL, null=True)
     grade = models.CharField(max_length=5, blank=True, null=True)
     remark = models.CharField(max_length=20, blank=True, null=True)
@@ -206,13 +223,18 @@ class Record(models.Model):
 
 # Subject and the class a staff teaches
 class TeacherClassSubjectCombination(models.Model):
-    subject = models.ForeignKey(
-        "Subject", on_delete=models.CASCADE, related_name="teachers")
-    klass = models.ForeignKey(
-        "Klass", verbose_name="Class", related_name="combinations", on_delete=models.CASCADE)
-    staff = models.ForeignKey(Staff, related_name="teaches",
-                              verbose_name="Staff", on_delete=models.CASCADE)
-    
+    subject = models.ForeignKey("Subject",
+                                on_delete=models.CASCADE,
+                                related_name="teachers")
+    klass = models.ForeignKey("Klass",
+                              verbose_name="Class",
+                              related_name="combinations",
+                              on_delete=models.CASCADE)
+    staff = models.ForeignKey(Staff,
+                              related_name="teaches",
+                              verbose_name="Staff",
+                              on_delete=models.CASCADE)
+
     class Meta:
         db_table = "teacher_class_subject_combination"
 
@@ -221,14 +243,14 @@ class TeacherClassSubjectCombination(models.Model):
 
     def class_name(self):
         return self.klass.name
-    
+
     def teacher(self):
         return self.staff.get_full_name()
 
-
     def __str__(self):
         if self.subject and self.staff:
-            return "{} - {}: {}".format(self.subject.name.capitalize(), self.klass.name, self.staff.surname)
+            return "{} - {}: {}".format(self.subject.name.capitalize(),
+                                        self.klass.name, self.staff.surname)
         else:
             return str(self.id)
 

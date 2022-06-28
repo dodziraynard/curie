@@ -1,14 +1,16 @@
 from django.shortcuts import render, redirect
 from school.models import School
+from curie.utils.decorators import login_required
 
 
+@login_required("accounts:login")
 def dashboard(request):
     template_name = "school/dashboard.html"
-    context = {
-
-    }
+    context = {}
     return render(request, template_name, context)
 
+
+@login_required("accounts:login")
 def school(request):
     template_name = "school/school.html"
     if request.method == "POST":
@@ -16,7 +18,7 @@ def school(request):
         post_data = request.POST.copy()
         post_data.pop("csrfmiddlewaretoken")
         post_data.pop("crest", None)
-        school_data = {k:v for k, v in post_data.items()}
+        school_data = {k: v for k, v in post_data.items()}
         School.objects.all().update(**school_data)
 
         if crest:
@@ -25,5 +27,5 @@ def school(request):
             instance.save()
 
         return redirect("school:school")
-      
+
     return render(request, template_name)
