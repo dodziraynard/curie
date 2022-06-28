@@ -1,5 +1,4 @@
 from django.contrib.auth.base_user import BaseUserManager
-from django.utils.translation import ugettext_lazy as _
 
 
 class AccountManager(BaseUserManager):
@@ -9,7 +8,7 @@ class AccountManager(BaseUserManager):
     """
     def create_user(self, username, password, **extra_fields):
         if not username:
-            raise ValueError(_('The username must be set'))
+            raise ValueError('The username must be set')
         photo = extra_fields.pop("photo", None)
         user = self.model(username=username, **extra_fields)
         if photo:
