@@ -11,8 +11,6 @@ from PIL import Image
 from redis.exceptions import ConnectionError
 
 from accounts.models import Charge, Promotion, Store
-from dashboard.serializers import ChargeSerializer, PromotionSerializer
-from techstuff.settings.base import PAYHUB_SECRET_TOKEN
 
 logger = logging.getLogger("django")
 redis_client = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT)
