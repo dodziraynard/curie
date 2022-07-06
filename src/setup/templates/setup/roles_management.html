@@ -1,0 +1,103 @@
+{% extends '../templates/dashboard/base_template.html' %}
+{% block page_title %}Setup{% endblock %}
+{% load static %}
+
+{% block content %}
+<div class="breadcrumb">
+    <a href="{%url 'dashboard:index'%}" class="">Home</a>
+    <a href="{%url 'setup:setup_index'%}"><i class="bi bi-chevron-right"></i> <span>Setup</span></a>
+    <a href=""><i class="bi bi-chevron-right"></i> <span class="active">Role Management</span></a>
+</div>
+
+<section class="role-management">
+    <div >
+        <table class="table table-sm">  
+            <tr>
+              <th>User Permissions</th>
+              <th>Has Permission</th>
+            </tr>
+            <colgroup span="2"></colgroup>
+            {%for permision in user_permissions%}
+            <tr>
+              <td>{{permision.name}}</td>
+              <td><input type="checkbox" value="{{permisions.codename}}"  name="permissions" {% if permissions in role.permissions.all %}checked{% endif %}></td>
+            </tr>
+            {%endfor%}
+            
+            
+        </table>
+
+        <table class="table table-sm">
+            <tr>
+                <th>Roles Permissions</th>
+                <th>Has Permission</th>
+              </tr>
+              <colgroup span="2"></colgroup>
+              {%for permision in roles_permissions%}
+                <tr>
+                  <td>{{permision.name}}</td>
+                  <td><input type="checkbox" value="{{permisions.codename}}"  name="permissions" {% if permissions in role.permissions.all %}checked{% endif %}></td>
+                </tr>
+                {%endfor%}
+        </table>
+
+            
+        <table class="table table-sm">
+            <tr>
+                <th>Group Permissions</th>
+                <th>Has Permission</th>
+              </tr>
+              <colgroup span="2"></colgroup>
+      
+              {%for permision in group_permissions%}
+              <tr>
+                <td>{{permision.name}}</td>
+                <td><input type="checkbox" value="{{permision.codename}}" name="permissions" {% if permission in role.permissions.all %}checked{% endif %}></td>
+              </tr>
+              {%endfor%}  
+        </table>
+ 
+        <table class="table table-sm">
+            <tr>
+                <th>Log Permissions</th>
+                <th>Has Permission</th>
+              </tr>
+              <colgroup span="2"></colgroup>
+              {%for permision in log_permissions%}
+              <tr>
+                <td>{{permision.name}}</td>
+                <td><input type="checkbox" value="{{permisions.codename}}" name="permissions" {% if permissions in role.permissions.all %}checked{% endif %}></td>
+              </tr>
+              {%endfor%}
+        </table>
+        <table class="table table-sm">
+            <tr>
+                <th>Default Permissions</th>
+                <th>Has Permission</th>
+              </tr>
+              <colgroup span="2"></colgroup>
+              {%for permision in permission_permission%}
+              <tr>
+                <td>{{permision.name}}</td>
+                <td><input type="checkbox" value="{{permisions.codename}}" name="permissions" {% if permissions in role.permissions.all %}checked{% endif %}></td>
+              </tr>
+              {%endfor%}
+        </table>
+        <table class="table table-sm">
+            <tr>
+                <th>Content Type Permissions</th>
+                <th>Has Permission</th>
+              </tr>
+              <colgroup span="2"></colgroup>
+              {%for permision in contenttype_permission%}
+              <tr>
+                <td>{{permision.name}}</td>
+                <td><input type="checkbox" value="{{permisions.codename}}" name="permissions" {% if permissions in role.permissions.all %}checked{% endif %}></td>
+              </tr>
+              {%endfor%}
+        </table>
+        
+    </div>
+</section>
+{% endblock %}
+

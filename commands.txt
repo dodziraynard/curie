@@ -1,2 +1,4 @@
 Delete migrations
 find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
+
+https://themeforest.net/item/vuexy-figma-admin-dashboard-ui-kit-template-with-atomic-design-system/screenshots/29721411?index=1

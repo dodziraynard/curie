@@ -1,2 +1,0 @@
-* [Home](/)
-* [Guide](guide.md)

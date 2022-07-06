@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Learning Management System">
+    <meta name="author" content="Learning Management System">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="{% static 'images/logo.png' %}" type="image/png">
+    <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+
+    <title>{% block page_title %}Home{% endblock %} | LMS</title>
+</head>
+
+
+<body>
+    {% include 'dashboard/modals/general_deletion_modal.html' %}
+
+    {% if messages %}
+    <div class="alert-container col-11 mx-auto col-lg-6">
+        <!-- message -->
+        {% for message in messages %}
+        <div class="alert alert-{{message.tags}} alert-dismissible fade show py-3 mt-1" role="alert">
+            {{message|safe}}
+        </div>
+        {% endfor %}
+        <span class="close-btn" onclick="hideAlert()"><i class="bi bi-x-lg"></i></span>
+    </div>
+    {% endif %}
+    <div class="overlay"></div>
+    <section class="sidebar menu-container overlay-toggle"
+        data-active-item="{% block active-sidebar-item-id %}dashboard{%endblock%}">
+        <span class="close-sidebar" data-target=".sidebar"><i class="bi bi-x-lg"></i></span>
+        <section class="d-flex justify-content-center align-items-center sidebar-header">
+            <div class="logo">
+                <img src="{% static 'images/logo.png' %}" alt="UG Logo" height="50">
+            </div>
+            <p class="ms-2">LMS</p>
+        </section>
+
+        <h6 class="header text-muted mt-4">HOME</h6>
+        <a href="{% url 'dashboard:index' %}">
+            <div class="menu-item" id="dashboard">
+                <i class='icon bx bxs-dashboard'></i>
+                <span class="label">Dashboard</span>
+            </div>
+        </a>
+        <a href="{% url 'dashboard:index' %}">
+            <div class="menu-item" id="action_center">
+                <i class='icon bx bxs-hand-up'></i>
+                <span class="label">Action Center</span>
+            </div>
+        </a>
+        <h6 class="header text-muted mt-4">ENTITIES</h6>
+        <a href="{% url 'dashboard:students' %}">
+            <div class="menu-item" id="students">
+                <i class='icon bx bx-group'></i>
+                <span class="label">Students</span>
+            </div>
+        </a>
+        <a href="">
+            <div class="menu-item" id="staff">
+                <i class='icon bx bx-group'></i>
+                <span class="label">Staff</span>
+            </div>
+        </a>
+        <a href="">
+            <div class="menu-item" id="classes">
+                <i class='icon bx bx-file'></i>
+                <span class="label">Classes</span>
+            </div>
+        </a>
+
+        <a href="">
+            <div class="menu-item" id="subjects">
+                <i class='icon bx bx-file'></i>
+                <span class="label">Subjects</span>
+            </div>
+        </a>
+
+        <a href="">
+            <div class="menu-item" id="courses">
+                <i class='icon bx bx-group'></i>
+                <span class="label">Courses</span>
+            </div>
+        </a>
+
+        <a href="">
+            <div class="menu-item" id="records">
+                <i class='icon bx bx-file'></i>
+                <span class="label">Records</span>
+            </div>
+        </a>
+
+        <a href="">
+            <div class="menu-item" id="houses">
+                <i class='icon bx bx-group'></i>
+                <span class="label">Houses</span>
+            </div>
+        </a>
+
+        <a href="">
+            <div class="menu-item" id="house_masters">
+                <i class='icon bx bx-group'></i>
+                <span class="label">House Masters</span>
+            </div>
+        </a>
+
+        <h6 class="header text-muted mt-4">APPLICATIONS</h6>
+        <a href="">
+            <div class="menu-item" id="sms">
+                <i class='icon bx bx-envelope'></i>
+                <span class="label">SMS</span>
+            </div>
+        </a>
+        <a href="">
+            <div class="menu-item" id="reporting">
+                <i class='icon bx bx-user'></i>
+                <span class="label">Reporting</span>
+            </div>
+        </a>
+
+        <h6 class="header text-muted mt-4">SYSTEM</h6>
+        <a href="">
+            <div class="menu-item" id="users">
+                <i class='icon bx bx-user'></i>
+                <span class="label">Users</span>
+            </div>
+        </a>
+        <a href="">
+            <div class="menu-item" id="setup">
+                <i class='icon bx bx-cog'></i>
+                <span class="label">Setup</span>
+            </div>
+        </a>
+
+        <a href="{% url 'accounts:logout' %}">
+            <div class="menu-item">
+                <i class='icon bx bx-lock'></i>
+                <span class="label">Log out</span>
+            </div>
+        </a>
+
+    </section>
+    <section class="main-content">
+        <nav class="nav">
+            <div class="">
+                <span class="open-sidebar" data-target=".sidebar">
+                    <i class='bx bx-menu-alt-right' id="btn"></i>
+                </span>
+            </div>
+            <div class=""></div>
+            <div class="d-flex align-items-center">
+                <div class="me-4">
+                    <span class="notification" data-count="3"><i class="bi bi-bell"></i></span>
+                </div>
+                <div class="me-3">
+                    <p class="m-0 p-0 text-end">{{request.user.get_name}}</p>
+                    <p class="m-0 p-0 text-end text text-muted"><small
+                            class="m-0 p-0">{{request.user.get_title}}</small></p>
+                </div>
+                <div class="avatar">
+                    <img src="{{request.user.get_photo_url}}" alt="User's picture">
+                </div>
+            </div>
+        </nav>
+        {% block breadcrumb %}
+        {% endblock %}
+        <section class="main">
+            {%block content%}
+
+            {%endblock%}
+            <footer>
+                <p class="text-center text-muted">Copyright ©
+                    <script>document.write(new Date().getFullYear())</script> LMS. All rights reserved.
+                </p>
+            </footer>
+        </section>
+    </section>
+</body>
+
+</html>

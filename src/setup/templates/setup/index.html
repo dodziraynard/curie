@@ -1,0 +1,86 @@
+{% extends '../templates/dashboard/base_template.html' %}
+{% block page_title %}Setup{% endblock %}
+{% load static %}
+
+{% block content %}
+<div class="breadcrumb">
+    <a href="{%url 'dashboard:index'%}" class="">Home</a>
+    <a href=""><i class="bi bi-chevron-right"></i> <span class="active">Setup</span></a>
+</div>
+
+<section class="system">
+    <hr>
+    <h4>
+        SYSTEM
+    </h4>
+    <div class="system-content">
+        <div class="card">
+            <div class="heading">
+                <div>
+                    <h6>ROLES</h6>
+                    <span>Click on the name of a role to configure permissions.</span>
+                </div>
+                <div>
+                    <button class="btn btn-primary"><i class="bi bi-plus-lg"></i></button>
+                </div>
+            </div>
+            <div id="table">
+                <table class="table table-sm">
+                    <tr>
+                      <th>Name</th>
+                      <th>Actions</th>
+                    </tr>
+                    {%for a in roles %}
+                    <tr>
+                      <td><a class="name" href="{%url 'setup:roles_management' user.id %}">{{a.name}}</a> </td>
+                      <td><a href="{%url 'setup:roles_management' user.id %}">manage</a><a href="">edit</a><a class="del" href="">delete</a></td>
+                    </tr>
+                    {%endfor%}
+                  </table>
+                  <caption>List of roles</caption>
+            </div>
+        </div>
+        <div class="card">
+            <div class="heading">
+                <div>
+                    <h6>USERS</h6>
+                    
+                </div>
+                <div>
+                    <button class="btn btn-primary"><i class="bi bi-plus-lg"></i></button>
+                </div>
+            </div>
+            <div id="table">
+                <table class="table table-sm">
+                    <tr>
+                      <th>Username</th>
+                      <th>Groups</th>
+                      <th>Action</th>
+                    </tr>
+                    {%for user in users %}
+                    <tr>
+                      <td>{{user.username}}</td>
+                      <td>
+                        {% if user.groups.all %}
+                        {% for group in user.groups.all %}
+                        {{group.name}}
+                        {% endfor %}
+                        {% else %}
+                        <p class="">No data</p>
+                        {% endif %}
+                        </td>
+                      <td><a href="">edit</a><a class="del" href="">delete</a></td>
+                    </tr>
+                    {%endfor%}
+                  </table>
+                  <caption>List of users</caption>
+            </div>
+        </div>
+        <div class="card">
+    
+        </div>
+    </div>
+    
+
+</section>
+{% endblock %}

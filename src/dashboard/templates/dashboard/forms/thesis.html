@@ -1,0 +1,446 @@
+{% extends 'templates/dashboard/base_template.html' %}
+{% block page_title %}Home{% endblock %}
+{% load static %}
+
+{% block content %}
+<div class="breadcrumb">
+    <a href="" class="">Home</a>
+    <a href="" class=""><i class="bi bi-chevron-right"></i> Applications</a>
+    <a href=""><i class="bi bi-chevron-right"></i> <span class="active">My Applications</span></a>
+</div>
+
+<!-- Modals -->
+<div class="modal fade" id="goalModal" tabindex="-1" aria-labelledby="goalModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="goalModalLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End of Store Modal -->
+
+
+<!-- End of Modals -->
+
+<!--Tabs starts here-->
+<nav id="form-nav">
+    <div class="nav navbar navbar-expand-sg navbar-light bg-light text-center" id="list-tab" role="tablist">
+        <a class="nav-link active col-3" id="intro" data-bs-toggle="list" href="#tab1" role="tab" aria-controls="list-home">Introduction</a>
+        <a class="nav-link col-3" id="form" data-bs-toggle="list" href="#tab2" role="tab" aria-controls="list-profile">Form</a>
+        <a class="nav-link col-3" id="documents" data-bs-toggle="list" href="#tab3" role="tab" aria-controls="list-messages">Documents</a>
+        <a class="nav-link col-3" id="review" data-bs-toggle="list" href="#tab4" role="tab" aria-controls="list-settings">Review</a>
+    </div>
+</nav>
+
+<!--
+    *********BUGS*********
+1. Nav bar gets messed up on smaller screens
+
+    **********************
+-->
+
+<!--Tabs ends here-->
+
+<main class="py-4 align-middle">
+    <h3 class="text-center">Thesis Completion Grants Form</h3>
+    <p class="text-center"><strong>PLEASE TAKE NOT THAT ANY APPLICATION THAT IS NOT SIGNED BY THE APPLICANT AND
+        ENDORSED BY THE PRINCIPAL SUPERVISOR AND HEAD OF DEPARTMENT SHALL NOT BE
+        CONSIDERED</strong> <br>
+        <span class="text text-info">You can always save and continue later.</span>
+    </p>
+
+    <div class="sticky-top d-flex justify-content-around px-5">
+        <button type="button" class="btn btn-primary m-3 px-4 py-2">
+            <i class="bi bi-arrow-left"></i> Back
+        </button>
+        <button type="button" class="btn btn-primary m-3 px-4 py-2">
+            Save <i class="bi bi-save"></i>
+        </button>
+    </div>
+
+    <!--Tab 1 (Introduction)-->
+    <div class="tab-content" id="nav-tabContent">
+        <div id="tab1" class="tab-pane fade show active" role="tabpanel">
+            <div>
+                <div class="text text-center">
+                    <h2>CALL FOR APPLICANTS</h2>
+                </div>
+                <div class="p-3">
+                    <u><h3 class="text text-center ">UG-BANGA-3 THESIS COMPLETION GRANTS</h3></u>
+                    <p>
+                        In line with our mandate to enhance the quality and timely completion of
+                        PhD education in West Africa, the <strong>Building A New Generation of
+                        Academics in Africa (BANGA-Africa) Project Phase 3</strong>, is 
+                        offering a limited number of grants to <strong>third and final year</strong>
+                        PhD students of the University of Ghana for the completion of their PhD studies <br> <br>
+                        
+                        <u><strong>Eligible expenses covered by the grant are:</strong></u>
+                        <ul>
+                            <li>Final year school fees</li>
+                            <li>Research costs (to finalise data collection)</li>
+                            <li>Thesis production costs (printing, binding, photocopying)</li>
+                            <li>Thesis proofreading and editing</li>
+                        </ul>
+    
+                        <strong><h3 class="text text-center">APPLICATION PROCEDURE</h3></strong>
+                        <p>To apply, interested candidates should submit the following Documents:</p>
+                        <ul>
+                            <li>A completed application form</li>
+                            <li>A maximum 3-page research proposal clearly outlining the 
+                                background, objectives, scope, methodology and status of PhD 
+                                completion with proof where possible.
+                            </li>
+                            <li>A copy of your admission letter</li>
+                            <li>Most recent CV</li>
+                        </ul>
+    
+                        <strong>
+                            NB: <br>
+                            Preference will be given to students whose studies are not funded by
+                            their employers or other donors. <br>
+                            This grant is open to Ghanaian nationals only.
+                        </strong>
+    
+                        <div class="text text-center">
+                            <p>For further enquiries, you may send an email to the Assistant Registrar
+                                at <a class="text-decoration-none" href="mailto:banga-africa@ug.edu.gh">banga-africa@ug.edu.gh</a> 
+                                or call <a class="text-decoration-none" href="tel:0558182449">0558182449</a>  
+                            </p>
+                        </div>
+                        
+                    </p>
+                </div>
+
+            </div>
+        </div>
+        <!--Tab 2 (Form)-->
+        <div id="tab2" class="tab-pane fade" role="tabpanel">
+            <form action="" class="m-3 needs-validation" novalidate>
+    
+                <div class="card">
+                    <div class="card-header p-1">
+                        <h6 class="text text-center">SECTION I: APPLICANT INFORMATION</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Surname Name</label>
+                                    <input type="text" class="form-control" placeholder="Surname Name" required>
+                                    <div class="invalid-feedback">
+                                        Please this field is required.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Other Names</label>
+                                    <input type="text" class="form-control" placeholder="Other Name" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Date of Birth</label>
+                                    <input type="date" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="gender">Gender</label>
+                                    <select class="form-select" id="cars" required>
+                                        <option value="">Select your Gender</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Email Address</label>
+                                    <input type="email" class="form-control" placeholder="Email" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Phone No.</label>
+                                    <input type="tel" class="form-control" placeholder="Phone Number" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Nationality</label>
+                                    <input type="text" class="form-control" placeholder="Nationality" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Address</label>
+                                    <input type="text" class="form-control" placeholder="Address" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Current Employer</label>
+                                    <input type="text" class="form-control" placeholder="Current Employer" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="">Position</label>
+                                <input type="text" class="form-control" placeholder="Position at Work" required>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="">Programme of Study</label>
+                                <input type="text" class="form-control" placeholder="Programme of Study" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="">Department</label>
+                                <input type="text" class="form-control" placeholder="Department" required>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="">University of Registration</label>
+                                <input type="text" name="" id="" class="form-control" placeholder="University of Registration" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="">Index Number</label>
+                                <input type="text" name="" id="" class="form-control" placeholder="Index Number" required>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="">Year of 1st Registration</label>
+                                <input type="text" name="" id="" class="form-control" placeholder="Year of 1st Registration" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="">Type of PhD Programme (Please indicate whether FULL TIME or PART TIME</label>
+                                <input type="text" name="" id="" class="form-control" placeholder="Type of PhD Programme" required>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="">Name of Principal Supervisor</label>
+                                <input type="text" name="" id="" class="form-control" placeholder="Name of Principal Supervisor" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="">Department</label>
+                                <input type="text" name="" id="" class="form-control" placeholder="Supervisor's Department" required>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div id="form-footer" class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-primary m-3 px-4 py-2">
+                            Save <i class="bi bi-save"></i>
+                        </button>
+                        <button type="button" class="btn btn-primary m-3 px-4 py-2">
+                            Print <i class="bi bi-printer"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    
+        <!--Tab 3 (Documents)-->
+        <div id="tab3" class="tab-pane fade" role="tabpanel">
+            <form action="" class="m-3 needs-validation" novalidate>
+    
+                <!--First Documents Section-->
+                <div class="card">
+                    <div class="card-header p1">
+                        <h6 class="text text-center">SECTION II: THESIS INFORMATION</h6>
+                    </div>
+    
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="thesis-title" class="form-label">
+                                <strong>1. PhD Thesis Title:</strong> (Attach a 3-page maximum PhD research proposal
+                                outlining the background, objectives, scopes, methodology and statues
+                                of PhD completion with proof where possible)
+                            </label>
+                            <input class="form-control" type="file" id="thesis-title">
+                        </div>
+                    </div>
+    
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="chapters-completed" class="form-label">
+                                <strong>2. Status of PhD Research (Chapters Completed): </strong>
+                                (Attach an outline of your thesis with an indication of the chapters completed)
+                            </label>
+                            <input class="form-control" type="file" id="chapters-completed">
+                        </div>
+                    </div>
+    
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="grant-need" class="form-label">
+                                3. Explain the need for the grant and the use to which it will be put.
+                            </label>
+                            <input class="form-control" type="file" id="grant-need">
+                        </div>
+                    </div>
+    
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="fund-sources" class="form-label">
+                                4. Indicate all sources of funds of your PhD to dae with amounts
+                            </label>
+                            <input class="form-control" type="file" id="fund-sources">
+                        </div>
+                    </div>
+                </div>
+    
+                <!--Second Document Section-->
+                <div class="card my-3">
+                    <div class="card-header p1 text-center">
+                        <h6>SECTION III: ENDORSEMENTS</h6>
+                    </div>
+    
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="PS-recommendation" class="form-label">
+                                5. Recommendation by Principal Supervisor including a statement
+                                justifying the need for the support. (Signature required)
+                            </label>
+                            <input class="form-control" type="file" id="PS-recommendation">
+                        </div>
+                    </div>
+    
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="HOD-recommendation" class="form-label">
+                                6. Recommendation by Head of Department (this section should include 
+                                a signature and stamp). Please note that a separate recommendation 
+                                letter is not required
+                            </label>
+                            <input class="form-control" type="file" id="HOD-recommendation">
+                        </div>
+                    </div>
+                </div>
+                
+                <!--Third Document Section-->
+                <div class="card">
+                    <div class="card-header p1 text-center">
+                        <h6>SECTION IV: BUDGET</h6>
+                    </div>
+    
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="" class="form-label">7. Provide details in the box below 
+                                (Please note that the thesis completion small grant covers only the items listed)
+                            </label>
+    
+                            <table class="table table-bordered align-middle">
+                                <thead class="text text-center">
+                                    <tr>
+                                        <th class="col-5">ITEM</th>
+                                        <th class="col-5">AMOUNT (GHC)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>i. Fees</td>
+                                        <td><input type="text" name="" id="" class="form-control"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>ii. Research Costs</td>
+                                        <td><input type="text" name="" id="" class="form-control"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>iii. Thesis proofreading and editing-UG-Carnegie 
+                                            Writing Centre (max. GHC 1,500)
+                                        </td>
+                                        <td><input type="text" name="" id="" class="form-control"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>iv. Printing & Binding (max GHC 1,000</td>
+                                        <td><input type="text" name="" id="" class="form-control"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text text-center">TOTAL:</td>
+                                        <td><input type="text" name="" id="" class="form-control"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    
+        <!--Tab 4 (Review)-->
+
+        <!--
+            ************SUGGESTION***************
+
+            1. Placing a preview of completed form before the checkboxes
+
+            *************************************
+        -->
+        <div id="tab4" class="m-3 tab-pane fade" role="tabpanel">
+            <P>
+                <strong>NOTE TO APPLICANTS</strong> <br>
+                BEFORE YOU SUBMIT THIS FORM, PLEASE ENSURE THAT THE 
+                FOLLOWING DOCUMENTS ARE UPLOADED WITH YOUR APPLICATION
+            </P>
+            <div class="input-group-check">
+                <input class="form-check-input" type="checkbox" value="" required> CV <br>
+                <input class="form-check-input" type="checkbox" value="" required> Admission Letter <br>
+                <input class="form-check-input" type="checkbox" value="" required> Outline of thesis with an indication of the chapter completed <br>
+                <input class="form-check-input" type="checkbox" value="" required> 3-Page research proposal <br>
+            </div>
+    
+            <div class="form-group d-grid gap-2 col-1 mx-auto my-4">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+    
+        </div>
+    </div>
+</main>
+
+{% endblock %}

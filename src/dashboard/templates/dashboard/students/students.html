@@ -1,0 +1,27 @@
+{% extends 'templates/dashboard/base_template.html' %}
+{% block page_title %}Students{% endblock %}
+{% block active-sidebar-item-id %}students{%endblock%}
+
+{% block breadcrumb %}
+<section class="breadcrumb">
+    <a href="{% url 'dashboard:index' %}" class="">Home <i class="bi bi-chevron-right"></i></a>
+    <a href="" class="active">Students</a>
+</section>
+{% endblock %}
+
+{% block content %}
+
+<h4 class="page-header"><i class='icon bx bx-group'></i> STUDENTS</h4>
+<section class="card">
+    <div class="card-header d-flex justify-content-between">
+        <h6>Students</h6>
+        <div class="">
+            <a href="" class="btn btn-sm btn-primary"><i class="bi bi-plus"></i> Add</a>
+        </div>
+    </div>
+    <div class="card-body">
+        Body
+    </div>
+</section>
+
+{% endblock %}
