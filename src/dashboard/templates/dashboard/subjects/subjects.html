@@ -1,0 +1,90 @@
+{% extends 'templates/dashboard/base_template.html' %}
+{% block page_title %}Subjects{% endblock %}
+{% block active-sidebar-item-id %}subjects{%endblock%}
+
+{% block breadcrumb %}
+<section class="breadcrumb">
+    <a href="{% url 'dashboard:index' %}" class="">Home <i class="bi bi-chevron-right"></i></a>
+    <a href="" class="active">Subjects</a>
+</section>
+{% endblock %}
+
+{% block content %}
+
+<!-- Modal -->
+<div class="modal fade" id="subjectModal" tabindex="-1" aria-labelledby="subjectModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-l">
+        <div class="modal-content px-4">
+            <div class="modal-header">
+                <h5 class="modal-title" id="subjectModalLabel">Add Subject</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            {% include 'dashboard/subjects/form_subject.html' %}
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End of Modal -->
+
+<h4 class="page-header"><i class='icon bx bx-group'></i> SUBJECTS</h4>
+<section class="card">
+    <div class="card-header d-flex justify-content-between">
+        <h4>Subjects</h4>
+        <div class="">
+            {% if perms.dashboard.add_subject %}
+            <button class="d-flex btn btn-sm btn-primary my-1" data-bs-toggle="modal" data-bs-target="#subjectModal"><i
+                    class="bi bi-plus"></i> Add
+            </button>
+            {% endif %}
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="col-md-8 mx-auto" style="overflow-x: auto;">
+            <table class="table data-table">
+                <thead class="bg-primary text-light">
+                    <tr>
+                        <th>S/N</th>
+                        <th>CODE</th>
+                        <th>NAME</th>
+                        <th>ELECTIVE</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for subject in subjects %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{subject.code}}</td>
+                        <td>{{subject.name}}</td>
+                        <td>{{subject.is_elective|yesno:"Yes,No" }}</td>
+                        <td class="d-flex">
+                            {% if perms.dashboard.change_subject %}
+                            <a href="{% url 'dashboard:create_update_subject' %}?subject_id={{subject.id}}"
+                                class="mx-3 d-flex text-primary">
+                                <i class="bi bi-pencil me-1"></i>
+                                Edit
+                            </a>
+                            {% endif %}
+                            {% if perms.dashboard.delete_subject %}
+                            <form action="{% url 'dashboard:delete_model' subject.model_name subject.id %}"
+                                method="POST" class="requires-confirmation"
+                                data-message="Click on okay to permanently delete {{subject.name}}">
+                                {% csrf_token %}
+                                <input type="hidden" name="subject_id" value="{{subject.id}}">
+                                <button type="submit" class="btn btn-sm btn-outline-danger"><span class="d-flex">
+                                        <i class="bi bi-trash"></i> Delete</span>
+                                </button>
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

@@ -16,6 +16,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap" rel="stylesheet">
     <link rel="shortcut icon" href="{% static 'images/logo.png' %}" type="image/png">
     <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
 
     <title>{% block page_title %}Home{% endblock %} | LMS</title>
 </head>
@@ -79,7 +80,7 @@
             </div>
         </a>
 
-        <a href="">
+        <a href="{% url 'dashboard:subjects' %}">
             <div class="menu-item" id="subjects">
                 <i class='icon bx bx-file'></i>
                 <span class="label">Subjects</span>
@@ -185,6 +186,11 @@
             </footer>
         </section>
     </section>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
 </body>
 
 </html>

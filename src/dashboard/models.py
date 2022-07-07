@@ -111,7 +111,7 @@ class Course(ModelMixin):
 
 
 class Subject(ModelMixin):
-    subject_id = models.CharField(max_length=50, unique=True)
+    code = models.CharField(max_length=50, unique=True)
     name = models.CharField(max_length=100, unique=True)
     is_elective = models.BooleanField()
 

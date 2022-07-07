@@ -1,0 +1,35 @@
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.shortcuts import render
+from django.views import View
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+from dashboard.forms import SubjectForm
+
+from dashboard.mixins import CreateUpdateMixin
+from dashboard.models import Subject
+
+
+class SubjectsView(PermissionRequiredMixin, View):
+    template_name = "dashboard/subjects/subjects.html"
+    permission_required = [
+        "dashboard.view_subject",
+    ]
+
+    @method_decorator(login_required(login_url="accounts:login"))
+    def get(self, request):
+        subjects = Subject.objects.all()
+        context = {"subjects": subjects}
+        return render(request, self.template_name, context)
+
+
+class CreateUpdateSubjectView(PermissionRequiredMixin, CreateUpdateMixin):
+    template_name = "dashboard/subjects/edit_subject.html"
+    form_class = SubjectForm
+    object_id_field = "subject_id"
+    model_class = Subject
+    object_name = "subject"
+    redirect_url = "dashboard:subjects"
+    permission_required = (
+        "dashboard.add_subject",
+        "dashboard.change_subject",
+    )

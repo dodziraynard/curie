@@ -11,4 +11,8 @@ urlpatterns = [
 
     # Students
     path('students/', views.StudentsView.as_view(), name='students'),
+
+    # Subjects
+    path('subjects/', views.SubjectsView.as_view(), name='subjects'),
+    path('subjects/create-update', views.CreateUpdateSubjectView.as_view(), name="create_update_subject"),
 ]

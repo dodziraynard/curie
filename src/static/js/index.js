@@ -2,6 +2,7 @@
 
 
 import "./app";
+import "./table_init";
 
 // Import the styles here.
 import "../css/main.scss";
