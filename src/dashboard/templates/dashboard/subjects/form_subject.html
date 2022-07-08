@@ -18,6 +18,18 @@
         </div>
     </div>
     <div class="mt-4 form-group">
+        <label for="department">Department</label>
+        <select class="form-control" name="department" id="department" required>
+            <option value="">--- Click to select --- </option>
+            {% for department in departments %}
+            <option value="{{department.id}}" {% if department.id == department_id %}selected{% endif %}>
+                {{department.name}}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="mt-4 form-group">
         <div class="form-check">
             <input class="form-check-input" type="checkbox" name="is_elective" id="filed_{{subject.id}}"
                 {% if subject.is_elective or is_elective %}checked{% endif %}>

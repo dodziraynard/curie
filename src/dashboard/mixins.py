@@ -16,6 +16,8 @@ class CreateUpdateMixin(View):
         context = {
             self.object_name: obj,
         }
+        if hasattr(self, "get_context_data"):
+            context.update(self.get_context_data())
         context.update(make_model_key_value(obj))
         return render(request, self.template_name, context)
 
@@ -32,5 +34,7 @@ class CreateUpdateMixin(View):
                 message = f"{field.title()}: {strip_tags(error)}"
                 break
             context = {k: v for k, v in request.POST.items()}
+            if hasattr(self, "get_context_data"):
+                context.update(self.get_context_data())
             messages.warning(request, message)
             return render(request, self.template_name, context)

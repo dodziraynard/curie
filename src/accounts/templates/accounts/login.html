@@ -20,9 +20,9 @@
       <form class="mb-3" method="POST">
         {% csrf_token %}
         <div class="form-floating mb-3">
-          <input type="email" class="form-control" id="floatingInput" name="email_address" value="{{email_address}}">
+          <input type="text" class="form-control" id="floatingInput" name="username" value="{{username}}">
           <label for="floatingInput">
-            Email Address
+            Username
           </label>
         </div>
         <div class="form-floating mb-3">

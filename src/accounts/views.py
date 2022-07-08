@@ -10,7 +10,6 @@ class ProfileView(View):
     """View the profile of currently logged in user. Uses the same base template as the dashboard."""
     template_name = 'accounts/profile.html'
 
-    # TODO @edmond: Add a template for the profile page.""
     def get(self, request):
         return render(request, self.template_name, {'user': request.user})
 
@@ -22,9 +21,9 @@ class LoginView(View):
         return render(request, self.template_name)
 
     def post(self, request):
-        email_address = request.POST.get('email_address')
+        username = request.POST.get('username')
         password = request.POST.get('password')
-        user = authenticate(request, email_address=email_address, password=password)
+        user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
             return redirect("dashboard:index")
@@ -53,7 +52,7 @@ class RegisterView(View):
             first_name = request.POST['first_name']
             last_name = request.POST['last_name']
             other_name = request.POST['last_name']
-            email = request.POST['email_address']
+            email = request.POST['username']
             phone = request.POST['phone']
             gender = request.POST['gender']
             password1 = request.POST['password1']

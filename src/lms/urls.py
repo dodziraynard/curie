@@ -26,7 +26,16 @@ urlpatterns = [
 ]
 
 if settings.DEBUG:
+    urlpatterns += [path('__debug__/', include('debug_toolbar.urls'))]
+
+if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
                           document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL,
                           document_root=settings.STATIC_ROOT)
+
+
+# Customize django admin page.
+admin.site.site_header = "LMS SYSTEM ADMINISTRATION"  # default: "Django Administration"
+admin.site.index_title = "Site Administration"  # default: "Site Administration"
+admin.site.site_title = 'LMS System site admin'  # default: "Django site admin"

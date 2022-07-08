@@ -15,4 +15,16 @@ urlpatterns = [
     # Subjects
     path('subjects/', views.SubjectsView.as_view(), name='subjects'),
     path('subjects/create-update', views.CreateUpdateSubjectView.as_view(), name="create_update_subject"),
+
+    # Courses
+    path('courses/', views.CoursesView.as_view(), name='courses'),
+    path('courses/create-update', views.CreateUpdateCourseView.as_view(), name="create_update_course"),
+
+    # Department
+    path('departments/', views.DepartmentsView.as_view(), name='departments'),
+    path('departments/create-update', views.CreateUpdateDepartmentView.as_view(), name="create_update_department"),
+
+    # Staff
+    path('staff/', views.StaffView.as_view(), name='staff'),
+    path('staff/create-update', views.CreateUpdateStaffView.as_view(), name="create_update_staff"),
 ]

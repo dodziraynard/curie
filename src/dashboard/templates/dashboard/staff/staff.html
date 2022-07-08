@@ -1,25 +1,25 @@
 {% extends 'templates/dashboard/base_template.html' %}
-{% block page_title %}Subjects{% endblock %}
-{% block active-sidebar-item-id %}subjects{%endblock%}
+{% block page_title %}Staff{% endblock %}
+{% block active-sidebar-item-id %}staff{%endblock%}
 
 {% block breadcrumb %}
 <section class="breadcrumb">
     <a href="{% url 'dashboard:index' %}" class="">Home <i class="bi bi-chevron-right"></i></a>
-    <a href="" class="active">Subjects</a>
+    <a href="" class="active">Staff</a>
 </section>
 {% endblock %}
 
 {% block content %}
 
 <!-- Modal -->
-<div class="modal fade" id="subjectModal" tabindex="-1" aria-labelledby="subjectModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-l">
+<div class="modal fade" id="staffModal" tabindex="-1" aria-labelledby="staffModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content px-4">
             <div class="modal-header">
-                <h5 class="modal-title" id="subjectModalLabel">Add Subject</h5>
+                <h5 class="modal-title" id="staffModalLabel">Add Staff</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            {% include 'dashboard/subjects/form_subject.html' %}
+            {% include 'dashboard/staff/form_staff.html' %}
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
@@ -28,13 +28,13 @@
 </div>
 <!-- End of Modal -->
 
-<h4 class="page-header"><i class='icon bx bx-group'></i> SUBJECTS</h4>
+<h4 class="page-header"><i class='icon bx bx-group'></i> STAFF</h4>
 <section class="card">
     <div class="card-header d-flex justify-content-between">
-        <h4>Subjects</h4>
+        <h4>Staff</h4>
         <div class="">
-            {% if perms.dashboard.add_subject %}
-            <button class="d-flex btn btn-sm btn-primary my-1" data-bs-toggle="modal" data-bs-target="#subjectModal"><i
+            {% if perms.dashboard.add_staff %}
+            <button class="d-flex btn btn-sm btn-primary my-1" data-bs-toggle="modal" data-bs-target="#staffModal"><i
                     class="bi bi-plus"></i> Add
             </button>
             {% endif %}
@@ -46,33 +46,39 @@
                 <thead class="bg-primary text-light">
                     <tr>
                         <th>S/N</th>
-                        <th>CODE</th>
-                        <th>NAME</th>
-                        <th>ELECTIVE</th>
+                        <th>Staff ID</th>
+                        <th>Title</th>
+                        <th>Surname</th>
+                        <th>Other Names</th>
+                        <th>Gender</th>
+                        <th>Phone Number</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for subject in subjects %}
+                    {% for item in staff %}
                     <tr>
                         <td>{{forloop.counter}}</td>
-                        <td>{{subject.code}}</td>
-                        <td>{{subject.name}}</td>
-                        <td>{{subject.is_elective|yesno:"Yes,No" }}</td>
+                        <td>{{item.staff_id}}</td>
+                        <td>{{item.user.title}}</td>
+                        <td>{{item.user.surname}}</td>
+                        <td>{{item.user.other_names}}</td>
+                        <td>{{item.user.gender}}</td>
+                        <td>{{item.user.phone}}</td>
                         <td class="d-flex">
-                            {% if perms.dashboard.change_subject %}
-                            <a href="{% url 'dashboard:create_update_subject' %}?subject_id={{subject.id}}"
+                            {% if perms.dashboard.change_staff %}
+                            <a href="{% url 'dashboard:create_update_staff' %}?staff_id={{item.id}}"
                                 class="me-3 d-flex text-primary">
                                 <i class="bi bi-pencil me-1"></i>
                                 Edit
                             </a>
                             {% endif %}
-                            {% if perms.dashboard.delete_subject %}
-                            <form action="{% url 'dashboard:delete_model' subject.model_name subject.id %}"
-                                method="POST" class="requires-confirmation"
-                                data-message="Click on okay to permanently delete {{subject.name}}">
+                            {% if perms.dashboard.delete_staff %}
+                            <form action="{% url 'dashboard:delete_model' item.model_name item.id %}" method="POST"
+                                class="requires-confirmation"
+                                data-message="Click on okay to permanently delete {{staff.name}}">
                                 {% csrf_token %}
-                                <input type="hidden" name="subject_id" value="{{subject.id}}">
+                                <input type="hidden" name="staff_id" value="{{staff.id}}">
                                 <button type="submit" class="btn btn-sm btn-outline-danger"><span class="d-flex">
                                         <i class="bi bi-trash"></i> Delete</span>
                                 </button>

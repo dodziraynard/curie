@@ -67,7 +67,7 @@
                 <span class="label">Students</span>
             </div>
         </a>
-        <a href="">
+        <a href="{% url 'dashboard:staff' %}">
             <div class="menu-item" id="staff">
                 <i class='icon bx bx-group'></i>
                 <span class="label">Staff</span>
@@ -87,7 +87,14 @@
             </div>
         </a>
 
-        <a href="">
+        <a href="{% url 'dashboard:departments' %}">
+            <div class="menu-item" id="departments">
+                <i class='icon bi bi-bank'></i>
+                <span class="label">Departments</span>
+            </div>
+        </a>
+
+        <a href="{% url 'dashboard:courses' %}">
             <div class="menu-item" id="courses">
                 <i class='icon bx bx-group'></i>
                 <span class="label">Courses</span>

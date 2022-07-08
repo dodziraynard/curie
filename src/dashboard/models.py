@@ -77,6 +77,7 @@ class Klass(ModelMixin):
         return Student.objects.filter(completed=False, klass=self).count()
 
     class Meta:
+        ordering = ['name']
         db_table = "classes"
         verbose_name_plural = "Classes"
         verbose_name = "Class"
@@ -88,8 +89,23 @@ class Klass(ModelMixin):
         return self.students.all().count()
 
 
+class Department(ModelMixin):
+    name = models.CharField(max_length=100, unique=True)
+    hod = models.ForeignKey("Staff",
+                            null=True,
+                            blank=True,
+                            on_delete=models.SET_NULL)
+
+    class Meta:
+        ordering = ['name']
+        db_table = "departments"
+
+    def __str__(self):
+        return self.name
+
+
 class Course(ModelMixin):
-    course_id = models.CharField(max_length=50, unique=True)
+    code = models.CharField(max_length=50, unique=True)
     name = models.CharField(max_length=100, unique=True)
     subjects = models.ManyToManyField("Subject", related_name="courses")
     hod = models.ForeignKey("Staff",
@@ -98,6 +114,7 @@ class Course(ModelMixin):
                             on_delete=models.SET_NULL)
 
     class Meta:
+        ordering = ['name']
         db_table = "courses"
 
     def __str__(self):
@@ -113,9 +130,29 @@ class Course(ModelMixin):
 class Subject(ModelMixin):
     code = models.CharField(max_length=50, unique=True)
     name = models.CharField(max_length=100, unique=True)
+    department = models.ForeignKey("Department",
+                                   related_name="subjects",
+                                   null=True,
+                                   blank=True,
+                                   on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ['name']
+        db_table = "subjects"
+
+    def __str__(self):
+        return self.name
+
+    def get_number_of_students(self):
+        num = 0
+        for klass in self.courses.all():
+            num += klass.get_student_count()
+        return num
+
     is_elective = models.BooleanField()
 
     class Meta:
+        ordering = ['name']
         db_table = "subjects"
 
     def student_count(self):
@@ -135,7 +172,6 @@ class Staff(ModelMixin):
     staff_id = models.CharField(max_length=100, unique=True)
     has_left = models.BooleanField(default=False)
     teaching = models.BooleanField(default=True)
-    temporal_pin = models.CharField(max_length=10)
     user = models.OneToOneField(User,
                                 related_name="staff",
                                 on_delete=models.CASCADE)
@@ -145,7 +181,7 @@ class Staff(ModelMixin):
         verbose_name_plural = "Staff"
 
     def __str__(self):
-        return f"{self.surname} {self.other_names}"
+        return f"{self.staff_id}"
 
     def get_full_name(self):
         return f"{self.surname} {self.other_names}"
