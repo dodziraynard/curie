@@ -4,6 +4,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect, render
 from django.views import View
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 
 
 class IndexView(PermissionRequiredMixin, View):
@@ -12,6 +14,7 @@ class IndexView(PermissionRequiredMixin, View):
         "setup.view_dashboard",
     ]
 
+    @method_decorator(login_required(login_url="accounts:login"))
     def get(self, request):
         return render(request, self.template_name)
 
@@ -21,9 +24,11 @@ class DeleteModelView(PermissionRequiredMixin, View):
         "setup.view_dashboard",
     ]
 
+    @method_decorator(login_required(login_url="accounts:login"))
     def get(self, request, model_name, instance_id):
         return redirect("dashboard:index")
 
+    @method_decorator(login_required(login_url="accounts:login"))
     def post(self, request, model_name, instance_id):
         # Get the model
         content_type = ContentType.objects.filter(model=model_name).first()

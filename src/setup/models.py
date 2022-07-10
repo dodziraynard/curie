@@ -42,40 +42,41 @@ class SchoolSession(ModelMixin):
         return f"{self.min_score} - {self.grade} - {self.remark}"
 
 
-class Attitude(ModelMixin):
+class Track(ModelMixin):
     name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.text
+
+
+class Attitude(ModelMixin):
+    text = models.CharField(max_length=255)
 
     def __str__(self):
         return self.name
 
 
 class Conduct(ModelMixin):
-    name = models.CharField(max_length=255)
+    text = models.CharField(max_length=255)
 
     def __str__(self):
-        return self.name
+        return self.text
 
 
 class Interest(ModelMixin):
-    name = models.CharField(max_length=255)
+    text = models.CharField(max_length=255)
 
     def __str__(self):
-        return self.name
+        return self.text
 
 
-class Track(ModelMixin):
-    name = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.name
-
-
-class GradingSystem(models.Model):
-    min_score = models.IntegerField()
-    grade = models.CharField(max_length=5)
+class GradingSystem(ModelMixin):
+    min_score = models.IntegerField(unique=True)
+    grade = models.CharField(max_length=2)
     remark = models.CharField(max_length=50)
 
     class Meta:
+        ordering = ["-min_score"]
         db_table = "grading_systems"
 
     def __str__(self):

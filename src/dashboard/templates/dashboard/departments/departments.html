@@ -68,7 +68,7 @@
                             {% if perms.dashboard.delete_department %}
                             <form action="{% url 'dashboard:delete_model' department.model_name department.id %}"
                                 method="POST" class="requires-confirmation"
-                                data-message="Click on okay to permanently delete {{department.name}}">
+                                data-message="Click on okay to permanently delete '{{department.name}}'">
                                 {% csrf_token %}
                                 <input type="hidden" name="department_id" value="{{department.id}}">
                                 <button type="submit" class="btn btn-sm btn-outline-danger"><span class="d-flex">

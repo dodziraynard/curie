@@ -1,0 +1,15 @@
+<form action="{% url 'setup:change_role' %}" class="needs-validation my-4" method="POST" novalidate>
+    {% csrf_token %}
+    <input type="hidden" name="role_id" value="{{role.id}}">
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input class="form-control" placeholder="E.g, Administrators" value="{{role.name}}" type="text" name="name"
+            id="name" required>
+        <div class="invalid-feedback">
+            Please this field is required.
+        </div>
+    </div>
+    <div class="form-group my-3">
+        <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+    </div>
+</form>

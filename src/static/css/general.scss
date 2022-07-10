@@ -195,6 +195,11 @@ a {
     margin-top: 5em;
   }
 }
+
+.card-body{
+  overflow-x: auto;
+}
+
 .card-shadow {
   border-radius: 0.4em;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);

@@ -1,0 +1,15 @@
+<form action="{% url 'setup:create_update_interest' %}" class="needs-validation my-4" method="POST" novalidate>
+    {% csrf_token %}
+    <input type="hidden" name="interest_id" value="{{interest.id}}">
+    <div class="form-group">
+        <label for="text">Text</label>
+        <input class="form-control" placeholder="Please enter text" value="{{text}}" type="text" name="text" id="text"
+            required>
+        <div class="invalid-feedback">
+            Please this field is required.
+        </div>
+    </div>
+    <div class="form-group my-3">
+        <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+    </div>
+</form>
