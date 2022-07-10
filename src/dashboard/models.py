@@ -14,7 +14,7 @@ class Student(ModelMixin):
     electives = models.ManyToManyField("Subject",
                                        related_name="students",
                                        blank=True)
-    house = models.CharField(max_length=50)
+    house = models.ForeignKey("House", on_delete=models.SET_NULL, null=True)
     bio = models.TextField(null=True, blank=True)
     track = models.ForeignKey(Track,
                               on_delete=models.SET_NULL,
@@ -130,7 +130,7 @@ class Course(ModelMixin):
 class Subject(ModelMixin):
     code = models.CharField(max_length=50, unique=True)
     name = models.CharField(max_length=100, unique=True)
-    department = models.ForeignKey("Department",
+    department = models.ForeignKey("Staff",
                                    related_name="subjects",
                                    null=True,
                                    blank=True,
@@ -291,6 +291,7 @@ class ClassTeacherRemark(ModelMixin):
 
 class HouseMasterRemark(ModelMixin):
     student = models.ForeignKey("Student", on_delete=models.CASCADE)
+    staff = models.ForeignKey("Staff", on_delete=models.CASCADE)
     session = models.ForeignKey(SchoolSession,
                                 on_delete=models.SET_NULL,
                                 null=True)
@@ -299,6 +300,21 @@ class HouseMasterRemark(ModelMixin):
 
     class Meta:
         db_table = "house_master_remarks"
+
+    def __str__(self):
+        return f"{self.student.surname} - {self.semester} {self.academic_year}"
+
+
+class House(ModelMixin):
+    name = models.CharField(max_length=200)
+    code = models.CharField(max_length=200)
+    house_master = models.ForeignKey("Staff",
+                                     on_delete=models.SET_NULL,
+                                     null=True)
+
+    class Meta:
+        ordering = ['name']
+        db_table = "houses"
 
     def __str__(self):
         return f"{self.student.surname} - {self.semester} {self.academic_year}"

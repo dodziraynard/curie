@@ -31,4 +31,8 @@ urlpatterns = [
     # Staff
     path('classes/', views.ClassesView.as_view(), name='classes'),
     path('classes/create-update', views.CreateUpdateClassView.as_view(), name="create_update_class"),
+
+     # House
+    path('houses/', views.HousesView.as_view(), name='houses'),
+    path('houses/create-update', views.CreateUpdateHouseView.as_view(), name="create_update_house"),
 ]
