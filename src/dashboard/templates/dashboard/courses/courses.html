@@ -66,7 +66,7 @@
                         <td class="d-flex">
                             {% if perms.dashboard.change_course %}
                             <a href="{% url 'dashboard:create_update_course' %}?course_id={{course.id}}"
-                                class="me-3 d-flex text-primary">
+                                class="me-3 d-flex btn btn-sm btn-light">
                                 <i class="bi bi-pencil me-1"></i>
                                 Edit
                             </a>
@@ -77,7 +77,7 @@
                                 data-message="Click on okay to permanently delete {{course.name}}">
                                 {% csrf_token %}
                                 <input type="hidden" name="course_id" value="{{course.id}}">
-                                <button type="submit" class="btn btn-sm btn-outline-danger"><span class="d-flex">
+                                <button type="submit" class="btn btn-sm btn-light"><span class="d-flex">
                                         <i class="bi bi-trash"></i> Delete</span>
                                 </button>
                             </form>

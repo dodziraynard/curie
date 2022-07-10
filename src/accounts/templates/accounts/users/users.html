@@ -1,0 +1,80 @@
+{% extends 'templates/dashboard/base_template.html' %}
+{% block page_title %}Users{% endblock %}
+{% block active-sidebar-item-id %}users{%endblock%}
+
+{% block breadcrumb %}
+<section class="breadcrumb">
+    <a href="{% url 'dashboard:index' %}" class="">Home <i class="bi bi-chevron-right"></i></a>
+    <a href="" class="active">Users</a>
+</section>
+{% endblock %}
+
+{% block content %}
+
+
+<h4 class="page-header"><i class='icon bx bx-group'></i> USERS</h4>
+<section class="card">
+    <div class="card-header d-flex justify-content-between">
+        <h4>Users</h4>
+        <div class="">
+            {% if perms.accounts.add_user %}
+            <button class="d-flex btn btn-sm btn-primary my-1" data-bs-toggle="modal" data-bs-target="#userModal"><i
+                    class="bi bi-plus"></i> Add
+            </button>
+            {% endif %}
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="col-md-12" style="overflow-x: auto;">
+            <table class="table data-table">
+                <thead class="bg-primary text-light">
+                    <tr>
+                        <th>S/N</th>
+                        <th>Username</th>
+                        <th>Title</th>
+                        <th>Surname</th>
+                        <th>Other Names</th>
+                        <th>Phone</th>
+                        <th>Gender</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{user.username}}</td>
+                        <td>{{user.title}}</td>
+                        <td>{{user.surname}}</td>
+                        <td>{{user.other_names}}</td>
+                        <td>{{user.phone}}</td>
+                        <td>{{user.gender}}</td>
+                        <td class="d-flex">
+                            {% if perms.accounts.change_user %}
+                            <a href=""
+                                class="me-3 d-flex btn btn-sm btn-light">
+                                <i class="bi bi-pencil me-1"></i>
+                                Edit
+                            </a>
+                            {% endif %}
+                            {% if perms.accounts.delete_user %}
+                            <form action="{% url 'dashboard:delete_model' user.model_name user.id %}" method="POST"
+                                class="requires-confirmation"
+                                data-message="Click on okay to permanently delete '{{user.get_name}}'.">
+                                {% csrf_token %}
+                                <input type="hidden" name="user_id" value="{{user.id}}">
+                                <button type="submit" class="btn btn-sm btn-light"><span class="d-flex">
+                                        <i class="bi bi-trash"></i> Delete</span>
+                                </button>
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

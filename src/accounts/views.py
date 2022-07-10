@@ -14,6 +14,17 @@ class ProfileView(View):
         return render(request, self.template_name, {'user': request.user})
 
 
+class UsersView(View):
+    template_name = 'accounts/users/users.html'
+
+    def get(self, request):
+        users = User.objects.all()
+        context = {
+            'users': users,
+        }
+        return render(request, self.template_name, context)
+
+
 class LoginView(View):
     template_name = 'accounts/login.html'
 
@@ -38,43 +49,3 @@ class LogoutView(View):
     def get(self, request):
         logout(request)
         return redirect('accounts:login')
-
-
-class RegisterView(View):
-    template_name = 'accounts/register.html'
-
-    def get(self, request):
-        return render(request, self.template_name)
-
-    def post(self, request, *args, **kwargs):
-
-        if request.method == 'POST':
-            first_name = request.POST['first_name']
-            last_name = request.POST['last_name']
-            other_name = request.POST['last_name']
-            email = request.POST['username']
-            phone = request.POST['phone']
-            gender = request.POST['gender']
-            password1 = request.POST['password1']
-            password2 = request.POST['password2']
-
-            if password1 == password2:
-
-                if User.objects.filter(phone=phone).exists():
-                    messages.error(request, 'Phone number already exists.')
-                    return redirect('create_user')
-                else:
-                    user = User(
-                        first_name=first_name,
-                        last_name=last_name,
-                        other_name=other_name,
-                        email=email,
-                        phone=phone,
-                        gender=gender,
-                        password=password1,
-                    )
-            user.photo = request.FILES.get('photo')
-            user.save()
-            print(user)
-            messages.success(request, 'user created successfully.')
-            return redirect('dashboard:index')

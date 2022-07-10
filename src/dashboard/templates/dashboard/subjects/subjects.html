@@ -64,7 +64,7 @@
                         <td class="d-flex">
                             {% if perms.dashboard.change_subject %}
                             <a href="{% url 'dashboard:create_update_subject' %}?subject_id={{subject.id}}"
-                                class="me-3 d-flex text-primary">
+                                class="me-3 d-flex btn btn-sm btn-light">
                                 <i class="bi bi-pencil me-1"></i>
                                 Edit
                             </a>
@@ -72,10 +72,10 @@
                             {% if perms.dashboard.delete_subject %}
                             <form action="{% url 'dashboard:delete_model' subject.model_name subject.id %}"
                                 method="POST" class="requires-confirmation"
-                                data-message="Click on okay to permanently delete {{subject.name}}">
+                                data-message="Click on okay to permanently delete '{{subject.name}}'.">
                                 {% csrf_token %}
                                 <input type="hidden" name="subject_id" value="{{subject.id}}">
-                                <button type="submit" class="btn btn-sm btn-outline-danger"><span class="d-flex">
+                                <button type="submit" class="btn btn-sm btn-light"><span class="d-flex">
                                         <i class="bi bi-trash"></i> Delete</span>
                                 </button>
                             </form>

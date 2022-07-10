@@ -1,4 +1,3 @@
-from pickle import TRUE
 from random import sample
 from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager,
                                         PermissionsMixin)
@@ -40,7 +39,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=30, unique=True)
     surname = models.CharField(max_length=30, null=True, blank=True)
     other_names = models.CharField(max_length=255, null=True, blank=True)
-    phone = models.CharField(max_length=255, unique=True,null=True,blank=True) #yapf: disable
+    phone = models.CharField(max_length=10,null=True,blank=True) #yapf: disable
     title = models.CharField(max_length=20,default="", blank=True) #yapf: disable
     photo = models.ImageField(upload_to='users', blank=True)
     gender = models.CharField(max_length=20, blank=True, null=True)
@@ -58,6 +57,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManger()
 
     USERNAME_FIELD = 'username'
+
+    class Meta:
+        permissions = [
+            ('reset_password', 'Can reset user password'),
+        ]
+
+    def model_name(self):
+        return self.__class__.__name__
 
     def get_title(self):
         group = self.groups.first()
