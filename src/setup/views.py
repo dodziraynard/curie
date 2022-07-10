@@ -27,7 +27,6 @@ class IndexView(View):
         school_sessions = SchoolSession.objects.all()
         staff = Staff.objects.filter(has_left=False, user__is_active=True)
         school = School.objects.first()
-
         context = {
             'roles': roles,
             'users': users,

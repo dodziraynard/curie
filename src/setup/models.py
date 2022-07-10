@@ -104,6 +104,10 @@ class School(ModelMixin):
                                         on_delete=models.SET_NULL,
                                         null=True,
                                         blank=True)
+    current_track = models.ForeignKey(Track,
+                                      on_delete=models.SET_NULL,
+                                      null=True,
+                                      blank=True)
     sms_sender_id = models.CharField(max_length=255, blank=True, null=True)
     sms_active = models.BooleanField(default=True)
     is_active = models.BooleanField(default=True)
