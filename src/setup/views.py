@@ -6,8 +6,9 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
 from dashboard.mixins import CreateUpdateMixin
+from dashboard.models import Staff
 from setup.forms import AttitudeForm, GroupForm, InterestForm, ConductForm, GradingSystemForm, SchoolSessionForm, TrackForm
-from setup.models import Attitude, Conduct, GradingSystem, Interest, SchoolSession, Track
+from setup.models import Attitude, Conduct, GradingSystem, Interest, School, SchoolSession, Track
 
 
 class IndexView(View):
@@ -24,6 +25,9 @@ class IndexView(View):
         tracks = Track.objects.all()
         grading_systems = GradingSystem.objects.all()
         school_sessions = SchoolSession.objects.all()
+        staff = Staff.objects.filter(has_left=False, user__is_active=True)
+        school = School.objects.first()
+
         context = {
             'roles': roles,
             'users': users,
@@ -31,8 +35,10 @@ class IndexView(View):
             'conducts': conducts,
             'attitudes': attitudes,
             'tracks': tracks,
+            'staff': staff,
             'grading_systems': grading_systems,
             'school_sessions': school_sessions,
+            'school': school,
         }
         return render(request, self.template_name, context)
 
@@ -165,27 +171,22 @@ class CreateUpdateGradingSystemView(PermissionRequiredMixin,
     )
 
 
-# class FormSimpleModelsView(PermissionRequiredMixin, View):
-#     permission_required = [
-#         "setup.manage_setup",
-#     ]
+class UpdateSchoolInfo(PermissionRequiredMixin, View):
+    permission_required = [
+        "setup.manage_setup",
+    ]
 
-#     @method_decorator(login_required(login_url="accounts:login"))
-#     def post(self, request, model_name):
-#         instance_id = request.POST.get("instance_id")
-#         text = request.POST.get("text")
+    @method_decorator(login_required(login_url="accounts:login"))
+    def get(self, request):
+        return redirect("setup:index")
 
-#         # Get the model
-#         content_type = ContentType.objects.filter(model=model_name).first()
-#         if not content_type:
-#             raise PermissionDenied("Model not found")
+    @method_decorator(login_required(login_url="accounts:login"))
+    def post(self, request):
+        school = School.objects.first() or School.objects.create()
 
-#         model_class = content_type.model_class()
-#         instance = model_class.objects.filter(id=instance_id).first()
-#         if not instance:
-#             instance = model_class.objects.create(text=text)
-#         else:
-#             instance.text = text
-#         instance.save()
-
-#         return redirect(request.META.get("HTTP_REFERER") or "setup:index")
+        # Update
+        for key, value in [*request.POST.items(), *request.FILES.items()]:
+            if hasattr(school, key) and value:
+                setattr(school, key, value)
+        school.save()
+        return redirect(request.META.get("HTTP_REFERER") or "setup:index")

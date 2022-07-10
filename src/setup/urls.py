@@ -17,4 +17,6 @@ urlpatterns = [
     path('create-update-track/', views.CreateUpdateTrackView.as_view(), name='create_update_track'),
     path('create-update-grading-system/', views.CreateUpdateGradingSystemView.as_view(), name='create_update_grading_system'),
     path('create-update-school-session/', views.CreateUpdateSchoolSessionView.as_view(), name='create_update_school_session'),
+
+    path('update-school-info/', views.UpdateSchoolInfo.as_view(), name='update_school_info'),
 ]

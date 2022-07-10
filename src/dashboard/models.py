@@ -2,7 +2,7 @@ from django.db import models
 from accounts.models import User
 from django.utils import timezone
 
-from setup.models import ModelMixin, Track, Attitude, Conduct, Interest, SchoolSession
+from setup.models import GradingSystem, ModelMixin, Track, Attitude, Conduct, Interest, SchoolSession
 
 
 class Student(ModelMixin):

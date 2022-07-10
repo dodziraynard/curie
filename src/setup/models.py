@@ -81,3 +81,40 @@ class GradingSystem(ModelMixin):
 
     def __str__(self):
         return f"{self.min_score} - {self.grade} - {self.remark}"
+
+
+class School(ModelMixin):
+    code = models.CharField(max_length=255, blank=True, null=True)
+    name = models.CharField(max_length=255, blank=True, null=True)
+    address = models.CharField(max_length=255, blank=True, null=True)
+    email_address = models.EmailField(max_length=255, blank=True, null=True)
+    phone = models.CharField(max_length=255, blank=True, null=True)
+    logo = models.ImageField(upload_to="school_logos", blank=True, null=True)
+    head_teacher = models.OneToOneField("dashboard.Staff",
+                                        null=True,
+                                        blank=True,
+                                        on_delete=models.SET_NULL)
+    assistant_head_teacher = models.OneToOneField(
+        "dashboard.Staff",
+        related_name="assistance_school",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL)
+    current_session = models.ForeignKey(SchoolSession,
+                                        on_delete=models.SET_NULL,
+                                        null=True,
+                                        blank=True)
+    sms_sender_id = models.CharField(max_length=255, blank=True, null=True)
+    sms_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        db_table = "schools"
+
+    def __str__(self):
+        return self.name
+
+    def get_logo_url(self):
+        if self.logo:
+            return self.logo.url
+        return "/static/images/logo.png"

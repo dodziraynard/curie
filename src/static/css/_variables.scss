@@ -1,7 +1,7 @@
 $primary: rgb(32, 60, 108);
 $primary-light: rgba(32, 60, 108, 0.8);
 
-$background: rgb(243, 243, 243);
+$background: rgba($primary, 0.05);
 $background-light: rgb(255, 255, 255);
 
 $success: rgb(66, 188, 93);

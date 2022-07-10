@@ -32,6 +32,8 @@
                     <table class="table table-sm">
                         <thead>
                             <tr>
+                                <th>S/N</th>
+                                <th>ID</th>
                                 <th>Name</th>
                                 <th>Actions</th>
                             </tr>
@@ -39,6 +41,8 @@
                         <tbody>
                             {% for role in roles %}
                             <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{role.id}}</td>
                                 <td><a href="{% url 'setup:roles_management' role.id %}">{{role.name}}</a> </td>
                                 <td class="d-flex">
                                     <a href="{% url 'setup:roles_management' role.id %}"
@@ -398,6 +402,155 @@
         </div>
 
         <h4 class="mt-3">THE SCHOOL</h4>
+        <div class="col-md-6 p-2">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <h6>MY SCHOOL</h6>
+                </div>
+                <div class="card-body p-3">
+                    <form action="{% url 'setup:update_school_info' %}" class="needs-validation" method="POST"
+                        enctype="multipart/form-data" novalidate>
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-4 form-group">
+                                <label for="code">Code</label>
+                                <input type="text" class="form-control" id="code" name="code" value="{{school.code}}"
+                                    required>
+                                <div class="invalid-feedback">
+                                    Please enter this filed is required.
+                                </div>
+                            </div>
+                            <div class="col-md-8 form-group">
+                                <label for="name">Name</label>
+                                <input type="text" class="form-control" id="name" name="name" value="{{school.name}}"
+                                    required>
+                                <div class="invalid-feedback">
+                                    Please enter this filed is required.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 form-group">
+                                <label for="phone">Phone</label>
+                                <input type="text" class="form-control" id="phone" name="phone"
+                                    pattern="0[1-9]{1}[0-9]{8}" value="{{school.phone}}">
+                                <div class="invalid-feedback">
+                                    Please enter a valid 10-digit phone number.
+                                </div>
+                            </div>
+                            <div class="col-md-8 form-group">
+                                <label for="email_address">Email Address</label>
+                                <input type="text" class="form-control" id="email_address" name="email_address"
+                                    value="{{school.email_address}}">
+                            </div>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label for="address">Address</label>
+                            <textarea class="form-control" id="address" name="address"
+                                rows="3">{{school.address}}</textarea>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label for="logo">Logo</label>
+                            <br>
+                            {% if school.logo %}
+                            Current: <a href="{{school.get_logo_url}}"><img src="{{school.get_logo_url}}"
+                                    alt="{{school.name}}" height="50"></a>
+                            {% endif %}
+                            <input type="file" class="form-control" id="logo" name="logo">
+                            <div class="invalid-feedback">
+                                Please enter this filed is required.
+                            </div>
+                        </div>
+
+
+                        <div class="form-group mt-3">
+                            <label for="head_teacher">Head Teacher</label>
+                            <select class="form-control" name="head_teacher_id" id="head_teacher" required>
+                                <option value="">Select Head Teacher</option>
+                                {% for teacher in staff %}
+                                <option value="{{teacher.id}}" {% if school.head_teacher.id == teacher.id %}selected{% endif %}>
+                                    {{teacher.user.get_name}}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <div class="invalid-feedback">
+                                Please enter this filed is required.
+                            </div>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label for="assistant_head_teacher">Ass. Head Teacher</label>
+                            <select class="form-control" name="assistant_head_teacher_id" id="assistant_head_teacher"
+                                required>
+                                <option value="">Select Head Ass. Teacher</option>
+                                {% for teacher in staff %}
+                                <option value="{{teacher.id}}" {% if school.assistant_head_teacher.id == teacher.id %}selected{% endif %}>
+                                    {{teacher.user.get_name}}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <div class="invalid-feedback">
+                                Please enter this filed is required.
+                            </div>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label for="current_session">Current School Session</label>
+                            <select class="form-control" name="current_session_id" id="current_session" required>
+                                <option value="">Select session</option>
+                                {% for session in school_sessions %}
+                                <option value="{{session.id}}" {% if school.current_session.id == session.id %}selected{% endif %}>
+                                    {{session.name}}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <div class="invalid-feedback">
+                                Please enter this filed is required.
+                            </div>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 p-2">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <h6>SMS CONFIG</h6>
+                </div>
+                <div class="card-body p-3">
+                    <form class="needs-validation" action="{% url 'setup:update_school_info' %}" method="POST"
+                        novalidate>
+                        {% csrf_token %}
+                        <div class="d-flex align-items-center">
+                            <div class="col-md-4 form-group">
+                                <label for="sms_sender_id">Sender SMS ID</label>
+                                <input type="text" class="form-control" id="sms_sender_id" name="sms_sender_id"
+                                    maxlength="11" value="{{school.sms_sender_id}}" required>
+                                <div class="invalid-feedback">
+                                    Please this field is required.
+                                </div>
+                            </div>
+                            <div class="col-md-8 mt-4 ps-3 form-group">
+                                <label for="name">SMS Enabled</label>
+                                <input class="form-check-input" value="1" type="checkbox" name="sms_active" disabled
+                                    {% if school.sms_active %}checked{% endif %}>
+                            </div>
+                        </div>
+                        <div class="form-group mt-3">
+                            <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
 
 
