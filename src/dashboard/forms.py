@@ -1,6 +1,6 @@
 from django import forms
 
-from dashboard.models import Course, Department, Subject
+from dashboard.models import Course, Department, Klass, Subject
 
 
 class SubjectForm(forms.ModelForm):
@@ -26,6 +26,16 @@ class CourseForm(forms.ModelForm):
 class DepartmentForm(forms.ModelForm):
     class Meta:
         model = Department
+        exclude = [
+            "id",
+            "created_at",
+            "updated_at",
+        ]
+
+
+class ClassForm(forms.ModelForm):
+    class Meta:
+        model = Klass
         exclude = [
             "id",
             "created_at",

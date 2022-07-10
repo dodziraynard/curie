@@ -22,11 +22,13 @@
         <select class="form-control" name="department" id="department" required>
             <option value="">--- Click to select --- </option>
             {% for department in departments %}
-            <option value="{{department.id}}" {% if department.id == department_id %}selected{% endif %}>
+            <option value="{{department.id}}" {% if department.id == subject.department.id %}selected{% endif %}>
                 {{department.name}}
             </option>
             {% endfor %}
         </select>
+        <a href="{% url 'dashboard:departments' %}" target="_blank" class="mt-2 text-end d-block text-primary"><i
+                class="bi bi-plus"></i> Go to Department</a>
     </div>
 
     <div class="mt-4 form-group">

@@ -47,6 +47,7 @@ class CreateUpdateStaffView(PermissionRequiredMixin, CreateUpdateMixin):
         if hasattr(self, "get_context_data"):
             context.update(self.get_context_data())
         context.update(make_model_key_value(obj))
+        context.update(make_model_key_value(obj.user))
         return render(request, self.template_name, context)
 
     @method_decorator(login_required(login_url="accounts:login"))

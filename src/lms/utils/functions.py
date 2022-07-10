@@ -18,9 +18,10 @@ def get_errors_from_form(form):
 
 
 def make_model_key_value(obj):
+    ignores = ["password"]
     data = {}
     for field in obj._meta.fields:
-        if field.name in obj.__dict__:
+        if field.name in obj.__dict__ and field.name not in ignores:
             value = obj.__dict__[field.name]
             if isinstance(value, datetime.datetime) or isinstance(
                     value, datetime.date):

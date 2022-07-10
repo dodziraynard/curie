@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from dashboard.forms import SubjectForm
 
 from dashboard.mixins import CreateUpdateMixin
-from dashboard.models import Subject
+from dashboard.models import Department, Subject
 
 
 class SubjectsView(PermissionRequiredMixin, View):
@@ -18,7 +18,11 @@ class SubjectsView(PermissionRequiredMixin, View):
     @method_decorator(login_required(login_url="accounts:login"))
     def get(self, request):
         subjects = Subject.objects.all()
-        context = {"subjects": subjects}
+        departments = Department.objects.all()
+        context = {
+            "subjects": subjects,
+            "departments": departments,
+        }
         return render(request, self.template_name, context)
 
 
@@ -33,3 +37,8 @@ class CreateUpdateSubjectView(PermissionRequiredMixin, CreateUpdateMixin):
         "dashboard.add_subject",
         "dashboard.change_subject",
     )
+
+    def get_context_data(self):
+        return {
+            "departments": Department.objects.all(),
+        }

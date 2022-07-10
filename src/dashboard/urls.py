@@ -27,4 +27,8 @@ urlpatterns = [
     # Staff
     path('staff/', views.StaffView.as_view(), name='staff'),
     path('staff/create-update', views.CreateUpdateStaffView.as_view(), name="create_update_staff"),
+
+    # Staff
+    path('classes/', views.ClassesView.as_view(), name='classes'),
+    path('classes/create-update', views.CreateUpdateClassView.as_view(), name="create_update_class"),
 ]

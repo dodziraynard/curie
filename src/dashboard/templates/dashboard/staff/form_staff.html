@@ -15,8 +15,8 @@
             <label for="name">Title</label>
             <select class="form-control" name="title" id="title" required>
                 <option value="">--Click to select--</option>
-                <option value="mr">Mr</option>
-                <option value="mrs">Mrs</option>
+                <option value="mr" {% if title == 'mr' %}selected{% endif %}>Mr</option>
+                <option value="mrs" {% if title == 'mrs' %}selected{% endif %}>Mrs</option>
             </select>
             <div class="invalid-feedback">
                 Please this field is required.
@@ -41,14 +41,13 @@
         </div>
     </div>
 
-
     <div class="row">
         <div class="form-group col-md-6 mt-4">
             <label for="name">Gender</label>
             <select class="form-control" name="gender" id="gender" required>
                 <option value="">--Click to select--</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
+                <option value="male" {% if gender == 'male' %}selected{% endif %}>Male</option>
+                <option value="female" {% if gender == 'female' %}selected{% endif %}>Female</option>
             </select>
             <div class="invalid-feedback">
                 Please this field is required.
@@ -64,15 +63,23 @@
         </div>
     </div>
 
-    <div class="form-group col-md-6 mt-4">
-        <label for="photo">Photo</label>
-        <input class="form-control" type="file" name="photo" id="photo">
-        <div class="invalid-feedback">
-            Please this field is required.
+    <div class="row mt-4">
+        <div class="form-group col-md-6">
+            <label for="photo">Photo</label>
+            <input class="form-control" type="file" name="photo" id="photo">
+            <div class="invalid-feedback">
+                Please this field is required.
+            </div>
+        </div>
+
+        <div class="form-group col-md-6">
+            <div class="form-check mt-4">
+                <label for="has_left">Has left</label>
+                <input class="form-check-input" type="checkbox" value="1" name="has_left" id="has_left"
+                    {% if has_left %}checked{% endif %}>
+            </div>
         </div>
     </div>
-
-
 
     <div class="mt-4 form-group">
         <button type="submit" class="btn btn-primary btn-sm">Submit</button>
