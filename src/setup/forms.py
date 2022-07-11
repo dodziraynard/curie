@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth.models import Group
-from .models import Interest, Attitude, Conduct, GradingSystem, SchoolSession, Track
+
+from .models import (Attitude, Conduct, GradingSystem, Interest, SchoolSession,
+                     Track)
 
 
 class GroupForm(forms.ModelForm):

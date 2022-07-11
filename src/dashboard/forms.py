@@ -1,6 +1,6 @@
 from django import forms
 
-from dashboard.models import Course, Department, Klass, Subject, House
+from dashboard.models import Course, Department, House, Klass, Subject
 
 
 class SubjectForm(forms.ModelForm):

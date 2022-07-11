@@ -1,14 +1,14 @@
-from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.shortcuts import get_object_or_404, render, redirect
-from django.views import View
-from django.utils.decorators import method_decorator
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from accounts.models import User
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.shortcuts import get_object_or_404, redirect, render
+from django.utils.decorators import method_decorator
+from django.views import View
 
+from accounts.models import User
 from dashboard.mixins import CreateUpdateMixin
 from dashboard.models import Staff
 from lms.utils.functions import make_model_key_value
-from django.contrib import messages
 
 
 class StaffView(PermissionRequiredMixin, View):
@@ -56,17 +56,20 @@ class CreateUpdateStaffView(PermissionRequiredMixin, CreateUpdateMixin):
         username = request.POST.get("username")
         if not username:
             messages.error(request, "Username is required.")
+            return redirect(self.redirect_url or "dashboard:index")
+
         staff = Staff.objects.filter(id=staff_id).first()
 
         if not staff:
             user, _ = User.objects.get_or_create(username=username)
             user.set_password(user.temporal_pin)
             user.save()
-            staff, _ = Staff.objects.get_or_create(staff_id=username, user=user)
+            staff, _ = Staff.objects.get_or_create(staff_id=username,
+                                                   user=user)
         else:
             user = staff.user
 
-        for key, value in request.POST.items():
+        for key, value in [*request.POST.items(), *request.FILES.items()]:
             if key in ["staff_id"]: continue
             if hasattr(staff, key):
                 setattr(staff, key, value)

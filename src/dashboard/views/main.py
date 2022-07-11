@@ -1,11 +1,11 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect, render
-from django.views import View
 from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
+from django.views import View
 
 
 class IndexView(PermissionRequiredMixin, View):

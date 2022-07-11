@@ -11,16 +11,87 @@
 
 {% block content %}
 
-<h4 class="page-header"><i class='icon bx bx-group'></i> STUDENTS</h4>
+<!-- Modal -->
+<div class="modal fade" id="studentModal" tabindex="-1" aria-labelledby="studentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content px-4">
+            <div class="modal-header">
+                <h5 class="modal-title" id="studentModalLabel">Add Student</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            {% include 'dashboard/students/form_student.html' %}
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End of Modal -->
+
+<h4 class="page-header"><i class='icon bx bx-group'></i> SUBJECTS</h4>
 <section class="card">
     <div class="card-header d-flex justify-content-between">
-        <h6>Students</h6>
+        <h4>Students</h4>
         <div class="">
-            <a href="" class="btn btn-sm btn-primary"><i class="bi bi-plus"></i> Add</a>
+            {% if perms.dashboard.add_student %}
+            <button class="d-flex btn btn-sm btn-primary my-1" data-bs-toggle="modal" data-bs-target="#studentModal"><i
+                    class="bi bi-plus"></i> Add
+            </button>
+            {% endif %}
         </div>
     </div>
     <div class="card-body">
-        Body
+        <div class="col-md-10 mx-auto" style="overflow-x: auto;">
+            <table class="table data-table">
+                <thead class="bg-primary text-light">
+                    <tr>
+                        <th>S/N</th>
+                        <th>Student ID</th>
+                        <th>Title</th>
+                        <th>Surname</th>
+                        <th>Other Names</th>
+                        <th>Class</th>
+                        <th>Gender</th>
+                        <th>Phone Number</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{student.student_id}}</td>
+                        <td>{{student.user.title}}</td>
+                        <td>{{student.user.surname}}</td>
+                        <td>{{student.user.other_names}}</td>
+                        <td>{{student.klass.name }}</td>
+                        <td>{{student.user.gender }}</td>
+                        <td>{{student.user.phone }}</td>
+                        <td class="d-flex">
+                            {% if perms.dashboard.change_student %}
+                            <a href="{% url 'dashboard:create_update_student' %}?id={{student.id}}"
+                                class="me-3 d-flex btn btn-sm btn-light">
+                                <i class="bi bi-pencil me-1"></i>
+                                Edit
+                            </a>
+                            {% endif %}
+                            {% if perms.dashboard.delete_student %}
+                            <form action="{% url 'dashboard:delete_model' student.model_name student.id %}"
+                                method="POST" class="requires-confirmation"
+                                data-message="Click on okay to permanently delete '{{student.name}}'.">
+                                {% csrf_token %}
+                                <input type="hidden" name="student_id" value="{{student.id}}">
+                                <button type="submit" class="btn btn-sm btn-light"><span class="d-flex">
+                                        <i class="bi bi-trash"></i> Delete</span>
+                                </button>
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </section>
 

@@ -1,12 +1,12 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render
-from django.views import View
 from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
-from dashboard.forms import HouseForm
+from django.views import View
 
+from dashboard.forms import HouseForm
 from dashboard.mixins import CreateUpdateMixin
-from dashboard.models import Staff, House
+from dashboard.models import House, Staff
 
 
 class HousesView(PermissionRequiredMixin, View):
@@ -19,7 +19,6 @@ class HousesView(PermissionRequiredMixin, View):
     def get(self, request):
         houses = House.objects.all()
         staff = Staff.objects.filter(has_left=False, user__is_active=True)
-        print('staff', staff)
         context = {
             "houses": houses,
             "staff": staff,

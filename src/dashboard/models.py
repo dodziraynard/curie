@@ -1,8 +1,9 @@
 from django.db import models
-from accounts.models import User
 from django.utils import timezone
 
-from setup.models import GradingSystem, ModelMixin, Track, Attitude, Conduct, Interest, SchoolSession
+from accounts.models import User
+from setup.models import (Attitude, Conduct, GradingSystem, Interest,
+                          ModelMixin, SchoolSession, Track)
 
 
 class Student(ModelMixin):
@@ -10,16 +11,24 @@ class Student(ModelMixin):
     klass = models.ForeignKey("Klass",
                               related_name="students",
                               on_delete=models.SET_NULL,
+                              blank=True,
                               null=True)
     electives = models.ManyToManyField("Subject",
                                        related_name="students",
                                        blank=True)
-    house = models.ForeignKey("House", on_delete=models.SET_NULL, null=True)
+    house = models.ForeignKey("House",
+                              on_delete=models.SET_NULL,
+                              blank=True,
+                              null=True)
     bio = models.TextField(null=True, blank=True)
     track = models.ForeignKey(Track,
                               on_delete=models.SET_NULL,
                               null=True,
                               blank=True)
+    course = models.ForeignKey("Course",
+                               on_delete=models.SET_NULL,
+                               null=True,
+                               blank=True)
     father = models.CharField(max_length=200, null=True, blank=True)
     mother = models.CharField(max_length=200, null=True, blank=True)
     completed = models.BooleanField(default=False)
@@ -130,7 +139,7 @@ class Course(ModelMixin):
 class Subject(ModelMixin):
     code = models.CharField(max_length=50, unique=True)
     name = models.CharField(max_length=100, unique=True)
-    department = models.ForeignKey("Staff",
+    department = models.ForeignKey("Department",
                                    related_name="subjects",
                                    null=True,
                                    blank=True,

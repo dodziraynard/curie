@@ -1,10 +1,10 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render
-from django.views import View
 from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
-from dashboard.forms import DepartmentForm
+from django.views import View
 
+from dashboard.forms import DepartmentForm
 from dashboard.mixins import CreateUpdateMixin
 from dashboard.models import Department, Staff
 

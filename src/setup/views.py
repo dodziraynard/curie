@@ -5,10 +5,13 @@ from django.contrib.auth.models import Group, Permission
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
+
 from dashboard.mixins import CreateUpdateMixin
 from dashboard.models import Staff
-from setup.forms import AttitudeForm, GroupForm, InterestForm, ConductForm, GradingSystemForm, SchoolSessionForm, TrackForm
-from setup.models import Attitude, Conduct, GradingSystem, Interest, School, SchoolSession, Track
+from setup.forms import (AttitudeForm, ConductForm, GradingSystemForm,
+                         GroupForm, InterestForm, SchoolSessionForm, TrackForm)
+from setup.models import (Attitude, Conduct, GradingSystem, Interest, School,
+                          SchoolSession, Track)
 
 
 class IndexView(View):
