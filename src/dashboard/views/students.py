@@ -4,13 +4,16 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.contrib import messages
-from accounts.models import User
 
 from dashboard.mixins import CreateUpdateMixin
 from dashboard.models import Course, House, Klass, Student, Subject
 from django.core.exceptions import ValidationError
+from dashboard.utils.sheet_operations import insert_students
 
 from lms.utils.functions import make_model_key_value
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 class StudentsView(PermissionRequiredMixin, View):
@@ -106,6 +109,28 @@ class CreateUpdateStudentView(PermissionRequiredMixin, CreateUpdateMixin):
 
         user.save()
         student.electives.set(electives)
-        print("electives",electives)
         student.save()
         return redirect(request.META.get("HTTP_REFERER") or "dashboard:index")
+
+
+class AddBulkStudents(PermissionRequiredMixin, View):
+    template_name = "dashboard/students/add_bulk_students.html"
+    permission_required = [
+        "dashboard.add_student",
+    ]
+
+    @method_decorator(login_required(login_url="accounts:login"))
+    def get(self, request):
+        context = {}
+        return render(request, self.template_name, context)
+
+    @method_decorator(login_required(login_url="accounts:login"))
+    def post(self, request):
+        file = request.FILES.get("file")
+        result = insert_students(file.file)
+        context = {
+            "error_messages": result,
+        }
+        if not result:
+            messages.success(request, "Students added successfully.")
+        return render(request, self.template_name, context)

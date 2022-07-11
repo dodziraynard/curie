@@ -1,9 +1,11 @@
 from django.db import models
 from django.utils import timezone
 
-from accounts.models import User
 from setup.models import (Attitude, Conduct, GradingSystem, Interest,
                           ModelMixin, SchoolSession, Track)
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 class Student(ModelMixin):

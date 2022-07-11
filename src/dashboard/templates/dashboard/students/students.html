@@ -32,10 +32,15 @@
 <section class="card">
     <div class="card-header d-flex justify-content-between">
         <h4>Students</h4>
-        <div class="">
+        <div class="d-flex">
             {% if perms.dashboard.add_student %}
-            <button class="d-flex btn btn-sm btn-primary my-1" data-bs-toggle="modal" data-bs-target="#studentModal"><i
-                    class="bi bi-plus"></i> Add
+            <a href="{% url 'dashboard:create_update_student_bulk' %}" class="my-1 mx-2">
+                <button class="btn btn-sm btn-primary d-flex">
+                    <i class="bi bi-plus"></i> Add Bulk
+                </button>
+            </a>
+            <button class="d-flex btn btn-sm btn-primary my-1" data-bs-toggle="modal" data-bs-target="#studentModal">
+                <i class="bi bi-plus"></i> Add Single
             </button>
             {% endif %}
         </div>

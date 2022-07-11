@@ -45,6 +45,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     photo = models.ImageField(upload_to='users', blank=True)
     gender = models.CharField(max_length=20, blank=True, null=True)
     temporal_pin = models.CharField(max_length=10, null=True, blank=True)
+    dob = models.DateTimeField(null=True, blank=True)
 
     activated = models.BooleanField(default=False)
     last_login = models.DateTimeField(auto_now=True)
@@ -81,3 +82,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         if self.surname and self.other_names and self.title:
             return f"{self.title.title()} {self.surname.title()} {self.other_names.title()}"
         return self.username.split('@')[0].title()
+
+    def save(self, *args, **kwargs):
+        if self.gender:
+            self.gender = self.gender.lower()
+        if self.title:
+            self.title = self.title.lower()
+        super().save(*args, **kwargs)

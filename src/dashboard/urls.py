@@ -12,6 +12,7 @@ urlpatterns = [
     # Students
     path('students/', views.StudentsView.as_view(), name='students'),
     path('students/create-update', views.CreateUpdateStudentView.as_view(), name='create_update_student'),
+    path('students/create-update-bulk', views.AddBulkStudents.as_view(), name='create_update_student_bulk'),
 
     # Subjects
     path('subjects/', views.SubjectsView.as_view(), name='subjects'),

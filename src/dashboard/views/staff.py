@@ -5,10 +5,12 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
 
-from accounts.models import User
 from dashboard.mixins import CreateUpdateMixin
 from dashboard.models import Staff
 from lms.utils.functions import make_model_key_value
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 class StaffView(PermissionRequiredMixin, View):
