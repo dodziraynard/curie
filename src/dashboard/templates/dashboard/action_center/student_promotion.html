@@ -1,0 +1,47 @@
+{% extends 'templates/dashboard/base_template.html' %}
+{% block page_title %}Student Promotion{% endblock %}
+{% block active-sidebar-item-id %}action_center{%endblock%}
+
+{% block breadcrumb %}
+<section class="breadcrumb">
+    <a href="{% url 'dashboard:index' %}" class="">Home <i class="bi bi-chevron-right"></i></a>
+    <a href="{% url 'dashboard:action_center' %}" class="">Action Center <i class="bi bi-chevron-right"></i></a>
+    <a href="" class="active">Student Promotion</a>
+</section>
+{% endblock %}
+
+{% block content %}
+
+<h4 class="page-header"><i class='icon bx bx-group'></i> STUDENT PROMOTION</h4>
+<section class="card">
+    <div class="card-header d-flex justify-content-between">
+        <h4>Promotion</h4>
+    </div>
+    <div class="card-body">
+        <form action="" class="col-md-6 mx-auto needs-validation" method="post" novalidate>
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="exceptions">Move all students except ...</label>
+                <textarea class="form-control" name="exceptions" id="exceptions" cols="30" rows="3"
+                    placeholder="Enter student IDs separated by comma."></textarea>
+            </div>
+            <div class="form-group my-3">
+                <label for="step">Action <span class="text-danger">*</span> </label>
+                <select name="step" id="step" class="form-control" required>
+                    <option value="">--- Select action ---</option>
+                    <option value="1">To next Class</option>
+                    <option value="-1">To previous class</option>
+                </select>
+                <div class="invalid-feedback">
+                    Please select an action.
+                </div>
+            </div>
+
+            <div class="form-group d-flex justify-content-end my-4">
+                <button type="submit" class="bnt btn-sm btn-primary">Execute</button>
+            </div>
+        </form>
+    </div>
+</section>
+
+{% endblock %}

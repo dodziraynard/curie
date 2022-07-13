@@ -5,7 +5,7 @@ from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.contrib.auth import get_user_model
-from dashboard.models import Klass, Staff, Subject, SubjectMapping
+from dashboard.models import Klass, Staff, Student, Subject, SubjectMapping
 
 from setup.models import School, SchoolSession
 
@@ -92,4 +92,46 @@ class SubjectMappingView(PermissionRequiredMixin, View):
                 subject_mapping.save()
             else:
                 messages.error(request, "Invalid mapping")
+        return redirect(request.META.get("HTTP_REFERER"))
+
+
+class StudentPromotionView(PermissionRequiredMixin, View):
+    template_name = "dashboard/action_center/student_promotion.html"
+    permission_required = [
+        "dashboard.view_dashboard",
+        "dashboard.promote_student",
+    ]
+
+    @method_decorator(login_required(login_url="accounts:login"))
+    def get(self, request):
+        context = {}
+        return render(request, self.template_name, context)
+
+    @method_decorator(login_required(login_url="accounts:login"))
+    def post(self, request):
+        exceptions = request.POST.get("exceptions", "")
+        step = request.POST.get("step")
+        if not (step and step.lstrip("-").isdigit()):
+            messages.error(request, "Invalid step")
+            return redirect(request.META.get("HTTP_REFERER"))
+        step = int(step)
+
+        exceptions = exceptions.replace(" ", "").split(",")
+        students = Student.objects.exclude(student_id__in=exceptions)
+
+        failures = False
+        count = 0
+        for student in students:
+            res = student.promote(step)
+            if all(res):
+                count += 1
+            elif not any(res):
+                failures = True
+        if failures:
+            messages.warning(
+                request, "Suitable classes were not found for some students.")
+        else:
+            messages.success(request,
+                             f"{count} students promoted successfully")
+
         return redirect(request.META.get("HTTP_REFERER"))

@@ -41,5 +41,6 @@ urlpatterns = [
     # Action Center
     path('action-center/', views.ActionCenterView.as_view(), name='action_center'),
     path('action-center/subject-mapping', views.SubjectMappingView.as_view(), name='subject_mapping'),
+    path('action-center/student-promotion', views.StudentPromotionView.as_view(), name='student_promotion'),
 
 ]

@@ -76,6 +76,7 @@ class CreateUpdateStudentView(PermissionRequiredMixin, CreateUpdateMixin):
     def post(self, request):
         student_id = request.POST.get("id") or -1
         username = request.POST.get("student_id")
+        completed = bool(request.POST.get("completed", 0))
         electives = request.POST.getlist("elective_ids")
         electives = Subject.objects.filter(id__in=electives, is_elective=True)
 
@@ -109,6 +110,7 @@ class CreateUpdateStudentView(PermissionRequiredMixin, CreateUpdateMixin):
 
         user.save()
         student.electives.set(electives)
+        student.completed = completed
         student.save()
         return redirect(request.META.get("HTTP_REFERER") or "dashboard:index")
 

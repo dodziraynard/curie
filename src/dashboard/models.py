@@ -42,18 +42,23 @@ class Student(ModelMixin):
     def my_class(self):
         return self.klass.name
 
-    def promote(self):
+    def promote(self, step):
+        if self.completed: return (True, False)
+
         final_form = Klass.objects.order_by("-form").first().form
         self.last_promotion_date = timezone.now()
-        if self.klass.form >= final_form:
+        if self.klass.form + step > final_form:
             self.completed = True
         else:
-            next_form = self.klass.form + 1
-            next_class = Klass.objects.get(form=next_form,
-                                           stream=self.klass.stream,
-                                           course=self.klass.course)
-            self.klass = next_class
+            new_form = self.klass.form + step
+            new_class = Klass.objects.filter(form=new_form,
+                                             stream=self.klass.stream,
+                                             course=self.klass.course).first()
+            if not new_class:
+                return False, False
+            self.klass = new_class
         self.save()
+        return True, True
 
     class Meta:
         db_table = "students"
@@ -62,19 +67,21 @@ class Student(ModelMixin):
         ]
 
     def __str__(self):
-        return f"{self.surname} {self.other_names}"
+        return self.get_full_name()
 
     def get_full_name(self):
-        return f"{self.surname} {self.other_names}"
+        if self.user:
+            return f"{self.user.get_name()}"
+        return f"{self.student_id}"
 
 
 class Klass(ModelMixin):
     class_id = models.CharField(max_length=50, unique=True)
     name = models.CharField(max_length=50, unique=True)
-    class_teacher = models.OneToOneField("Staff",
-                                         related_name="klass",
-                                         null=True,
-                                         on_delete=models.SET_NULL)
+    class_teacher = models.ForeignKey("Staff",
+                                      related_name="classes",
+                                      null=True,
+                                      on_delete=models.SET_NULL)
     form = models.IntegerField(default=1)
     stream = models.CharField(max_length=5)
     course = models.ForeignKey("Course",
@@ -330,15 +337,3 @@ class House(ModelMixin):
 
     def __str__(self):
         return f"{self.student.surname} - {self.semester} {self.academic_year}"
-
-
-class PromotionHistory(ModelMixin):
-    old_class = models.ForeignKey(Klass,
-                                  related_name="old_history",
-                                  on_delete=models.CASCADE)
-    new_class = models.ForeignKey(Klass,
-                                  related_name="new_history",
-                                  on_delete=models.CASCADE)
-
-    class Meta:
-        verbose_name_plural = "Promotion Histories"

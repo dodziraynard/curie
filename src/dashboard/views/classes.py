@@ -19,9 +19,7 @@ class ClassesView(PermissionRequiredMixin, View):
     def get(self, request):
         classes = Klass.objects.all()
         courses = Course.objects.all()
-        staff = Staff.objects.filter(user__is_active=True,
-                                     klass=None,
-                                     has_left=False)
+        staff = Staff.objects.filter(user__is_active=True, has_left=False)
         context = {
             "classes": classes,
             "staff": staff,
