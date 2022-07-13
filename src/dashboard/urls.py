@@ -34,7 +34,12 @@ urlpatterns = [
     path('classes/', views.ClassesView.as_view(), name='classes'),
     path('classes/create-update', views.CreateUpdateClassView.as_view(), name="create_update_class"),
 
-     # House
+    # House
     path('houses/', views.HousesView.as_view(), name='houses'),
     path('houses/create-update', views.CreateUpdateHouseView.as_view(), name="create_update_house"),
+
+    # Action Center
+    path('action-center/', views.ActionCenterView.as_view(), name='action_center'),
+    path('action-center/subject-mapping', views.SubjectMappingView.as_view(), name='subject_mapping'),
+
 ]

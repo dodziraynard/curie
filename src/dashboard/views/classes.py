@@ -44,10 +44,7 @@ class CreateUpdateClassView(PermissionRequiredMixin, CreateUpdateMixin):
 
     def get_context_data(self):
         return {
-            "staff":
-            Staff.objects.filter(user__is_active=True,
-                                 klass=None,
-                                 has_left=False),
-            "courses":
-            Course.objects.all(),
+            "staff": Staff.objects.filter(user__is_active=True,
+                                          has_left=False),
+            "courses": Course.objects.all(),
         }

@@ -57,6 +57,9 @@ class Student(ModelMixin):
 
     class Meta:
         db_table = "students"
+        permissions = [
+            ('promote_student', 'Can promote students'),
+        ]
 
     def __str__(self):
         return f"{self.surname} {self.other_names}"
@@ -88,7 +91,6 @@ class Klass(ModelMixin):
         return Student.objects.filter(completed=False, klass=self).count()
 
     class Meta:
-        ordering = ['name']
         db_table = "classes"
         verbose_name_plural = "Classes"
         verbose_name = "Class"
@@ -108,7 +110,6 @@ class Department(ModelMixin):
                             on_delete=models.SET_NULL)
 
     class Meta:
-        ordering = ['name']
         db_table = "departments"
 
     def __str__(self):
@@ -125,7 +126,6 @@ class Course(ModelMixin):
                             on_delete=models.SET_NULL)
 
     class Meta:
-        ordering = ['name']
         db_table = "courses"
 
     def __str__(self):
@@ -148,7 +148,6 @@ class Subject(ModelMixin):
                                    on_delete=models.CASCADE)
 
     class Meta:
-        ordering = ['name']
         db_table = "subjects"
 
     def __str__(self):
@@ -163,7 +162,6 @@ class Subject(ModelMixin):
     is_elective = models.BooleanField()
 
     class Meta:
-        ordering = ['name']
         db_table = "subjects"
 
     def student_count(self):
@@ -247,7 +245,7 @@ class Record(ModelMixin):
         super(Record, self).save(*args, **kwargs)
 
 
-class SubjectAssignment(ModelMixin):
+class SubjectMapping(ModelMixin):
     subject = models.ForeignKey("Subject",
                                 on_delete=models.CASCADE,
                                 related_name="teachers")
@@ -258,10 +256,13 @@ class SubjectAssignment(ModelMixin):
     staff = models.ForeignKey(Staff,
                               related_name="teaches",
                               verbose_name="Staff",
+                              null=True,
+                              blank=True,
                               on_delete=models.CASCADE)
+    session = models.ForeignKey(SchoolSession, on_delete=models.CASCADE)
 
     class Meta:
-        db_table = "subject_assignment"
+        db_table = "subject_mapping"
 
     def subject_name(self):
         return self.subject.name
@@ -275,7 +276,8 @@ class SubjectAssignment(ModelMixin):
     def __str__(self):
         if self.subject and self.staff:
             return "{} - {}: {}".format(self.subject.name.capitalize(),
-                                        self.klass.name, self.staff.surname)
+                                        self.klass.name,
+                                        self.staff.user.get_name())
         else:
             return str(self.id)
 
@@ -324,8 +326,19 @@ class House(ModelMixin):
                                      null=True)
 
     class Meta:
-        ordering = ['name']
         db_table = "houses"
 
     def __str__(self):
         return f"{self.student.surname} - {self.semester} {self.academic_year}"
+
+
+class PromotionHistory(ModelMixin):
+    old_class = models.ForeignKey(Klass,
+                                  related_name="old_history",
+                                  on_delete=models.CASCADE)
+    new_class = models.ForeignKey(Klass,
+                                  related_name="new_history",
+                                  on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name_plural = "Promotion Histories"

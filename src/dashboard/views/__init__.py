@@ -6,3 +6,4 @@ from .main import *
 from .staff import *
 from .students import *
 from .subjects import *
+from .action_center import *

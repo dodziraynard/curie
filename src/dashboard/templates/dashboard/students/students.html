@@ -28,7 +28,7 @@
 </div>
 <!-- End of Modal -->
 
-<h4 class="page-header"><i class='icon bx bx-group'></i> SUBJECTS</h4>
+<h4 class="page-header"><i class='icon bx bx-group'></i> STUDENTS</h4>
 <section class="card">
     <div class="card-header d-flex justify-content-between">
         <h4>Students</h4>
@@ -83,7 +83,7 @@
                             {% if perms.dashboard.delete_student %}
                             <form action="{% url 'dashboard:delete_model' student.model_name student.id %}"
                                 method="POST" class="requires-confirmation"
-                                data-message="Click on okay to permanently delete '{{student.name}}'.">
+                                data-message="Click on okay to permanently delete '{{student.user.get_name}}'.">
                                 {% csrf_token %}
                                 <input type="hidden" name="student_id" value="{{student.id}}">
                                 <button type="submit" class="btn btn-sm btn-light"><span class="d-flex">

@@ -5,7 +5,8 @@
 {% block breadcrumb %}
 <section class="breadcrumb">
     <a href="{% url 'dashboard:index' %}" class="">Home <i class="bi bi-chevron-right"></i></a>
-    <a href="" class="active">Setup</a>
+    <a href="{% url 'setup:index' %}">Setup <i class="bi bi-chevron-right"></i></a>
+    <a href="" class="active">School Session</a>
 </section>
 {% endblock %}
 

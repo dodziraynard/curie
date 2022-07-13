@@ -1,4 +1,6 @@
+from datetime import datetime
 from django.db import models
+from django.utils import timezone
 
 
 class ModelMixin(models.Model):
@@ -34,12 +36,20 @@ class SchoolSession(ModelMixin):
     name = models.CharField(max_length=50)
     semester = models.IntegerField(verbose_name="Semester/Term")
     academic_year = models.CharField(max_length=10)
+    tracks = models.ManyToManyField("Track", blank=True)
+    start_date = models.DateField(verbose_name="Start Date",
+                                  null=True,
+                                  blank=True)
+    end_date = models.DateField(verbose_name="End Date", null=True, blank=True)
 
     class Meta:
         db_table = "school_sessions"
 
     def __str__(self):
         return f"{self.min_score} - {self.grade} - {self.remark}"
+
+    def active(self):
+        return self.start_date <= datetime.today().date() <= self.end_date
 
 
 class Track(ModelMixin):
@@ -117,6 +127,12 @@ class School(ModelMixin):
 
     def __str__(self):
         return self.name
+
+    def get_current_session(self):
+        if self.current_session:
+            return self.current_session
+        return SchoolSession.objects.filter(
+            date_start__lte=timezone.now()).order_by("-date_start").first()
 
     def get_logo_url(self):
         if self.logo:

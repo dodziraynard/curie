@@ -157,6 +157,11 @@ class CreateUpdateSchoolSessionView(PermissionRequiredMixin,
         "setup.change_schoolsession",
     )
 
+    def get_context_data(self, **kwargs):
+        return {
+            "tracks": Track.objects.all(),
+        }
+
 
 class CreateUpdateGradingSystemView(PermissionRequiredMixin,
                                     CreateUpdateMixin):

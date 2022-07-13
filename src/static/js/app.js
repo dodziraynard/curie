@@ -73,3 +73,12 @@ confirmationForms?.forEach(form => {
         }
     })
 })
+
+// Toggle session for subject mapping
+window.toggleSession = function (element) {
+    const sessionId = element.value
+    const location = window.location
+    const url = new URL(location)
+    url.searchParams.set("session_id", sessionId)
+    window.location.href = url.href
+}
