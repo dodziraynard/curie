@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from django.db import models
 from django.utils import timezone
 
@@ -38,6 +39,26 @@ class Student(ModelMixin):
                                 related_name="student",
                                 on_delete=models.CASCADE)
     last_promotion_date = models.DateField(default=timezone.now)
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
+
+    class Meta:
+        db_table = "students"
+        permissions = [
+            ('promote_student', 'Can promote students'),
+        ]
+
+    def save(self, *args, **kwargs):
+        COMPLETE_SCHOOL_DURATION = 3
+        if self.klass:
+            if not self.start_date:
+                self.start_date = datetime.today() - timedelta(
+                    days=(self.klass.form - 1) * 365.25)
+            if not self.end_date:
+                self.end_date = datetime.today() + timedelta(
+                    days=COMPLETE_SCHOOL_DURATION -
+                    (self.klass.form - 1) * 365.25)
+        super().save(*args, **kwargs)
 
     def my_class(self):
         return self.klass.name
@@ -59,12 +80,6 @@ class Student(ModelMixin):
             self.klass = new_class
         self.save()
         return True, True
-
-    class Meta:
-        db_table = "students"
-        permissions = [
-            ('promote_student', 'Can promote students'),
-        ]
 
     def __str__(self):
         return self.get_full_name()
@@ -214,12 +229,15 @@ class Record(ModelMixin):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     exam_score = models.IntegerField(default=0, blank=True, null=True)
     class_score = models.IntegerField(default=0, blank=True, null=True)
+    total_exam_score = models.IntegerField(default=0, blank=True, null=True)
+    total_class_score = models.IntegerField(default=0, blank=True, null=True)
     total = models.IntegerField(default=0, blank=True, null=True)
     subject = models.ForeignKey("Subject", on_delete=models.PROTECT)
-    uploaded_by = models.ForeignKey(Staff,
+    updated_by = models.ForeignKey(User,
+                                    blank=True,
+                                    null=True,
                                     related_name="records",
                                     on_delete=models.PROTECT)
-    klass = models.ForeignKey("Klass", on_delete=models.CASCADE)
     grade = models.CharField(max_length=5, blank=True, null=True)
     remark = models.CharField(max_length=20, blank=True, null=True)
     position = models.CharField(max_length=5, blank=True, null=True)
@@ -230,25 +248,30 @@ class Record(ModelMixin):
     rank = models.CharField(max_length=20, blank=True, null=True)
 
     class Meta:
+        permissions = [
+            ('manage_other_record',
+             'Can add/change academic/classwork records of other teachers'),
+        ]
         db_table = "academic_records"
 
     def __str__(self):
         return self.student.get_full_name()
 
     def save(self, *args, **kwargs):
-        self.rank = f"{self.position}/{self.roll_no}"
-        self.total = round(0.3 * float(self.class_score) +
-                           0.7 * float(self.exam_score))
+        if self.class_score and self.exam_score and self.total_class_score and self.total_exam_score:
+            self.rank = f"{self.position}/{self.roll_no}"
+            self.total = round(30 *
+                            float(self.class_score / self.total_class_score) +
+                            70 * float(self.exam_score / self.total_exam_score))
 
-        grading_system = GradingSystem.objects.filter(
-            min_score__lte=self.total).order_by("-min_score").first()
-        if grading_system:
-            self.grade = grading_system.grade
-            self.remark = grading_system.remark
-        else:
-            self.grade = "F"
-            self.remark = "Fail"
-
+            grading_system = GradingSystem.objects.filter(
+                min_score__lte=self.total).order_by("-min_score").first()
+            if grading_system:
+                self.grade = grading_system.grade
+                self.remark = grading_system.remark
+            else:
+                self.grade = "F"
+                self.remark = "Fail"
         super(Record, self).save(*args, **kwargs)
 
 

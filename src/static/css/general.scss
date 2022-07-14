@@ -196,7 +196,7 @@ a {
   }
 }
 
-.card-body{
+.card-body {
   overflow-x: auto;
 }
 
@@ -254,4 +254,9 @@ a {
     color: $primary;
     cursor: pointer;
   }
+}
+
+.inline-input {
+  width: 5em;
+  display: inline !important;
 }

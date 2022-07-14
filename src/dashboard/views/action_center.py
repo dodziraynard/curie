@@ -1,11 +1,11 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.shortcuts import redirect, render
+from django.shortcuts import get_list_or_404, get_object_or_404, redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.contrib.auth import get_user_model
-from dashboard.models import Klass, Staff, Student, Subject, SubjectMapping
+from dashboard.models import Klass, Record, Staff, Student, Subject, SubjectMapping
 
 from setup.models import School, SchoolSession
 
@@ -134,4 +134,134 @@ class StudentPromotionView(PermissionRequiredMixin, View):
             messages.success(request,
                              f"{count} students promoted successfully")
 
+        return redirect(request.META.get("HTTP_REFERER"))
+
+
+class AcademicRecordSelectionView(PermissionRequiredMixin, View):
+    template_name = "dashboard/action_center/academic_record_selection.html"
+
+    permission_required = []
+
+    @method_decorator(login_required(login_url="accounts:login"))
+    def get(self, request):
+        sessions = SchoolSession.objects.all().order_by("-start_date")
+        classes = Klass.objects.all()
+        subjects = Subject.objects.all()
+        context = {
+            "sessions": sessions,
+            "classes": classes,
+            "subjects": subjects
+        }
+        return render(request, self.template_name, context)
+
+
+class AcademicRecordDataView(PermissionRequiredMixin, View):
+    template_name = "dashboard/action_center/academic_record_data.html"
+
+    permission_required = []
+
+    @method_decorator(login_required(login_url="accounts:login"))
+    def get(self, request):
+        session = request.GET.get("session")
+        subject = request.GET.get("subject")
+        classes = request.GET.getlist("classes")
+
+        if not (session and subject):
+            messages.error(request, "Please choose a session and a subject")
+            return redirect("dashboard:academic_record_selection")
+
+        session = get_object_or_404(SchoolSession, id=session)
+        subject = get_object_or_404(Subject, id=subject)
+        classes = Klass.objects.filter(id__in=classes)
+
+        students = Student.objects.filter(start_date__lte=session.start_date,
+                                          end_date__gte=session.end_date)
+        if classes:
+            students = students.filter(klass__in=classes)
+        if subject.is_elective:
+            students = students.filter(electives=subject)
+
+        # Validate user
+        if not request.user.has_perm("dashboard.manage_other_record"):
+            mappings = SubjectMapping.objects.filter(
+                session=session,
+                staff__user_id=request.user.id,
+                subject=subject)
+            for klass in classes:
+                if not mappings.filter(klass=klass).exists():
+                    error_message = f"You do not have permission to view or modify records of {subject.name} in {klass.name} for {session.name}"
+                    messages.error(request, error_message)
+                    return redirect(request.META.get("HTTP_REFERER"))
+
+        # Get the academic records for the selected classes
+        for student in students:
+            Record.objects.get_or_create(student=student,
+                                         subject=subject,
+                                         session=session)
+
+        records = Record.objects.filter(
+            session=session, student__in=students,
+            subject=subject).order_by("student__user__surname")
+            
+        context = {
+            "records": records,
+            "session": session,
+            "subject": subject,
+        }
+        return render(request, self.template_name, context)
+
+    @method_decorator(login_required(login_url="accounts:login"))
+    def post(self, request):
+        total_class_score = request.POST.get("total_class_score") or 100
+        total_exam_score = request.POST.get("total_exam_score") or 100
+        session = request.POST.get("session")
+        subject = request.POST.get("subject")
+        class_scores = request.POST.getlist("class_scores")
+        exam_scores = request.POST.getlist("exam_scores")
+        record_ids = request.POST.getlist("record_ids")
+
+        # Validating user input
+        if not (str(total_class_score).isdigit()
+                and str(total_exam_score).isdigit()):
+            messages.error(request, "Invalid total scores")
+            return redirect(request.META.get("HTTP_REFERER"))
+
+        if not (session and subject):
+            messages.error(request, "Please choose a session and a subject")
+            return redirect(request.META.get("HTTP_REFERER"))
+
+        if len(class_scores) != len(exam_scores) != len(record_ids):
+            messages.error(request, "Invalid scores")
+            return redirect(request.META.get("HTTP_REFERER"))
+
+        session = get_object_or_404(SchoolSession, id=session)
+        subject = get_object_or_404(Subject, id=subject)
+
+        # Get the user's (teacher's) assigned classes and subjects.
+        mappings = SubjectMapping.objects.filter(
+            session=session, staff__user_id=request.user.id, subject=subject)
+
+        # Updating records
+        for record_id, class_score, exam_score in zip(record_ids, class_scores,
+                                                      exam_scores):
+            record = get_object_or_404(Record, id=record_id)
+
+            # Check whether user has the permission to modify this record.
+            if not request.user.has_perm("dashboard.manage_other_record"
+                                         ):  # Administrative permission.
+                if not mappings.filter(klass=record.klass).exists():
+                    messages.error(
+                        request,
+                        "You do not have permission to view or modify this subject record."
+                    )
+                    return redirect(request.META.get("HTTP_REFERER"))
+
+            record.total_class_score = int(total_class_score)
+            record.total_exam_score = int(total_exam_score)
+            record.class_score = int(class_score)
+            record.exam_score = int(exam_score)
+            record.updated_by = request.user
+            record.save()
+
+        messages.success(request, "Scores updated successfully")
         return redirect(request.META.get("HTTP_REFERER"))

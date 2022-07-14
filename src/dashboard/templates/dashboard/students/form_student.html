@@ -1,6 +1,8 @@
 <form action="{% url 'dashboard:create_update_student' %}" class="needs-validation my-4" method="POST" novalidate>
     {% csrf_token %}
     <input type="hidden" name="id" value="{{student.id}}">
+    <h5>BIOGRAPHY</h5>
+    <hr>
     <div class="form-group">
         <label for="name">Student ID</label>
         <input class="form-control" placeholder="E.g., 10739443" value="{{student_id}}" type="text" name="student_id"
@@ -41,7 +43,7 @@
     </div>
 
     <div class="row">
-        <div class="form-group col-md-6 mt-4">
+        <div class="form-group col-md-2 mt-4">
             <label for="name">Gender</label>
             <select class="form-control" name="gender" id="gender" required>
                 <option value="">--Click to select--</option>
@@ -52,7 +54,7 @@
                 Please this field is required.
             </div>
         </div>
-        <div class="form-group col-md-5 mt-4">
+        <div class="form-group col-md-4 mt-4">
             <label for="phone">Phone Number</label>
             <input class="form-control" placeholder="E.g, 024*******" value="{{phone}}" type="text" name="phone"
                 maxlength="10" minlength="10" pattern="0[0-9]{9}" id="phone" required>
@@ -60,18 +62,33 @@
                 Please enter a valid 10-digit phone number.
             </div>
         </div>
-    </div>
 
-    <div class="row mt-4">
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-6 mt-4">
             <label for="photo">Photo</label>
             <input class="form-control" type="file" name="photo" id="photo">
             <div class="invalid-feedback">
                 Please this field is required.
             </div>
         </div>
+    </div>
 
-        <div class="form-group col-md-6">
+    <div class="row">
+        <div class="form-group col-md-2 mt-4">
+            <label for="start_date">Start Date</label>
+           <input class="form-control" type="date" name="start_date" id="start_date" value="{{start_date}}">
+            <div class="invalid-feedback">
+                Please this field is required.
+            </div>
+        </div>
+        <div class="form-group col-md-4 mt-4">
+            <label for="end_date">End Date</label>
+           <input class="form-control" type="date" name="end_date" id="end_date" value="{{end_date}}">
+            <div class="invalid-feedback">
+                Please this field is required.
+            </div>
+        </div>
+
+        <div class="form-group col-md-4 mt-4">
             <div class="form-check mt-4">
                 <label for="completed">Completed</label>
                 <input class="form-check-input" type="checkbox" value="1" name="completed" id="completed"
@@ -79,7 +96,10 @@
             </div>
         </div>
     </div>
-    <div class="mt-4 form-group">
+    
+    <h5 class="mt-5">SCHOOL INFO</h5>
+    <hr>
+    <div class="form-group">
         <label for="house">House</label>
         <select class="form-control" name="house_id" id="house" required>
             <option value="">--- Click to select --- </option>
