@@ -1,5 +1,4 @@
 from django.urls import path
-from django_pdfkit import PDFView
 from . import views
 
 app_name = "pdf"

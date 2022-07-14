@@ -8,3 +8,4 @@ django-user-agents==0.4.0
 django-prometheus==2.2.0
 xhtml2pdf==0.2.5
 pandas>=1.4.1
+celery==5.1.0

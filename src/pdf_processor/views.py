@@ -1,7 +1,6 @@
 from django.shortcuts import get_list_or_404, render, redirect, reverse, HttpResponse, get_object_or_404
 from django.utils import timezone
 from django.views import View
-import pdfkit
 from dashboard.models import Student, Record, Klass
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.utils.decorators import method_decorator
