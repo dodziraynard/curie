@@ -15,7 +15,7 @@ ENV PATH="/home/lms/.local/bin:${PATH}"
 ENV HOME=/home/lms
 ENV APP_HOME=/home/lms/src
 RUN mkdir $APP_HOME
-RUN mkdir $APP_HOME/static
+RUN mkdir $APP_HOME/staticfiles
 RUN mkdir $APP_HOME/assets
 RUN mkdir $APP_HOME/logs
 WORKDIR $APP_HOME
