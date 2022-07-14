@@ -27,7 +27,7 @@ services:
     env_file:
       - ./.env.prod.db
     ports:
-      - 1598:5432
+      - 5432:5432
   redis:
     container_name: lms_redis
     image: "redis:alpine"
