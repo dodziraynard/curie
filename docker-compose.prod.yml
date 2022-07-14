@@ -5,7 +5,8 @@ services:
     container_name: lms
     # image: dodziraynard/lms:latest
     build: .
-    command: sh -c 'gunicorn lms.wsgi:application --bind 0.0.0.0:8000 & celery -A lms worker -l info'
+    # command: sh -c 'gunicorn lms.wsgi:application --bind 0.0.0.0:8000 & celery -A lms worker -l info'
+    command: sh -c 'gunicorn lms.wsgi:application --bind 0.0.0.0:8000'
     restart: always
     volumes:
       - static_volume:/home/lms/src/staticfiles
