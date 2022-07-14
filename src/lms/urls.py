@@ -23,6 +23,7 @@ urlpatterns = [
     path('', include('dashboard.urls')),
     path('accounts/', include('accounts.urls')),
     path('setup/', include('setup.urls')),
+    path('pdf/', include('pdf_processor.urls')),
 ]
 
 if settings.DEBUG:

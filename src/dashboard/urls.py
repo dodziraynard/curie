@@ -45,4 +45,7 @@ urlpatterns = [
     path('action-center/academic-record-selection', views.AcademicRecordSelectionView.as_view(), name='academic_record_selection'),
     path('action-center/academic-record-data', views.AcademicRecordDataView.as_view(), name='academic_record_data'),
 
+    # Reporting
+    path('reporting/index', views.ReportingIndexView.as_view(), name='reporting_index'),
+
 ]

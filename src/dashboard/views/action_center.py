@@ -195,14 +195,17 @@ class AcademicRecordDataView(PermissionRequiredMixin, View):
 
         # Get the academic records for the selected classes
         for student in students:
-            Record.objects.get_or_create(student=student,
-                                         subject=subject,
-                                         session=session)
+            record, created = Record.objects.get_or_create(student=student,
+                                                           subject=subject,
+                                                           session=session)
+            if created:
+                record.klass = student.klass
+                record.save()
 
         records = Record.objects.filter(
             session=session, student__in=students,
             subject=subject).order_by("student__user__surname")
-            
+
         context = {
             "records": records,
             "session": session,
@@ -219,6 +222,7 @@ class AcademicRecordDataView(PermissionRequiredMixin, View):
         class_scores = request.POST.getlist("class_scores")
         exam_scores = request.POST.getlist("exam_scores")
         record_ids = request.POST.getlist("record_ids")
+        classes = request.POST.getlist("classes")
 
         # Validating user input
         if not (str(total_class_score).isdigit()
@@ -230,7 +234,8 @@ class AcademicRecordDataView(PermissionRequiredMixin, View):
             messages.error(request, "Please choose a session and a subject")
             return redirect(request.META.get("HTTP_REFERER"))
 
-        if len(class_scores) != len(exam_scores) != len(record_ids):
+        if len(class_scores) != len(exam_scores) != len(record_ids) != len(
+                classes):
             messages.error(request, "Invalid scores")
             return redirect(request.META.get("HTTP_REFERER"))
 
@@ -242,9 +247,10 @@ class AcademicRecordDataView(PermissionRequiredMixin, View):
             session=session, staff__user_id=request.user.id, subject=subject)
 
         # Updating records
-        for record_id, class_score, exam_score in zip(record_ids, class_scores,
-                                                      exam_scores):
+        for record_id, class_id, class_score, exam_score in zip(
+                record_ids, classes, class_scores, exam_scores):
             record = get_object_or_404(Record, id=record_id)
+            klass = get_object_or_404(Klass, id=class_id)
 
             # Check whether user has the permission to modify this record.
             if not request.user.has_perm("dashboard.manage_other_record"
@@ -260,6 +266,7 @@ class AcademicRecordDataView(PermissionRequiredMixin, View):
             record.total_exam_score = int(total_exam_score)
             record.class_score = int(class_score)
             record.exam_score = int(exam_score)
+            record.klass = klass
             record.updated_by = request.user
             record.save()
 

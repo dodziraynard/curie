@@ -63,6 +63,9 @@ class Student(ModelMixin):
     def my_class(self):
         return self.klass.name
 
+    def class_options(self):
+        return Klass.objects.filter(course=self.klass.course)
+
     def promote(self, step):
         if self.completed: return (True, False)
 
@@ -227,6 +230,10 @@ class Staff(ModelMixin):
 
 class Record(ModelMixin):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    klass = models.ForeignKey(Klass,
+                              on_delete=models.SET_NULL,
+                              blank=True,
+                              null=True)
     exam_score = models.IntegerField(default=0, blank=True, null=True)
     class_score = models.IntegerField(default=0, blank=True, null=True)
     total_exam_score = models.IntegerField(default=0, blank=True, null=True)
@@ -234,10 +241,10 @@ class Record(ModelMixin):
     total = models.IntegerField(default=0, blank=True, null=True)
     subject = models.ForeignKey("Subject", on_delete=models.PROTECT)
     updated_by = models.ForeignKey(User,
-                                    blank=True,
-                                    null=True,
-                                    related_name="records",
-                                    on_delete=models.PROTECT)
+                                   blank=True,
+                                   null=True,
+                                   related_name="records",
+                                   on_delete=models.PROTECT)
     grade = models.CharField(max_length=5, blank=True, null=True)
     remark = models.CharField(max_length=20, blank=True, null=True)
     position = models.CharField(max_length=5, blank=True, null=True)
@@ -260,9 +267,9 @@ class Record(ModelMixin):
     def save(self, *args, **kwargs):
         if self.class_score and self.exam_score and self.total_class_score and self.total_exam_score:
             self.rank = f"{self.position}/{self.roll_no}"
-            self.total = round(30 *
-                            float(self.class_score / self.total_class_score) +
-                            70 * float(self.exam_score / self.total_exam_score))
+            self.total = round(
+                30 * float(self.class_score / self.total_class_score) +
+                70 * float(self.exam_score / self.total_exam_score))
 
             grading_system = GradingSystem.objects.filter(
                 min_score__lte=self.total).order_by("-min_score").first()
