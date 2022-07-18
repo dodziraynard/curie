@@ -22,7 +22,7 @@
             class="col-md-5 mx-auto overflow-auto needs-validation" novalidate>
             <div class="form-group my-2">
                 <label for="session">School Session</label>
-                <select class="form-control" name="session" id="session" required>
+                <select class="form-select" name="session" id="session" required>
                     {% for session in sessions %}
                         <option value="{{session.id}}">{{session.name}}</option>
                     {% endfor %}
@@ -34,7 +34,7 @@
 
             <div class="form-group my-2">
                 <label for="subject">Subject</label>
-                <select class="form-control" name="subject" id="subject" required>
+                <select class="form-select" name="subject" id="subject" required>
                     <option value="">Select Subject</option>
                     {% for subject in subjects %}
                         <option value="{{subject.id}}">{{subject.name}}</option>

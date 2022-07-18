@@ -19,7 +19,7 @@
     </div>
     <div class="mt-4 form-group">
         <label for="house_master">House Master</label>
-        <select class="form-control" name="house_master" id="house_master" required>
+        <select class="form-select" name="house_master" id="house_master" required>
             <option value="">--- Click to select --- </option>
             {% for teacher in staff %}
             <option value="{{teacher.id}}" {% if teacher.id == house.house_master.id %}selected{% endif %}>

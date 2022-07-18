@@ -13,7 +13,7 @@
     <div class="row">
         <div class="form-group col-md-2 mt-4">
             <label for="name">Title</label>
-            <select class="form-control" name="title" id="title" required>
+            <select class="form-select" name="title" id="title" required>
                 <option value="">--Click to select--</option>
                 <option value="mr" {% if title == 'mr' %}selected{% endif %}>Mr</option>
                 <option value="mrs" {% if title == 'mrs' %}selected{% endif %}>Mrs</option>
@@ -44,7 +44,7 @@
     <div class="row">
         <div class="form-group col-md-6 mt-4">
             <label for="name">Gender</label>
-            <select class="form-control" name="gender" id="gender" required>
+            <select class="form-select" name="gender" id="gender" required>
                 <option value="">--Click to select--</option>
                 <option value="male" {% if gender == 'male' %}selected{% endif %}>Male</option>
                 <option value="female" {% if gender == 'female' %}selected{% endif %}>Female</option>

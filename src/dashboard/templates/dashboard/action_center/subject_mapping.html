@@ -17,7 +17,7 @@
     <div class="card-header d-flex justify-content-between">
         <h4>Mapping</h4>
         <div>
-            <select class="form-control" name="session" id="session" onchange="toggleSession(this)">
+            <select class="form-select" name="session" id="session" onchange="toggleSession(this)">
                 <option value="">Select Session</option>
                 {% for session in sessions %}
                 <option value="{{session.id}}" {% if session.id == mappings.first.session.id %} selected {% endif %} >{{session.name}}</option>
@@ -43,7 +43,7 @@
                             <td>{{mapping.subject.name}}</td>
                             <td>{{mapping.klass.name}}</td>
                             <td>
-                                <select class="form-control" {% if not mapping.session.active %} disabled {% endif %}
+                                <select class="form-select" {% if not mapping.session.active %} disabled {% endif %}
                                     name="mappings" required>
                                 <option value="">Select Teacher</option>
                                 {% for teacher in teachers %}

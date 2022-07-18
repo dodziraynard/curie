@@ -19,7 +19,7 @@
     </div>
     <div class="mt-4 form-group">
         <label for="department">Department</label>
-        <select class="form-control" name="department" id="department" required>
+        <select class="form-select" name="department" id="department" required>
             <option value="">--- Click to select --- </option>
             {% for department in departments %}
             <option value="{{department.id}}" {% if department.id == subject.department.id %}selected{% endif %}>

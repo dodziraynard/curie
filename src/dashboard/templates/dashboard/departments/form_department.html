@@ -12,7 +12,7 @@
 
     <div class="mt-4 form-group">
         <label for="hod">Head of Department</label>
-        <select class="form-control" name="hod" id="hod" required>
+        <select class="form-select" name="hod" id="hod" required>
             <option value="">Select</option>
             {% for hod in staff %}
             <option value="{{hod.id}}" {% if hod.id == department.hod.id %}selected{% endif %}>{{hod.user.get_name}}</option>

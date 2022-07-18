@@ -58,7 +58,7 @@
                             <td>{{forloop.counter}}</td>
                             <td>{{record.student.user.get_name}}</td>
                             <td class="text-center">
-                               <select class="form-control inline-input" name="classes" id="klass" required>
+                               <select class="form-select inline-input" name="classes" id="klass" required>
                                     <option value="">Choose class</option>
                                     {% for klass in record.student.class_options %}
                                     <option value="{{klass.id}}" {% if record.klass.id == klass.id %}selected{% endif %}>{{klass.name}}</option>

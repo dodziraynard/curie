@@ -41,7 +41,7 @@
 
     <div class="mt-4 form-group">
         <label for="course">Course</label>
-        <select class="form-control" name="course" id="course" required>
+        <select class="form-select" name="course" id="course" required>
             <option value="">Select</option>
             {% for course in courses %}
             <option value="{{course.id}}" {% if course.id == class.course.id %}selected{% endif %}>{{course.name}}</option>
@@ -56,7 +56,7 @@
 
     <div class="mt-4 form-group">
         <label for="class_teacher">Class Teacher</label>
-        <select class="form-control" name="class_teacher" id="class_teacher" required>
+        <select class="form-select" name="class_teacher" id="class_teacher" required>
             <option value="">Select</option>
             {% for teacher in staff %}
             <option value="{{teacher.id}}" {% if teacher.id == class.class_teacher.id %}selected{% endif %}>{{teacher.user.get_name}}</option>
