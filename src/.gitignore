@@ -11,7 +11,6 @@ __pycache__/
 develop-eggs/
 dist/
 downloads/
-migrations/
 eggs/
 .eggs/
 lib/
