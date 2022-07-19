@@ -8,3 +8,4 @@ from .students import *
 from .subjects import *
 from .action_center import *
 from .reporting import *
+from .class_teacher_report import *

@@ -265,12 +265,62 @@
                                         <span><i class="bi bi-pencil"></i></span><span class="ms-1">Edit</span>
                                     </a>
 
-                                    {% if perms.auth.delete_group %}
+                                    {% if perms.auth.delete_remark %}
                                     <form action="{% url 'dashboard:delete_model' conduct.model_name conduct.id %}"
                                         method="POST" class="requires-confirmation"
                                         data-message="Click on okay to permanently delete '{{conduct.text}}'.">
                                         {% csrf_token %}
                                         <input type="hidden" name="conduct_id" value="{{conduct.id}}">
+                                        <button type="submit" class="btn btn-sm btn-light">
+                                            <span class="d-flex">
+                                                <span><i class="bi bi-trash"></i> </span>
+                                                <span class="ms-1">Delete</span>
+                                            </span>
+                                        </button>
+                                    </form>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 p-2 my-3">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <h6>REMARK</h6>
+                    {% if perms.setup.add_remark %}
+                    <button class="d-flex btn btn-sm btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#remarkModal"><i class="bi bi-plus"></i></button>
+                    {% endif %}
+                </div>
+                <div class="card-body p-2">
+                    <table class="table table-sm">
+                        <tr>
+                            <th>S/N</th>
+                            <th>Text</th>
+                            <th>Actions</th>
+                        </tr>
+                        <tbody>
+                            {% for remark in remarks %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{remark.text}}</td>
+                                <td class="d-flex">
+                                    <a href="{% url 'setup:create_update_remark' %}?remark_id={{remark.id}}"
+                                        class="btn btn-light btn-sm d-flex mx-2">
+                                        <span><i class="bi bi-pencil"></i></span><span class="ms-1">Edit</span>
+                                    </a>
+
+                                    {% if perms.auth.delete_remark %}
+                                    <form action="{% url 'dashboard:delete_model' remark.model_name remark.id %}"
+                                        method="POST" class="requires-confirmation"
+                                        data-message="Click on okay to permanently delete '{{remark.text}}'.">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="remark_id" value="{{remark.id}}">
                                         <button type="submit" class="btn btn-sm btn-light">
                                             <span class="d-flex">
                                                 <span><i class="bi bi-trash"></i> </span>
@@ -412,7 +462,7 @@
                 </div>
             </div>
         </div>
-        
+
         <h4 class="mt-3">THE SCHOOL</h4>
         <div class="col-md-6 p-2 my-3">
             <div class="card">
@@ -480,7 +530,7 @@
 
                         <div class="form-group mt-3">
                             <label for="head_teacher">Head Teacher</label>
-                            <select class="form-control" name="head_teacher_id" id="head_teacher" required>
+                            <select class="form-select" name="head_teacher_id" id="head_teacher" required>
                                 <option value="">Select Head Teacher</option>
                                 {% for teacher in staff %}
                                 <option value="{{teacher.id}}" {% if school.head_teacher.id == teacher.id %}selected{% endif %}>
@@ -495,7 +545,7 @@
 
                         <div class="form-group mt-3">
                             <label for="assistant_head_teacher">Ass. Head Teacher</label>
-                            <select class="form-control" name="assistant_head_teacher_id" id="assistant_head_teacher"
+                            <select class="form-select" name="assistant_head_teacher_id" id="assistant_head_teacher"
                                 required>
                                 <option value="">Select Head Ass. Teacher</option>
                                 {% for teacher in staff %}
@@ -511,7 +561,7 @@
 
                         <div class="form-group mt-3">
                             <label for="current_session">Current School Session</label>
-                            <select class="form-control" name="current_session_id" id="current_session" required>
+                            <select class="form-select" name="current_session_id" id="current_session" required>
                                 <option value="">Select session</option>
                                 {% for session in school_sessions %}
                                 <option value="{{session.id}}" {% if school.current_session.id == session.id %}selected{% endif %}>
@@ -526,7 +576,7 @@
 
                         <div class="form-group mt-3">
                             <label for="current_track">Current Track</label>
-                            <select class="form-control" name="current_track_id" id="current_track" required>
+                            <select class="form-select" name="current_track_id" id="current_track" required>
                                 <option value="">Select track</option>
                                 {% for track in tracks %}
                                 <option value="{{track.id}}" {% if school.current_track.id == track.id %}selected{% endif %}>

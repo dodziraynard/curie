@@ -1,8 +1,8 @@
 from django import forms
 from django.contrib.auth.models import Group
 
-from .models import (Attitude, Conduct, GradingSystem, Interest, SchoolSession,
-                     Track)
+from .models import (Attitude, Conduct, GradingSystem, Interest, Remark,
+                     SchoolSession, Track)
 
 
 class GroupForm(forms.ModelForm):
@@ -16,6 +16,16 @@ class GroupForm(forms.ModelForm):
 class AttitudeForm(forms.ModelForm):
     class Meta:
         model = Attitude
+        exclude = [
+            'id',
+            'created_at',
+            'updated_at',
+        ]
+
+
+class RemarkForm(forms.ModelForm):
+    class Meta:
+        model = Remark
         exclude = [
             'id',
             'created_at',

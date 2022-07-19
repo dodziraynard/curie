@@ -46,7 +46,7 @@ class SchoolSession(ModelMixin):
         db_table = "school_sessions"
 
     def __str__(self):
-        return f"{self.min_score} - {self.grade} - {self.remark}"
+        return self.name
 
     def active(self):
         return self.start_date <= datetime.today().date() <= self.end_date
@@ -74,6 +74,13 @@ class Conduct(ModelMixin):
 
 
 class Interest(ModelMixin):
+    text = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.text
+
+
+class Remark(ModelMixin):
     text = models.CharField(max_length=255)
 
     def __str__(self):

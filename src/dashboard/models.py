@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from django.db import models
 from django.utils import timezone
+from lms.utils.functions import get_current_session
 
 from setup.models import (Attitude, Conduct, GradingSystem, Interest,
                           ModelMixin, SchoolSession, Track)
@@ -80,7 +81,18 @@ class Student(ModelMixin):
                                              course=self.klass.course).first()
             if not new_class:
                 return False, False
+            old_class = self.klass
             self.klass = new_class
+            self.completed = False
+
+            # Create history
+            session = get_current_session()
+            history, _ = StudentPromotionHistory.objects.get_or_create(
+                student=self, session=session)
+            history.new_class = self.klass
+            history.old_class = old_class
+            history.save()
+
         self.save()
         return True, True
 
@@ -319,24 +331,37 @@ class SubjectMapping(ModelMixin):
             return str(self.id)
 
 
-class ClassTeacherRemark(ModelMixin):
+class ClassTeacherReport(ModelMixin):
     student = models.ForeignKey("Student", on_delete=models.CASCADE)
     session = models.ForeignKey(SchoolSession,
                                 on_delete=models.SET_NULL,
                                 null=True)
-    klass = models.ForeignKey("klass", on_delete=models.CASCADE)
-    attendance = models.IntegerField(default=0)
-    total_attendance = models.IntegerField(default=0)
-    attitude = models.ForeignKey(Attitude, on_delete=models.CASCADE)
-    interest = models.ForeignKey(Interest, on_delete=models.CASCADE)
-    conduct = models.ForeignKey(Conduct, on_delete=models.CASCADE)
-    remark = models.CharField(max_length=200)
+    klass = models.ForeignKey("klass",
+                              null=True,
+                              blank=True,
+                              on_delete=models.CASCADE)
+    attendance = models.IntegerField(default=0, null=True, blank=True)
+    total_attendance = models.IntegerField(default=0, null=True, blank=True)
+    attitude = models.ForeignKey(Attitude,
+                                 null=True,
+                                 blank=True,
+                                 on_delete=models.CASCADE)
+    interest = models.ForeignKey(Interest,
+                                 null=True,
+                                 blank=True,
+                                 on_delete=models.CASCADE)
+    conduct = models.ForeignKey(Conduct,
+                                null=True,
+                                blank=True,
+                                on_delete=models.CASCADE)
+    remark = models.CharField(max_length=200, null=True, blank=True)
+    promotion = models.CharField(max_length=200, null=True, blank=True)
 
     class Meta:
-        db_table = "class_teacher_remarks"
+        db_table = "class_teacher_report"
 
     def __str__(self):
-        return f"{self.student.surname} - {self.semester} {self.academic_year}"
+        return f"{self.student.get_full_name()} - {self.session.name}"
 
 
 class HouseMasterRemark(ModelMixin):
@@ -367,3 +392,26 @@ class House(ModelMixin):
 
     def __str__(self):
         return f"{self.student.surname} - {self.semester} {self.academic_year}"
+
+
+class StudentPromotionHistory(ModelMixin):
+    student = models.ForeignKey("Student", on_delete=models.CASCADE)
+    new_class = models.ForeignKey("Klass",
+                                  blank=True,
+                                  null=True,
+                                  related_name="new_classes",
+                                  on_delete=models.CASCADE)
+    old_class = models.ForeignKey("Klass",
+                                  blank=True,
+                                  null=True,
+                                  related_name="old_classes",
+                                  on_delete=models.CASCADE)
+    session = models.ForeignKey(SchoolSession,
+                                on_delete=models.SET_NULL,
+                                null=True)
+
+    class Meta:
+        db_table = "student_promotion_history"
+
+    def __str__(self):
+        return f"{self.student.get_full_name()} - {self.new_class} {self.old_class}"

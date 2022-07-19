@@ -63,7 +63,7 @@ confirmationForms?.forEach(form => {
         event.preventDefault()
         var myModal = new Modal(generalDeletionModal)
         if (message != null) {
-            generalDeletionModal.querySelector("#message").innerText = message
+            generalDeletionModal.querySelector("#message").innerHTML = message
         }
         myModal.show()
 

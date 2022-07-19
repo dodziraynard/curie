@@ -6,6 +6,8 @@ from django.core.files import File
 from django.utils.html import strip_tags
 from PIL import Image
 
+from setup.models import School, SchoolSession
+
 logger = logging.getLogger("system")
 
 
@@ -47,3 +49,8 @@ def crop_image_to_size(picture, filename=None, quality=50):
     except Exception as e:
         logger.error("Compressing Image: " + str(e))
     return picture
+
+
+def get_current_session():
+    return School.objects.first().current_session or SchoolSession.objects.all(
+    ).order_by("-start_date").first()

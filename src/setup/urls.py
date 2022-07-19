@@ -14,6 +14,7 @@ urlpatterns = [
     path('create-update-attitude/', views.CreateUpdateAttitudeView.as_view(), name='create_update_attitude'),
     path('create-update-interest/', views.CreateUpdateInterestView.as_view(), name='create_update_interest'),
     path('create-update-conduct/', views.CreateUpdateConductView.as_view(), name='create_update_conduct'),
+    path('create-update-remark/', views.CreateUpdateRemarkView.as_view(), name='create_update_remark'),
     path('create-update-track/', views.CreateUpdateTrackView.as_view(), name='create_update_track'),
     path('create-update-grading-system/', views.CreateUpdateGradingSystemView.as_view(), name='create_update_grading_system'),
     path('create-update-school-session/', views.CreateUpdateSchoolSessionView.as_view(), name='create_update_school_session'),

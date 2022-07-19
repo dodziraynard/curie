@@ -9,9 +9,10 @@ from django.views import View
 from dashboard.mixins import CreateUpdateMixin
 from dashboard.models import Staff
 from setup.forms import (AttitudeForm, ConductForm, GradingSystemForm,
-                         GroupForm, InterestForm, SchoolSessionForm, TrackForm)
-from setup.models import (Attitude, Conduct, GradingSystem, Interest, School,
-                          SchoolSession, Track)
+                         GroupForm, InterestForm, RemarkForm,
+                         SchoolSessionForm, TrackForm)
+from setup.models import (Attitude, Conduct, GradingSystem, Interest, Remark,
+                          School, SchoolSession, Track)
 
 
 class IndexView(View):
@@ -25,6 +26,7 @@ class IndexView(View):
         interests = Interest.objects.all()
         conducts = Conduct.objects.all()
         attitudes = Attitude.objects.all()
+        remarks = Remark.objects.all()
         tracks = Track.objects.all()
         grading_systems = GradingSystem.objects.all()
         school_sessions = SchoolSession.objects.all()
@@ -36,6 +38,7 @@ class IndexView(View):
             'interests': interests,
             'conducts': conducts,
             'attitudes': attitudes,
+            'remarks': remarks,
             'tracks': tracks,
             'staff': staff,
             'grading_systems': grading_systems,
@@ -98,6 +101,20 @@ class CreateUpdateAttitudeView(PermissionRequiredMixin, CreateUpdateMixin):
         "setup.manage_setup",
         "setup.add_attitude",
         "setup.change_attitude",
+    )
+
+
+class CreateUpdateRemarkView(PermissionRequiredMixin, CreateUpdateMixin):
+    template_name = "setup/edit_remark.html"
+    form_class = RemarkForm
+    object_id_field = "remark_id"
+    model_class = Remark
+    redirect_url = "setup:index"
+    object_name = "remark"
+    permission_required = (
+        "setup.manage_setup",
+        "setup.add_remark",
+        "setup.change_remark",
     )
 
 

@@ -1,15 +1,17 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.shortcuts import get_list_or_404, get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
-from django.contrib.auth import get_user_model
-from dashboard.models import Klass, Record, Staff, Student, Subject, SubjectMapping
+from dashboard.models import Klass, Record, Staff, Student, StudentPromotionHistory, Subject, SubjectMapping
+from lms.utils.functions import get_current_session
+from django.db.utils import NotSupportedError
+import logging
 
 from setup.models import School, SchoolSession
 
-User = get_user_model()
+logger = logging.getLogger("system")
 
 
 class ActionCenterView(PermissionRequiredMixin, View):
@@ -104,7 +106,30 @@ class StudentPromotionView(PermissionRequiredMixin, View):
 
     @method_decorator(login_required(login_url="accounts:login"))
     def get(self, request):
-        context = {}
+        session = get_current_session()
+        promotion_exists = StudentPromotionHistory.objects.filter(
+            session=session).exists()
+
+        promotion_sessions = set(
+            StudentPromotionHistory.objects.all().order_by(
+                "-created_at").values_list("session", flat=True))
+
+        promotion_histories = []
+        for session_id in promotion_sessions:
+            session = SchoolSession.objects.get(id=session_id)
+            history = StudentPromotionHistory.objects.filter(session=session)
+            promotion_histories.append({
+                "session":
+                session,
+                "students_count":
+                history.values("student").distinct().count(),
+                "classes_count":
+                history.values("new_class").distinct().count(),
+            })
+        context = {
+            "promotion_exists": promotion_exists,
+            "promotion_histories": promotion_histories,
+        }
         return render(request, self.template_name, context)
 
     @method_decorator(login_required(login_url="accounts:login"))
@@ -134,6 +159,35 @@ class StudentPromotionView(PermissionRequiredMixin, View):
             messages.success(request,
                              f"{count} students promoted successfully")
 
+        return redirect(request.META.get("HTTP_REFERER"))
+
+
+class RevertPromotionView(PermissionRequiredMixin, View):
+    permission_required = [
+        "dashboard.view_dashboard",
+        "dashboard.promote_student",
+    ]
+
+    @method_decorator(login_required(login_url="accounts:login"))
+    def get(self, request):
+        return redirect("dashboard:student_promotion")
+
+    @method_decorator(login_required(login_url="accounts:login"))
+    def post(self, request):
+        session_id = request.POST.get("session_id") or -1
+        session = SchoolSession.objects.get(id=session_id)
+        if not session:
+            messages.error(request, "No session selected")
+            return redirect(request.META.get("HTTP_REFERER"))
+        histories = StudentPromotionHistory.objects.filter(session=session)
+        for history in histories:
+            if history.old_class:
+                history.student.klass = history.old_class
+                history.student.completed = False
+                history.student.save()
+                history.delete()
+
+        messages.success(request, "Promotion has been reverted.")
         return redirect(request.META.get("HTTP_REFERER"))
 
 
