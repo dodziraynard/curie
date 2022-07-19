@@ -3,6 +3,7 @@ from random import sample
 from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager,
                                         PermissionsMixin)
 from django.db import models
+import geocoder
 
 
 class UserManger(BaseUserManager):
@@ -89,3 +90,16 @@ class User(AbstractBaseUser, PermissionsMixin):
         if self.title:
             self.title = self.title.lower()
         super().save(*args, **kwargs)
+
+
+class ActivityLog(models.Model):
+    username = models.CharField(max_length=100)
+    action = models.CharField(max_length=100)
+    ip = models.CharField(max_length=100, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return "%s %s" % (self.username, self.action)
+
+    def get_latlng(self):
+        return geocoder.ip(self.registration_ip).latlng

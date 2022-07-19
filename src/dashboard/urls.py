@@ -52,6 +52,10 @@ urlpatterns = [
     path('reporting/index', views.ReportingIndexView.as_view(), name='reporting_index'),
 
     # Class teacher reporting
-    path('reporting/class-teacher-report-filter', views.SessionReportFilterView.as_view(), name='class_teacher_report_filter'),
-    path('reporting/class-teacher-report-data', views.SessionReportDataView.as_view(), name='class_teacher_report_data'),
+    path('reporting/class-teacher-report-filter', views.ClassTeacherSessionReportFilterView.as_view(), name='class_teacher_report_filter'),
+    path('reporting/class-teacher-report-data', views.ClassTeacherSessionReportDataView.as_view(), name='class_teacher_report_data'),
+
+    # House master reporting
+    path('reporting/house-master-report-filter', views.HouseMasterSessionReportFilterView.as_view(), name='house_master_report_filter'),
+    path('reporting/house-master-report-data', views.HouseMasterSessionReportDataView.as_view(), name='house_master_report_data'),
 ]

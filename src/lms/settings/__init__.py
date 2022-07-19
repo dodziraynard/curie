@@ -1,3 +1,4 @@
+from datetime import timedelta
 from .base import *
 
 try:
@@ -30,6 +31,11 @@ if not DEBUG:
                 "level": "INFO",
                 "propagate": True
             },
+            "django": {
+                "handlers": ["file"],
+                "level": "INFO",
+                "propagate": True
+            },
         },
         "formatters": {
             "app": {
@@ -47,4 +53,10 @@ if DEBUG:
     INTERNAL_IPS = [
         "127.0.0.1",
     ]
-    
+
+if not DEBUG:
+    AUTO_LOGOUT = {
+        'IDLE_TIME': timedelta(minutes=30),
+        'REDIRECT_TO_LOGIN_IMMEDIATELY': True,
+        'MESSAGE': 'The session has expired. Please login again to continue.',
+    }

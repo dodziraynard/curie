@@ -369,6 +369,9 @@ class SessionReport(ModelMixin):
         db_table = "class_teacher_report"
         permissions = [
             ('manage_other_report', 'Can manage reports of other classes.'),
+            ('manage_class_teacher_report',
+             'Can manage class teacher report.'),
+            ('manage_house_master_report', 'Can manage house master report.'),
         ]
 
     def __str__(self):
@@ -386,7 +389,7 @@ class House(ModelMixin):
         db_table = "houses"
 
     def __str__(self):
-        return f"{self.student.surname} - {self.semester} {self.academic_year}"
+        return self.name
 
 
 class StudentPromotionHistory(ModelMixin):

@@ -6,7 +6,9 @@
 <section class="breadcrumb">
     <a href="{% url 'dashboard:index' %}" class="">Home <i class="bi bi-chevron-right"></i></a>
     <a href="{% url 'dashboard:action_center' %}" class="">Action Center <i class="bi bi-chevron-right"></i></a>
-    <a href="" class="active">Class Teacher Report</a>
+    <a href="{% url 'dashboard:class_teacher_report_filter' %}" class="">Class Teacher Report <i
+            class="bi bi-chevron-right"></i></a>
+    <a href="" class="active">Data</a>
 </section>
 {% endblock %}
 

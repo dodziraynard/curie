@@ -9,7 +9,7 @@ from dashboard.models import SessionReport, Klass, StudentPromotionHistory
 from setup.models import Attitude, Conduct, Interest, Remark, SchoolSession
 
 
-class SessionReportFilterView(PermissionRequiredMixin, View):
+class ClassTeacherSessionReportFilterView(PermissionRequiredMixin, View):
     template_name = "dashboard/class_teacher_report/report_filter.html"
     permission_required = [
         "dashboard.view_dashboard",
@@ -27,7 +27,7 @@ class SessionReportFilterView(PermissionRequiredMixin, View):
         return render(request, self.template_name, context)
 
 
-class SessionReportDataView(PermissionRequiredMixin, View):
+class ClassTeacherSessionReportDataView(PermissionRequiredMixin, View):
     template_name = "dashboard/class_teacher_report/class_teacher_report_data.html"
     permission_required = [
         "dashboard.view_dashboard",
