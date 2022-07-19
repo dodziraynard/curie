@@ -354,6 +354,8 @@ class SessionReport(ModelMixin):
                                 null=True,
                                 blank=True,
                                 on_delete=models.PROTECT)
+    assistant_head_signature = models.ImageField(
+        upload_to="uploads/signatures", null=True, blank=True)
     class_teacher_remark = models.ForeignKey(Remark,
                                              null=True,
                                              blank=True,
@@ -372,6 +374,8 @@ class SessionReport(ModelMixin):
             ('manage_class_teacher_report',
              'Can manage class teacher report.'),
             ('manage_house_master_report', 'Can manage house master report.'),
+            ('append_assistance_head_signature',
+             'Can append assistance head signature.'),
         ]
 
     def __str__(self):
