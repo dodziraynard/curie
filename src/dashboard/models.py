@@ -69,7 +69,6 @@ class Student(ModelMixin):
 
     def promote(self, step):
         if self.completed: return (True, False)
-
         final_form = Klass.objects.order_by("-form").first().form
         self.last_promotion_date = timezone.now()
         if self.klass.form + step > final_form:
@@ -397,7 +396,9 @@ class House(ModelMixin):
 
 
 class StudentPromotionHistory(ModelMixin):
-    student = models.ForeignKey("Student", on_delete=models.CASCADE)
+    student = models.ForeignKey("Student",
+                                related_name="promotion_histories",
+                                on_delete=models.CASCADE)
     new_class = models.ForeignKey("Klass",
                                   blank=True,
                                   null=True,

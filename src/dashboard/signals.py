@@ -5,6 +5,7 @@ from .models import Student
 
 @receiver(post_save, sender=Student)
 def create_student(sender, instance, created, **kwargs):
-    if created:
-        # Create history for student's initial class.
+    # Create history for student's initial class.
+    if not instance.promotion_histories.exists() and instance.klass:
         instance.promote(0)
+    
