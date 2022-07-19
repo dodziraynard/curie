@@ -181,7 +181,8 @@ class RevertPromotionView(PermissionRequiredMixin, View):
             return redirect(request.META.get("HTTP_REFERER"))
         histories = StudentPromotionHistory.objects.filter(session=session)
         for history in histories:
-            if history.old_class:
+            if history.old_class and history.new_class and history.new_class != history.old_class:
+                # This is not an initial promotion
                 history.student.klass = history.old_class
                 history.student.completed = False
                 history.student.save()
