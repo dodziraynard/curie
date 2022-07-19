@@ -82,3 +82,11 @@ window.toggleSession = function (element) {
     url.searchParams.set("session_id", sessionId)
     window.location.href = url.href
 }
+
+// Update report modal src
+const reportIframe = document.querySelector("#report-iframe")
+const reportPreviewButton = document.querySelector("#report-preview-button")
+window.updateReportIframeSrc = function (url) {
+    reportPreviewButton?.setAttribute("href", url)
+    reportIframe?.setAttribute("src", url)
+}

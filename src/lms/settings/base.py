@@ -143,3 +143,5 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',
     50: 'critical',
 }
+
+X_FRAME_OPTIONS = 'SAMEORIGIN'

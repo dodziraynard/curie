@@ -17,23 +17,25 @@ class AcademicRecordReportView(PermissionRequiredMixin, View):
     ]
 
     @method_decorator(login_required(login_url="accounts:login"))
-    def get(self, request):
-        session = request.GET.get("session")
+    def get(self, request, session_id):
         classes = request.GET.getlist("classes")
-        student_ids = request.GET.get("student_ids")
+        student_ids = request.GET.get("students")
 
-        session = get_object_or_404(SchoolSession, pk=session)
-        classes = Klass.objects.filter(id__in=classes)
+        session = get_object_or_404(SchoolSession, pk=session_id)
+        classes = Klass.objects.filter(class_id__in=classes)
 
         records = Record.objects.filter(session=session)
         if classes:
-            records = records.filter(klass__in=classes)
-            
-        records = records.union(
-            Record.objects.filter(session=session, student__in=student_ids))
+            records = records.filter(klass__class_id__in=classes)
+
+        if student_ids:
+            records = records.union(
+                Record.objects.filter(session=session,
+                                      student__student_id__in=student_ids))
 
         context = {
             "session": session,
+            "records": records,
         }
 
         pdf = render_to_pdf(self.template_name, context)

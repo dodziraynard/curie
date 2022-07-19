@@ -1,0 +1,132 @@
+{% extends 'templates/dashboard/base_template.html' %}
+{% block page_title %}Class Teacher Report{% endblock %}
+{% block active-sidebar-item-id %}action_center{%endblock%}
+
+{% block breadcrumb %}
+<section class="breadcrumb">
+    <a href="{% url 'dashboard:index' %}" class="">Home <i class="bi bi-chevron-right"></i></a>
+    <a href="{% url 'dashboard:action_center' %}" class="">Action Center <i class="bi bi-chevron-right"></i></a>
+    <a href="" class="active">Class Teacher Report</a>
+</section>
+{% endblock %}
+
+{% block content %}
+
+{% include 'dashboard/class_teacher_report/report_modal.html' %}
+
+<h4 class="page-header"><i class='icon bx bx-group'></i> CLASS TEACHER REPORT</h4>
+<section class="card">
+    <div class="card-header d-flex justify-content-between">
+        <h4>Report - {{session.name}}, {{class.name}} </h4>
+    </div>
+    <div class="card-body">
+        <form class="col-12 mx-auto overflow-auto needs-validation" method="POST" novalidate>
+            <input type="hidden" name="session" value="{{session.id}}">
+            <input type="hidden" name="subject" value="{{subject.id}}">
+            <div class="mx-auto" style="max-height: 60vh; overflow-y: auto;">
+
+                {% csrf_token %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>S/N</th>
+                            <th>Student Name</th>
+                            <th>Class</th>
+                            <th class="text-center">
+                                Attendance <br> Total:<input class="form-control inline-input" name="total_attendance"
+                                    type="number" value="{{reports.first.total_attendance}}" min="1" required>
+                                <div class="invalid-feedback">
+                                    Please enter total attendance here.
+                                </div>
+                            </th>
+                            <th>Attitude</th>
+                            <th>Interest</th>
+                            <th>Conduct</th>
+                            <th>Remark</th>
+                            <th>Promotion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if reports %}
+                        {% for report in reports %}
+                        <input type="hidden" name="report_ids" value="{{report.id}}">
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>{{report.student.get_full_name}}</td>
+                            <td class="text-center">
+                                <select class="form-select inline-input" name="classes" id="classes" required>
+                                    <option value="">Choose class</option>
+                                    {% for klass in report.student.class_options %}
+                                    <option value="{{klass.id}}" {% if report.klass.id == klass.id %}selected{% endif %}>{{klass.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td class="text-center">
+                                <input type="number" min="0" maxlength="3" class="form-control inline-input"
+                                    value="{{report.attendance}}" name="attendance">
+                            </td>
+                            <td class="text-center">
+                                <select name="attitudes" id="attitudes" class="form-select">
+                                    <option value="">Choose attitude</option>
+                                    {% for attitude in attitudes %}
+                                    <option value="{{attitude.id}}" {% if report.attitude.id == attitude.id %}selected{% endif %}>{{attitude.text}}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td class="text-center">
+                                <select name="interests" id="interests" class="form-select">
+                                    <option value="">Choose interest</option>
+                                    {% for interest in interests %}
+                                    <option value="{{interest.id}}" {% if report.interest.id == interest.id %}selected{% endif %}>{{interest.text}}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td class="text-center">
+                                <select name="conducts" id="conducts" class="form-select">
+                                    <option value="">Choose conduct</option>
+                                    {% for conduct in conducts %}
+                                    <option value="{{conduct.id}}" {% if report.conduct.id == conduct.id %}selected{% endif %}>{{conduct.text}}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td class="text-center">
+                                <select name="remarks" id="remarks" class="form-select">
+                                    <option value="">Choose remark</option>
+                                    {% for remark in remarks %}
+                                    <option value="{{remark.id}}" {% if report.class_teacher_remark.id == remark.id %}selected{% endif %}>{{remark.text}}</option>
+                                    {% endfor %}
+                                </select>
+                                <button type="button" class="btn btn-light m-0" data-bs-toggle="modal"
+                                    onclick=updateReportIframeSrc("{% url 'pdf:report_per_session' session.id %}?classes={{report.klass.class_id}}&students={{report.student.student_is}}")
+                                    data-bs-target="#reportModal">View Report</button>
+                            </td>
+                            <td class="text-center">
+                                <select name="promotions" id="promotions" class="form-select">
+                                    <option value="">---Blank---</option>
+                                    <option value="Promoted" {% if report.promotion == "Promoted" %}selected{% endif %}>Promoted</option>
+                                    <option value="Not promoted" {% if report.promotion == "Not promoted" %}selected{% endif %}>Not promoted</option>
+                                </select>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="9">
+                                <p class="text-center text-danger">No reports found</p>
+                            </td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% if reports %}
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit">Save</button>
+            </div>
+            {% endif %}
+        </form>
+    </div>
+</section>
+
+{% endblock %}

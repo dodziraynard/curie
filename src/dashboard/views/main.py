@@ -6,6 +6,7 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
+from django.db.models.deletion import ProtectedError
 
 
 class IndexView(PermissionRequiredMixin, View):
@@ -42,7 +43,14 @@ class DeleteModelView(PermissionRequiredMixin, View):
             raise PermissionDenied()
 
         # Get the model instance
-        res = model_class.objects.filter(id=instance_id).delete()
+        try:
+            res = model_class.objects.filter(id=instance_id).delete()
+        except ProtectedError as _:
+            messages.error(
+                request,
+                "This item is protected and cannot be deleted until all references are removed."
+            )
+            return redirect(request.META.get("HTTP_REFERER"))
         if res and res[0]:
             messages.success(request, "Successfully deleted.")
         else:

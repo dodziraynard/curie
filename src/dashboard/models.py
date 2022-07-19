@@ -4,7 +4,7 @@ from django.utils import timezone
 from lms.utils.functions import get_current_session
 
 from setup.models import (Attitude, Conduct, GradingSystem, Interest,
-                          ModelMixin, SchoolSession, Track)
+                          ModelMixin, Remark, SchoolSession, Track)
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -331,7 +331,7 @@ class SubjectMapping(ModelMixin):
             return str(self.id)
 
 
-class ClassTeacherReport(ModelMixin):
+class SessionReport(ModelMixin):
     student = models.ForeignKey("Student", on_delete=models.CASCADE)
     session = models.ForeignKey(SchoolSession,
                                 on_delete=models.SET_NULL,
@@ -345,39 +345,34 @@ class ClassTeacherReport(ModelMixin):
     attitude = models.ForeignKey(Attitude,
                                  null=True,
                                  blank=True,
-                                 on_delete=models.CASCADE)
+                                 on_delete=models.PROTECT)
     interest = models.ForeignKey(Interest,
                                  null=True,
                                  blank=True,
-                                 on_delete=models.CASCADE)
+                                 on_delete=models.PROTECT)
     conduct = models.ForeignKey(Conduct,
                                 null=True,
                                 blank=True,
-                                on_delete=models.CASCADE)
-    remark = models.CharField(max_length=200, null=True, blank=True)
+                                on_delete=models.PROTECT)
+    class_teacher_remark = models.ForeignKey(Remark,
+                                             null=True,
+                                             blank=True,
+                                             on_delete=models.PROTECT)
+    house_master_remark = models.ForeignKey(Remark,
+                                            null=True,
+                                            blank=True,
+                                            related_name="house_master_remark",
+                                            on_delete=models.PROTECT)
     promotion = models.CharField(max_length=200, null=True, blank=True)
 
     class Meta:
         db_table = "class_teacher_report"
+        permissions = [
+            ('manage_other_report', 'Can manage reports of other classes.'),
+        ]
 
     def __str__(self):
         return f"{self.student.get_full_name()} - {self.session.name}"
-
-
-class HouseMasterRemark(ModelMixin):
-    student = models.ForeignKey("Student", on_delete=models.CASCADE)
-    staff = models.ForeignKey("Staff", on_delete=models.CASCADE)
-    session = models.ForeignKey(SchoolSession,
-                                on_delete=models.SET_NULL,
-                                null=True)
-    remark = models.CharField(max_length=200)
-    klass = models.ForeignKey("Klass", on_delete=models.CASCADE)
-
-    class Meta:
-        db_table = "house_master_remarks"
-
-    def __str__(self):
-        return f"{self.student.surname} - {self.semester} {self.academic_year}"
 
 
 class House(ModelMixin):
