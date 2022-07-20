@@ -44,6 +44,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     phone = models.CharField(max_length=10,null=True,blank=True) #yapf: disable
     title = models.CharField(max_length=20,default="", blank=True) #yapf: disable
     photo = models.ImageField(upload_to='users', blank=True)
+    signature = models.ImageField(upload_to='signatures',
+                                  null=True,
+                                  blank=True)
     gender = models.CharField(max_length=20, blank=True, null=True)
     temporal_pin = models.CharField(max_length=10, null=True, blank=True)
     dob = models.DateTimeField(null=True, blank=True)
@@ -67,7 +70,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         ]
 
     def model_name(self):
-        return self.__class__.__name__
+        return self.__class__.__name__.lower()
+
+    def signature_url(self):
+        if self.signature:
+            return self.signature.url
+        return ""
 
     def get_title(self):
         group = self.groups.first()

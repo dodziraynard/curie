@@ -1,4 +1,5 @@
 import { Modal } from 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import Cropper from 'cropperjs';
 
 const sidebar = document.querySelector('.sidebar');
 const overlay = document.querySelector('.overlay');
@@ -90,3 +91,27 @@ window.updateReportIframeSrc = function (url) {
     reportPreviewButton?.setAttribute("href", url)
     reportIframe?.setAttribute("src", url)
 }
+
+
+// Cropping
+const croppableContainers = document.querySelectorAll(".croppable-container")
+croppableContainers?.forEach(container => {
+    const image = container.querySelector('img');
+    const dataContainer = container.querySelector('.cropdata');
+    if (image != null && dataContainer != null) {
+        let aspectRatio = image.dataset.aspectRatio
+        if (aspectRatio != null && aspectRatio != undefined && aspectRatio != "") {
+            aspectRatio = aspectRatio.split(":").map(x => parseInt(x))
+            aspectRatio = aspectRatio[0] / aspectRatio[1]
+        } else {
+            aspectRatio = null
+        }
+        new Cropper(image, {
+            aspectRatio: aspectRatio,
+            crop(event) {
+                const data = `${event.detail.x},${event.detail.y},${event.detail.width},${event.detail.height},${event.detail.rotate},${event.detail.scaleX},${event.detail.scaleY}`
+                dataContainer.setAttribute("value", data)
+            },
+        });
+    }
+})

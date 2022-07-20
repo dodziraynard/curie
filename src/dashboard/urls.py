@@ -8,6 +8,9 @@ app_name = "dashboard"
 urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
     path('delete/<str:model_name>/<str:instance_id>', views.DeleteModelView.as_view(), name='delete_model'),
+    path('model_agnostic_image_upload/<str:model_name>/<str:model_id>/<str:field_name>', views.ModelAgnosticImageUploadView.as_view(), name='model_agnostic_image_upload'),
+    path('crop-model-image/<str:model_name>/<str:model_id>/<str:field_name>', views.CropModelImageView.as_view(), name='crop_model_image'),
+
 
     # Students
     path('students/', views.StudentsView.as_view(), name='students'),
@@ -46,8 +49,6 @@ urlpatterns = [
     path('action-center/academic-record-selection', views.AcademicRecordSelectionView.as_view(), name='academic_record_selection'),
     path('action-center/academic-record-data', views.AcademicRecordDataView.as_view(), name='academic_record_data'),
 
-
-
     # Reporting
     path('reporting/index', views.ReportingIndexView.as_view(), name='reporting_index'),
 
@@ -58,4 +59,8 @@ urlpatterns = [
     # House master reporting
     path('reporting/house-master-report-filter', views.HouseMasterSessionReportFilterView.as_view(), name='house_master_report_filter'),
     path('reporting/house-master-report-data', views.HouseMasterSessionReportDataView.as_view(), name='house_master_report_data'),
+
+    # House master reporting
+    path('reporting/assistant-head-report-filter', views.AssistantHeadSessionReportFilterView.as_view(), name='assistant_head_report_filter'),
+    path('reporting/assistant-head-report-data', views.AssistantHeadSessionReportDataView.as_view(), name='assistant_head_report_data'),
 ]

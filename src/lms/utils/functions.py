@@ -54,3 +54,24 @@ def crop_image_to_size(picture, filename=None, quality=50):
 def get_current_session():
     return School.objects.first().current_session or SchoolSession.objects.all(
     ).order_by("-start_date").first()
+
+
+def crop_image(image, filename=None, crop_data=None, quality=50):
+    left, top = crop_data[0], crop_data[1]
+    right, bottom = crop_data[2] + left, crop_data[3] + top
+    if not image:
+        return None
+    if not filename:
+        filename = datetime.now().strftime("%Y%m%d%H%M%S%f")
+    try:
+        img = Image.open(image)
+        thumb_io = BytesIO()
+        img = img.crop((left, top, right, bottom))
+        img = img.convert('RGB')
+        img.save(thumb_io, "png", quality=quality)
+        new_image = File(thumb_io, name=f"{filename}.png")
+        image.delete()
+        return new_image
+    except Exception as e:
+        logger.error("Compressing Image: " + str(e))
+    return image

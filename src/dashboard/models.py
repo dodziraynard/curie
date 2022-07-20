@@ -355,6 +355,10 @@ class SessionReport(ModelMixin):
                                 on_delete=models.PROTECT)
     assistant_head_signature = models.ImageField(
         upload_to="uploads/signatures", null=True, blank=True)
+    signed_by = models.ForeignKey(Staff,
+                                  on_delete=models.PROTECT,
+                                  null=True,
+                                  blank=True)
     class_teacher_remark = models.ForeignKey(Remark,
                                              null=True,
                                              blank=True,
@@ -379,6 +383,12 @@ class SessionReport(ModelMixin):
 
     def __str__(self):
         return f"{self.student.get_full_name()} - {self.session.name}"
+
+    def signature_url(self):
+        if self.assistant_head_signature:
+            return self.assistant_head_signature.url
+        else:
+            return ""
 
 
 class House(ModelMixin):

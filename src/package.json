@@ -1,15 +1,15 @@
 {
-  "name": "banga-africa",
+  "name": "lms",
   "private": true,
   "version": "1.0.0",
-  "description": "BANGA-Africa Application Portal",
+  "description": "Learning Management System",
   "scripts": {
     "start": "webpack --config ./webpack.dev.js --watch",
     "build": "webpack --config ./webpack.prod.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dodziraynard/banga-africa.git"
+    "url": "git+https://github.com/dodziraynard/curie.git"
   },
   "keywords": [
     "portal"
@@ -17,9 +17,9 @@
   "author": "Raynard Dodzi Helegah",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/dodziraynard/banga-africa/issues"
+    "url": "https://github.com/dodziraynard/curie/issues"
   },
-  "homepage": "https://github.com/dodziraynard/banga-africa#readme",
+  "homepage": "https://github.com/dodziraynard/curie#readme",
   "devDependencies": {
     "@popperjs/core": "^2.11.2",
     "bootstrap": "^5.1.3",
@@ -45,5 +45,8 @@
       "docs/*"
     ],
     "delay": 2500
+  },
+  "dependencies": {
+    "cropperjs": "^1.5.12"
   }
 }
