@@ -214,7 +214,6 @@
                                         class="btn btn-light btn-sm d-flex mx-2">
                                         <span><i class="bi bi-pencil"></i></span><span class="ms-1">Edit</span>
                                     </a>
-
                                     {% if perms.auth.delete_group %}
                                     <form action="{% url 'dashboard:delete_model' interest.model_name interest.id %}"
                                         method="POST" class="requires-confirmation"
@@ -413,9 +412,9 @@
                                 <th>Name</th>
                                 <th>Semester</th>
                                 <th>Academic Year</th>
-                                <th>Tracks</th>
                                 <th>Start</th>
                                 <th>End</th>
+                                <th>Tracks</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>

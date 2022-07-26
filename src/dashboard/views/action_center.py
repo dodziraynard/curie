@@ -6,7 +6,6 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from dashboard.models import Klass, Record, Staff, Student, StudentPromotionHistory, Subject, SubjectMapping
 from lms.utils.functions import get_current_session
-from django.db.utils import NotSupportedError
 import logging
 
 from setup.models import School, SchoolSession

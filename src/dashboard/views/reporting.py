@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views import View
 
-from dashboard.models import Klass, Student, Subject
+from dashboard.models import Klass
 from setup.models import SchoolSession
 
 
