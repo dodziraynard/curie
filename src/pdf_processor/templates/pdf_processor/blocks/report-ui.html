@@ -20,34 +20,26 @@
                     <table>
                         <tr>
                             <td>
-                                <h3 style="text-align: right;">Contact: </h3>
+                                <p style="text-align: right;">Contact: </p>
                             </td>
-                            <td>
-                                <p style="text-align: right;">{{school.phone}}</p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <h3 style="text-align: right;">Email: </h3>
-                            </td>
-                            <td>
-                                <p style="text-align: right;">{{school.email_address}}</p>
+                            <td colspan="2">
+                                <h3 style="text-align: right;">{{school.phone}}</h3>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <h3 style="text-align: right;">Website: </h3>
+                                <p style="text-align: right;">Email: </p>
                             </td>
-                            <td>
-                                <p style="text-align: right;">www.anlog.com</p>
+                            <td colspan="2">
+                                <h3 style="text-align: right;">{{school.email_address}}</h3>
                             </td>
                         </tr>
+
                     </table>
                 </td>
             </tr>
             </tr>
         </table>
-        <hr>
 
         <table>
             <tr>
@@ -55,34 +47,34 @@
                     <table>
                         <tr>
                             <td>
-                                <h3 style="text-align: left;">Student ID: </h3>
+                                <p style="text-align: left;">Student ID: </p>
                             </td>
                             <td>
-                                <h6 style="text-align: left;">{{school.phone}}</h6>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <h3 style="text-align: left;">Surname: </h3>
-                            </td>
-                            <td>
-                                <h6 style="text-align: left;">{{school.email_address}}</h6>
+                                <h6 style="text-align: left;">{{records.first.student.student_id}}</h6>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <h3 style="text-align: left;">Other Names: </h3>
+                                <p style="text-align: left;">Surname: </p>
                             </td>
                             <td>
-                                <h6 style="text-align: left;">www.anlog.com</h6>
+                                <h6 style="text-align: left;">{{records.first.student.user.surname}}</h6>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <h3 style="text-align: left;">House: </h3>
+                                <p style="text-align: left;">Other Names: </p>
                             </td>
                             <td>
-                                <h6 style="text-align: left;">www.anlog.com</h6>
+                                <h6 style="text-align: left;">{{records.first.student.user.other_names}}</h6>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p style="text-align: left;">House: </p>
+                            </td>
+                            <td>
+                                <h6 style="text-align: left;">{{records.first.student.house}}</h6>
                             </td>
                         </tr>
                     </table>
@@ -98,32 +90,32 @@
                             <td>
                                 <p style="text-align: right;">Academic Year: </p>
                             </td>
+                            <td colspan="2">
+                                <h6 style="text-align: right;">{{records.first.session.academic_year}}</h6>
+                            </td>
+                        </tr>
+                        <tr>
                             <td>
-                                <h6 style="text-align: right;">{{school.phone}}</h6>
+                                <p style="text-align: right;">Semester: </p>
+                            </td>
+                            <td colspan="2">
+                                <h6 style="text-align: right;">{{records.first.session.semester}}</h6>
                             </td>
                         </tr>
                         <tr>
                             <td>
                                 <p style="text-align: right;">Course: </p>
                             </td>
-                            <td>
-                                <h6 style="text-align: right;">General Science</h6>
+                            <td colspan="2">
+                                <h6 style="text-align: right;">{{records.first.student.course.name}}</h6>
                             </td>
                         </tr>
                         <tr>
                             <td>
                                 <p style="text-align: right;">Class: </p>
                             </td>
-                            <td>
-                                <h6 style="text-align: right;">www.anlog.com</h6>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p style="text-align: right;">House: </p>
-                            </td>
-                            <td>
-                                <h6 style="text-align: right;">www.anlog.com</h6>
+                            <td colspan="2">
+                                <h6 style="text-align: right;">{{records.first.klass.name}}</h6>
                             </td>
                         </tr>
                     </table>
@@ -131,7 +123,7 @@
             </tr>
         </table>
     </div>
-    <h1 style="text-align: center;  margin: 0.4em 0 0 0; padding-top: 1em; background-color: rgb(240, 240, 240);">
+    <h1 style="text-align: center;  margin: 0.4em 0 0 0; padding-top: 1em; background-color: #f0f0f0;">
         STUDENT REPORT SHEET</h1>
     <br>
     <table style="border: 1px solid gray;">
@@ -161,9 +153,9 @@
             </tr>
         </thead>
         <tbody>
-            <tr style="padding: 0.2em;">
+            <tr style="padding: 0.2em; background-color: #f0f0f0;">
                 <td colspan="7">
-                    <h3 style="text-align: center;">Core Subjects</h3>
+                    <h3 style="text-align: center; padding: 1em auto 0.5em auto;">CORE SUBJECTS</h3>
                 </td>
             </tr>
             {% for record in records %}
@@ -194,9 +186,9 @@
             {% endif %}
             {% endfor %}
 
-            <tr style="padding: 0.2em;">
+            <tr style="padding: 0.2em; background-color: #f0f0f0;">
                 <td colspan="7">
-                    <h3 style="text-align: center;">Elective Subjects</h3>
+                    <h3 style="text-align: center; padding: 1em auto 0.5em auto;">ELECTIVE SUBJECTS</h3>
                 </td>
             </tr>
             {% for record in records %}
@@ -238,11 +230,13 @@
                 </td>
                 <td colspan="5" style="border-bottom: 1px solid black;">
                     <p style="font-size: 1.3em; margin-left: 5em;">
-                        {% if session_report.promotion %}
-                        {{session_report.promotion}}
-                        {% else %}
-                        -
-                        {% endif %}
+                        <b>
+                            {% if session_report.promotion %}
+                            {{session_report.promotion}}
+                            {% else %}
+                            -
+                            {% endif %}
+                        </b>
                     </p>
                 </td>
             </tr>
@@ -301,14 +295,12 @@
     </table>
 
     <br>
-    <br>
 
     <table>
         <tbody>
             <tr>
                 <td colspan="2"></td>
                 <td>
-
                     <p style="text-align: center; margin:0; padding:0;">
                         <img src="{{session_report.signature_url}}" alt="" height="50">
                     </p>
@@ -321,7 +313,6 @@
         </tbody>
     </table>
 
-    <br>
     <div id="footer_content">
         <p style="text-align: left;" style="margin:0">
             <i>Printed @ {{current_time}}</i>

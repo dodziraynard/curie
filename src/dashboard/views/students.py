@@ -29,7 +29,7 @@ class StudentsView(PermissionRequiredMixin, View):
         houses = House.objects.all()
         tracks = House.objects.all()
         classes = Klass.objects.all()
-        subjects = Subject.objects.all()
+        subjects = Subject.objects.filter(is_elective=True)
 
         context = {
             "students": students,
@@ -58,7 +58,7 @@ class CreateUpdateStudentView(PermissionRequiredMixin, CreateUpdateMixin):
         houses = House.objects.all()
         tracks = House.objects.all()
         classes = Klass.objects.all()
-        subjects = Subject.objects.all()
+        subjects = Subject.objects.filter(is_elective=True)
 
         context = {
             "student": student,

@@ -1,13 +1,14 @@
 from django.shortcuts import HttpResponse, get_object_or_404
 from django.utils import timezone
 from django.views import View
-from dashboard.models import SessionReport, Record, Klass
+from dashboard.models import SessionReport, Record
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 
 from setup.models import School, SchoolSession
 from .utils import render_to_pdf
+from django.db.models import Q
 
 
 class SingleAcademicRecordReportView(PermissionRequiredMixin, View):
@@ -87,8 +88,12 @@ class BulkAcademicRecordReportView(PermissionRequiredMixin, View):
     def get(self, request):
         session_id = request.GET.get("session")
         classes = request.GET.getlist("classes")
+        student_ids = request.GET.get("student_ids").replace(" ",
+                                                             "").split(",")
         session = get_object_or_404(SchoolSession, pk=session_id)
-        records = Record.objects.filter(session=session, klass_id__in=classes)
+        records = Record.objects.filter(
+            Q(session=session, klass_id__in=classes)
+            | Q(session=session, student__student_id__in=student_ids))
 
         student_ids = set(records.values_list("student__student_id",
                                               flat=True))
