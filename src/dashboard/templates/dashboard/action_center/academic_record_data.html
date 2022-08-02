@@ -23,7 +23,6 @@
             <input type="hidden" name="session" value="{{session.id}}">
             <input type="hidden" name="subject" value="{{subject.id}}">
             <div class="mx-auto" style="max-height: 60vh; overflow-y: auto;">
-
                 {% csrf_token %}
                 <table class="table">
                     <thead>
@@ -33,14 +32,14 @@
                             <th>Class</th>
                             <th class="text-center">
                                 Class Score (Over <input class="form-control inline-input" name="total_class_score"
-                                    type="number" placeholder="100">)
+                                    value="{{records.first.total_class_score}}" type="number" placeholder="100">)
                                 <div class="invalid-feedback">
                                     Value must be between 0 and 999.
                                 </div>
                             </th>
                             <th class="text-center">
                                 Exam Score (Over <input class="form-control inline-input" name="total_exam_score"
-                                    type="number" placeholder="100">)
+                                    value="{{records.first.total_exam_score}}" type="number" placeholder="100">)
                                 <div class="invalid-feedback">
                                     Value must be between 0 and 999.
                                 </div>
@@ -58,7 +57,7 @@
                             <td>{{forloop.counter}}</td>
                             <td>{{record.student.user.get_name}}</td>
                             <td class="text-center">
-                               <select class="form-select inline-input" name="classes" id="klass" required>
+                                <select class="form-select inline-input" name="classes" id="klass" required>
                                     <option value="">Choose class</option>
                                     {% for klass in record.student.class_options %}
                                     <option value="{{klass.id}}" {% if record.klass.id == klass.id %}selected{% endif %}>{{klass.name}}</option>

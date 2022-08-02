@@ -6,7 +6,8 @@
 <section class="breadcrumb">
     <a href="{% url 'dashboard:index' %}" class="">Home <i class="bi bi-chevron-right"></i></a>
     <a href="{% url 'dashboard:action_center' %}" class="">Action Center <i class="bi bi-chevron-right"></i></a>
-    <a href="{% url 'dashboard:house_master_report_filter' %}" class="">House Master Report <i class="bi bi-chevron-right"></i></a>
+    <a href="{% url 'dashboard:house_master_report_filter' %}" class="">House Master Report <i
+            class="bi bi-chevron-right"></i></a>
     <a href="" class="active">Data</a>
 </section>
 {% endblock %}
@@ -56,7 +57,7 @@
                             </td>
                             <td class="text-center">
                                 <button type="button" class="btn btn-light m-0" data-bs-toggle="modal"
-                                    onclick=updateReportIframeSrc("{% url 'pdf:report_per_session' session.id %}?classes={{report.klass.class_id}}&students={{report.student.student_is}}")
+                                    onclick=updateReportIframeSrc("{% url 'pdf:single_report' session.id report.klass.class_id report.student.student_id %}")
                                     data-bs-target="#reportModal">View Report</button>
                             </td>
                         </tr>

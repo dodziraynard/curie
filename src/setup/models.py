@@ -63,7 +63,7 @@ class Attitude(ModelMixin):
     text = models.CharField(max_length=255)
 
     def __str__(self):
-        return self.name
+        return self.text
 
 
 class Conduct(ModelMixin):
@@ -134,6 +134,11 @@ class School(ModelMixin):
 
     def __str__(self):
         return self.name
+
+    def logo_url(self):
+        if self.logo:
+            return self.logo.url
+        return ""
 
     def get_current_session(self):
         if self.current_session:

@@ -56,7 +56,7 @@ def render_to_pdf_file(template_src, filename, context_dict={}):
     # find the template and render it.
     template = get_template(template_src)
     html = template.render(context_dict)
-    
+
     # create a pdf
     pisa.CreatePDF(html,
                    dest=open(filename, "w+b"),

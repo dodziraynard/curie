@@ -1,0 +1,37 @@
+{% extends 'templates/dashboard/base_template.html' %}
+{% block page_title %}Reporting{% endblock %}
+{% block active-sidebar-item-id %}reporting{%endblock%}
+
+{% block breadcrumb %}
+<section class="breadcrumb">
+    <a href="{% url 'dashboard:index' %}" class="">Home <i class="bi bi-chevron-right"></i></a>
+    <a href="" class="active">Reporting</a>
+</section>
+{% endblock %}
+
+{% block content %}
+
+<h4 class="page-header"><i class='icon bx bx-group'></i> REPORT</h4>
+<section class="card">
+    <div class="card-header d-flex justify-content-between">
+        <h4>Reporting</h4>
+    </div>
+    <div class="card-body p-2">
+        <div class="embed-responsive embed-responsive" style="height: 70vh; padding: 5%;">
+            <iframe id="report-iframe" src="/pdf/single-report/session/2/2BUSA/111111" frameborder="0" frameborder="0"
+                style="
+                        overflow: hidden;
+                        overflow-x: hidden;
+                        overflow-y: hidden;
+                        height: 100%;
+                        width: 100%;
+                        position: absolute;
+                        top: 0px;
+                        left: 0px;
+                        right: 0px;
+                        bottom: 0px;" height="100%" width="100"></iframe>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

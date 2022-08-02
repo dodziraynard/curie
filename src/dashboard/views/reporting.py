@@ -24,3 +24,21 @@ class ReportingIndexView(PermissionRequiredMixin, View):
             "classes": classes,
         }
         return render(request, self.template_name, context)
+
+
+class StudentFullReportView(PermissionRequiredMixin, View):
+    template_name = "dashboard/reporting/student-full-report.html"
+    permission_required = [
+        "dashboard.view_dashboard",
+    ]
+
+    @method_decorator(login_required(login_url="accounts:login"))
+    def get(self, request):
+        sessions = SchoolSession.objects.all()
+        classes = Klass.objects.all()
+
+        context = {
+            "sessions": sessions,
+            "classes": classes,
+        }
+        return render(request, self.template_name, context)

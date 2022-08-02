@@ -34,10 +34,11 @@ class LoginView(View):
     def post(self, request):
         username = request.POST.get('username')
         password = request.POST.get('password')
+        next_ = request.GET.get('next')
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect("dashboard:index")
+            return redirect(next_ or "dashboard:index")
         else:
             message = 'Invalid credentials. Please try again.'
             messages.error(request, message)

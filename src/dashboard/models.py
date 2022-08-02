@@ -94,6 +94,11 @@ class Student(ModelMixin):
 
         self.save()
         return True, True
+    
+    def logo_url(self):
+        if self.user:
+            return self.user.get_photo_url()
+        return "/static/images/default_profile.jpg"
 
     def __str__(self):
         return self.get_full_name()
@@ -247,8 +252,8 @@ class Record(ModelMixin):
                               null=True)
     exam_score = models.IntegerField(default=0, blank=True, null=True)
     class_score = models.IntegerField(default=0, blank=True, null=True)
-    total_exam_score = models.IntegerField(default=0, blank=True, null=True)
-    total_class_score = models.IntegerField(default=0, blank=True, null=True)
+    total_exam_score = models.IntegerField(default=100, blank=True, null=True)
+    total_class_score = models.IntegerField(default=100, blank=True, null=True)
     total = models.IntegerField(default=0, blank=True, null=True)
     subject = models.ForeignKey("Subject", on_delete=models.PROTECT)
     updated_by = models.ForeignKey(User,
