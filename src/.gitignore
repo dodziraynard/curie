@@ -9,7 +9,6 @@ __pycache__/
 # Distribution / packaging
 .Python
 develop-eggs/
-dist/
 downloads/
 eggs/
 .eggs/
@@ -150,5 +149,4 @@ dashboard/react/yarn.lock
 certbot
 
 node_modules
-dist
 build
