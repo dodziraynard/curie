@@ -1,0 +1,90 @@
+{% extends 'templates/dashboard/base_template.html' %}
+{% block page_title %}Houses{% endblock %}
+{% block active-sidebar-item-id %}houses{%endblock%}
+
+{% block breadcrumb %}
+<section class="breadcrumb">
+    <a href="{% url 'dashboard:index' %}" class="">Home <i class="bi bi-chevron-right"></i></a>
+    <a href="" class="active">Houses</a>
+</section>
+{% endblock %}
+
+{% block content %}
+
+<!-- Modal -->
+<div class="modal fade" id="houseModal" tabindex="-1" aria-labelledby="houseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-l">
+        <div class="modal-content px-4">
+            <div class="modal-header">
+                <h5 class="modal-title" id="houseModalLabel">Add House</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            {% include 'dashboard/houses/form_house.html' %}
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End of Modal -->
+
+<h4 class="page-header"><i class='icon bx bx-group'></i> SUBJECTS</h4>
+<section class="card">
+    <div class="card-header d-flex justify-content-between">
+        <h4>Houses</h4>
+        <div class="">
+            {% if perms.dashboard.add_house %}
+            <button class="d-flex btn btn-sm btn-primary my-1" data-bs-toggle="modal" data-bs-target="#houseModal"><i
+                    class="bi bi-plus"></i> Add
+            </button>
+            {% endif %}
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="col-md-10 mx-auto" style="overflow-x: auto;">
+            <table class="table data-table">
+                <thead class="bg-primary text-light">
+                    <tr>
+                        <th>S/N</th>
+                        <th>Code</th>
+                        <th>Name</th>
+                        <th>House Master</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for house in houses %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{house.code}}</td>
+                        <td>{{house.name}}</td>
+                        <td>{{house.house_master.user.get_name}}</td>
+                        <td class="d-flex">
+                            {% if perms.dashboard.change_house %}
+                            <a href="{% url 'dashboard:create_update_house' %}?house_id={{house.id}}"
+                                class="me-3 d-flex btn btn-light btn-sm">
+                                <i class="bi bi-pencil me-1"></i>
+                                Edit
+                            </a>
+                            {% endif %}
+                            {% if perms.dashboard.delete_house %}
+                            <form action="{% url 'dashboard:delete_model' house.model_name house.id %}" method="POST"
+                                class="requires-confirmation"
+                                data-message="Click on okay to permanently delete {{house.name}}">
+                                {% csrf_token %}
+                                <input type="hidden" name="house_id" value="{{house.id}}">
+                                <button type="submit" class="btn btn-sm btn-light"><span class="d-flex">
+                                        <i class="bi bi-trash"></i> Delete</span>
+                                </button>
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

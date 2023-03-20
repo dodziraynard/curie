@@ -1,0 +1,122 @@
+{% extends 'templates/dashboard/base_template.html' %}
+{% block page_title %}Student Promotion{% endblock %}
+{% block active-sidebar-item-id %}action_center{%endblock%}
+
+{% block breadcrumb %}
+<section class="breadcrumb">
+    <a href="{% url 'dashboard:index' %}" class="">Home <i class="bi bi-chevron-right"></i></a>
+    <a href="{% url 'dashboard:action_center' %}" class="">Action Center <i class="bi bi-chevron-right"></i></a>
+    <a href="" class="active">Student Promotion</a>
+</section>
+{% endblock %}
+
+{% block content %}
+
+<!-- Promotion Modal -->
+<div class="modal fade" id="promotionModal" tabindex="-1" aria-labelledby="promotionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content px-4">
+            <div class="modal-header">
+                <h5 class="modal-title" id="promotionModalLabel">New Promotion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" class="col-md-11 mx-auto needs-validation" method="post" novalidate>
+                    {% if promotion_exists %}
+                    <div class="alert alert-danger alert-dismissible fade show py-3 mt-1" role="alert">
+                        <strong>Attention!</strong>
+                        <p>
+                            Promotion history exists for this session already.
+                            If this is not a mistake, create a new session or change the current session
+                            <strong><a href="{% url 'setup:index' %}" target="_blank">here</a></strong> before executing
+                            this
+                            action.
+                        </p>
+                    </div>
+                    {% endif %}
+
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="exceptions">Move all students except ...</label>
+                        <textarea class="form-control" name="exceptions" id="exceptions" cols="30" rows="3"
+                            placeholder="Enter student IDs separated by comma."></textarea>
+                    </div>
+                    <div class="form-group my-3">
+                        <label for="step">Action <span class="text-danger">*</span> </label>
+                        <select name="step" id="step" class="form-select" required>
+                            <option value="1">To next Class</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            Please select an action.
+                        </div>
+                    </div>
+
+                    <div class="form-group d-flex justify-content-end my-4">
+                        <button type="submit" class="bnt btn-sm btn-primary">Execute</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End of Promotion Modal -->
+
+<h4 class="page-header"><i class='icon bx bx-group'></i> STUDENT PROMOTION</h4>
+<section class="card">
+    <div class="card-header d-flex justify-content-between">
+        <h4>Promotion</h4>
+        <div class="d-flex">
+            {% if perms.dashboard.promote_student %}
+            <button class="d-flex btn btn-sm btn-primary my-1" data-bs-toggle="modal" data-bs-target="#promotionModal">
+                <i class="bi bi-plus"></i> New Promotion
+            </button>
+            {% endif %}
+        </div>
+    </div>
+    <div class="card-body">
+        <h5>Promotion History</h5>
+        <table class="table data-table">
+            <thead class="bg-primary text-light">
+                <tr>
+                    <th>S/N</th>
+                    <th>Session</th>
+                    <th>Students</th>
+                    <th>Classes</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for promotion in promotion_histories %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{promotion.session.name}}</td>
+                    <td>{{promotion.students_count}}</td>
+                    <td>{{promotion.classes_count}}</td>
+                    <td class="d-flex">
+                        {% if perms.dashboard.promote_student %}
+                        <form action="{% url 'dashboard:student_promotion_revert' %}" method="POST"
+                            class="requires-confirmation" data-message="This action will revert this promotion 
+                            action and classes of all students will be set 
+                            their classes before this promotion activity was carried out. <br><br>
+                            <p class='text-danger'>This action cannot be undone.</p>
+                            <strong>Are you sure you want to revert this promotion action?</strong>">
+                            {% csrf_token %}
+                            <input type="hidden" name="session_id" value="{{promotion.session.id}}">
+                            <button type="submit" class="btn btn-sm btn-light"><span class="d-flex">
+                                    <i class="bi bi-arrow-counterclockwise me-1"></i> Revert</span>
+                            </button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+</section>
+
+{% endblock %}

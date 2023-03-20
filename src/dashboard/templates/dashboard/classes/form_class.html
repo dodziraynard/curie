@@ -1,0 +1,77 @@
+<form action="{% url 'dashboard:create_update_class' %}" class="needs-validation my-4" method="POST" novalidate>
+    {% csrf_token %}
+    <input type="hidden" name="id" value="{{class.id}}">
+    <div class="row">
+        <div class="form-group">
+            <label for="class_id">Class ID</label>
+            <input class="form-control" placeholder="E.g, BUS1A" value="{{class_id}}" type="text" name="class_id"
+                id="class_id" required>
+            <div class="invalid-feedback">
+                Please this field is required.
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input class="form-control" placeholder="E.g, Business 1 A" value="{{name}}" type="text" name="name"
+                id="name" required>
+            <div class="invalid-feedback">
+                Please this field is required.
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group mt-4">
+        <label for="stream">Stream</label>
+        <input class="form-control" placeholder="E.g, A" value="{{stream}}" type="text" name="stream" id="stream"
+            required>
+        <div class="invalid-feedback">
+            Please this field is required.
+        </div>
+    </div>
+
+    <div class="form-group mt-4">
+        <label for="form">Form</label>
+        <input class="form-control" placeholder="E.g, 1" value="{{form}}" type="number" min="1" max="3" name="form"
+            id="form" required>
+        <div class="invalid-feedback">
+            Please this field is required.
+        </div>
+    </div>
+
+    <div class="mt-4 form-group">
+        <label for="course">Course</label>
+        <select class="form-select" name="course" id="course" required>
+            <option value="">Select</option>
+            {% for course in courses %}
+            <option value="{{course.id}}" {% if course.id == class.course.id %}selected{% endif %}>{{course.name}}</option>
+            {% endfor %}
+        </select>
+        <div class="invalid-feedback">
+            Please this field is required.
+        </div>
+        <a href="{% url 'dashboard:courses' %}" target="_blank" class="mt-2 text-end d-block text-primary"><i
+                class="bi bi-plus"></i> Go to Courses</a>
+    </div>
+
+    <div class="mt-4 form-group">
+        <label for="class_teacher">Class Teacher</label>
+        <select class="form-select" name="class_teacher" id="class_teacher" required>
+            <option value="">Select</option>
+            {% for teacher in staff %}
+            <option value="{{teacher.id}}" {% if teacher.id == class.class_teacher.id %}selected{% endif %}>{{teacher.user.get_name}}</option>
+            {% endfor %}
+        </select>
+        <div class="invalid-feedback">
+            Please this field is required.
+        </div>
+
+        <a href="{% url 'dashboard:staff' %}" target="_blank" class="mt-2 text-end d-block text-primary"><i
+                class="bi bi-plus"></i> Go to Staff</a>
+    </div>
+
+    <div class="mt-4 form-group">
+        <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+    </div>
+
+</form>

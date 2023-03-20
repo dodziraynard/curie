@@ -1,0 +1,94 @@
+{% extends 'templates/dashboard/base_template.html' %}
+{% block page_title %}Courses{% endblock %}
+{% block active-sidebar-item-id %}courses{%endblock%}
+
+{% block breadcrumb %}
+<section class="breadcrumb">
+    <a href="{% url 'dashboard:index' %}" class="">Home <i class="bi bi-chevron-right"></i></a>
+    <a href="" class="active">Courses</a>
+</section>
+{% endblock %}
+
+{% block content %}
+
+<!-- Modal -->
+<div class="modal fade" id="courseModal" tabindex="-1" aria-labelledby="courseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-l">
+        <div class="modal-content px-4">
+            <div class="modal-header">
+                <h5 class="modal-title" id="courseModalLabel">Add Courses</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            {% include 'dashboard/courses/form_course.html' %}
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End of Modal -->
+
+<h4 class="page-header"><i class='icon bx bx-group'></i> COURSES</h4>
+<section class="card">
+    <div class="card-header d-flex justify-content-between">
+        <h4>Courses</h4>
+        <div class="">
+            {% if perms.dashboard.add_course %}
+            <button class="d-flex btn btn-sm btn-primary my-1" data-bs-toggle="modal" data-bs-target="#courseModal"><i
+                    class="bi bi-plus"></i> Add
+            </button>
+            {% endif %}
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="col-md-10 mx-auto" style="overflow-x: auto;">
+            <table class="table data-table">
+                <thead class="bg-primary text-light">
+                    <tr>
+                        <th>S/N</th>
+                        <th>CODE</th>
+                        <th>NAME</th>
+                        <th>ELECTIVES</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for course in courses %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{course.code}}</td>
+                        <td>{{course.name}}</td>
+                        <td>
+                            {% for elective in course.subjects.all %}
+                            <span class="badge bg-primary">{{elective.code|upper}}</span>
+                            {% endfor %}
+                        </td>
+                        <td class="d-flex">
+                            {% if perms.dashboard.change_course %}
+                            <a href="{% url 'dashboard:create_update_course' %}?course_id={{course.id}}"
+                                class="me-3 d-flex btn btn-sm btn-light">
+                                <i class="bi bi-pencil me-1"></i>
+                                Edit
+                            </a>
+                            {% endif %}
+                            {% if perms.dashboard.delete_course %}
+                            <form action="{% url 'dashboard:delete_model' course.model_name course.id %}" method="POST"
+                                class="requires-confirmation"
+                                data-message="Click on okay to permanently delete {{course.name}}">
+                                {% csrf_token %}
+                                <input type="hidden" name="course_id" value="{{course.id}}">
+                                <button type="submit" class="btn btn-sm btn-light"><span class="d-flex">
+                                        <i class="bi bi-trash"></i> Delete</span>
+                                </button>
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

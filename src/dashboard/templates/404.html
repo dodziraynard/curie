@@ -1,0 +1,15 @@
+{% extends 'templates/dashboard/base_template.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="col-md-10 mx-auto col-11">
+    <div class="row col-md-10 col-12 mx-auto">
+        <div class="col-12 mx-auto">
+            <img src="{% static 'images/404.webp' %}" alt="404 logo" style="width: 80%; margin: auto; display: block;">
+        </div>
+        <p class="text text-center"><a href="{% url 'dashboard:index' %}" class="btn btn-primary">Home</a></p>
+    </div>
+</div>
+{% endblock %}

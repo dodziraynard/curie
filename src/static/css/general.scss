@@ -1,0 +1,262 @@
+html {
+  font-family: 'Helvetica', 'Arial', sans-serif;
+}
+
+body {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  background-color: $background;
+}
+
+.open-sidebar {
+  display: none;
+}
+
+a {
+  &,
+  &:hover {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9;
+
+  &.active {
+    display: block;
+  }
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: $sidebar-size;
+  background-color: $background-light;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  &.active {
+    width: $sidebar-size;
+  }
+
+  .close-sidebar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: none;
+    height: 2em;
+    width: 2em;
+    justify-content: center;
+    align-items: center;
+    padding: 0.3em;
+    background-color: $background-light;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 2;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      background-color: rgba(red, 0.7);
+      color: white;
+    }
+  }
+
+  .sidebar-header {
+    height: $nav-height;
+    border-bottom: 2px solid rgba($primary, 0.1);
+    font-size: 1.5em;
+    text-align: center;
+  }
+
+  .header {
+    padding: 0.2em 0.5em;
+  }
+
+  .menu-item {
+    color: rgba($black, 0.7);
+    font-weight: 500;
+    padding: 0.5em 0.5em;
+    margin-right: 0.5em;
+
+    &.active,
+    &:hover {
+      background-color: rgba($primary, 0.1);
+      box-shadow: 0px 0px 10px rgba($primary, 0.1);
+      color: $primary;
+      cursor: pointer;
+      border-radius: 0.4em;
+    }
+
+    .icon {
+      margin-right: 0.5em;
+      font-size: 1.3em;
+    }
+  }
+}
+
+.main-content {
+  position: absolute;
+  left: calc(#{$sidebar-size});
+  top: 0;
+  width: calc(100vw - #{$sidebar-size});
+  padding-inline: 2em;
+  padding-top: 1em;
+  min-height: 100vh;
+
+  // Navbar
+  .nav {
+    background-color: $background-light;
+    height: $nav-height;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    padding: 0.5em 1em;
+    position: sticky;
+    top: 0;
+    border-radius: 0.4em;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 8;
+
+    .notification {
+      position: relative;
+      cursor: pointer;
+
+      &::after {
+        content: attr(data-count);
+        position: absolute;
+        top: -0.7em;
+        right: -0.7em;
+        background-color: $primary;
+        color: white;
+        width: 1.5em;
+        height: 1.5em;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        border-radius: 50%;
+        font-size: 0.8em;
+      }
+    }
+
+    .avatar {
+      height: calc(#{$nav-height} - 0.8em);
+      width: calc(#{$nav-height} - 0.8em);
+      background-color: rgba($primary, 0.1);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0.1em;
+        right: 0.1em;
+        background-color: $success;
+        color: white;
+        width: 0.9em;
+        height: 0.9em;
+        border: 2px solid white;
+        border-radius: 50%;
+      }
+
+      img {
+        height: calc(#{$nav-height} - 1.5em);
+      }
+    }
+  }
+
+  .breadcrumb {
+    background-color: rgba($primary, 0.1);
+    margin: 0.5em auto 1.5em;
+    padding: 0.5em;
+  }
+
+  footer {
+    background-color: $background-light;
+    padding: 0.5em;
+    text-align: center;
+    font-size: 0.8em;
+    color: rgba($black, 0.7);
+    margin-top: 5em;
+  }
+}
+
+.card-body {
+  overflow-x: auto;
+}
+
+.card-shadow {
+  border-radius: 0.4em;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.page-header {
+  font-weight: bolder;
+  color: rgba($primary, 0.9);
+  margin-top: 0.5em;
+}
+
+.alert-container {
+  position: fixed;
+  top: 0.1em;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  transition: 0.05s all ease-in-out;
+
+  &.hide {
+    display: none;
+  }
+
+  .close-btn {
+    position: absolute;
+    right: 0;
+    cursor: pointer;
+    box-shadow: 0 0 2px grey;
+    height: 2em;
+    width: 2em;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    top: 0;
+    padding: 0.2em;
+    border-radius: 100%;
+    background-color: white;
+    color: red;
+    transition: 0.05s all ease-in-out;
+
+    &:hover {
+      background-color: #fd3c3ca6;
+      color: white;
+    }
+  }
+}
+
+.application-menu-item {
+  &:hover,
+  &.active {
+    background-color: rgba($primary, 0.1);
+    color: $primary;
+    cursor: pointer;
+  }
+}
+
+.inline-input {
+  width: 5em;
+  display: inline !important;
+}

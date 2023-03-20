@@ -1,0 +1,32 @@
+<form action="{% url 'setup:create_update_grading_system' %}" class="needs-validation my-4" method="POST" novalidate>
+    {% csrf_token %}
+    <input type="hidden" name="grading_system_id" value="{{grading_system.id}}">
+    <div class="form-group">
+        <label for="min_score">Min Score</label>
+        <input class="form-control" placeholder="E.g., 80" value="{{min_score}}" type="number" name="min_score" min="0"
+            max="100" id="min_score" required>
+        <div class="invalid-feedback">
+            Please this field is required.
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="grade">Grade</label>
+        <input class="form-control" placeholder="E.g., A" value="{{grade}}" type="text" name="grade" minlength="1"
+            maxlength="2" id="grade" required>
+        <div class="invalid-feedback">
+            Please this field is required.
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="remark">Remark</label>
+        <input class="form-control" placeholder="E.g., Excellent" value="{{remark}}" type="text" name="remark"
+            minlength="1" maxlength="50" id="remark" required>
+        <div class="invalid-feedback">
+            Please this field is required.
+        </div>
+    </div>
+    <div class="form-group my-3">
+        <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+    </div>
+</form>

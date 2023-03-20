@@ -1,0 +1,103 @@
+{% extends 'templates/dashboard/base_template.html' %}
+{% block page_title %}Students{% endblock %}
+{% block active-sidebar-item-id %}students{%endblock%}
+
+{% block breadcrumb %}
+<section class="breadcrumb">
+    <a href="{% url 'dashboard:index' %}" class="">Home <i class="bi bi-chevron-right"></i></a>
+    <a href="" class="active">Students</a>
+</section>
+{% endblock %}
+
+{% block content %}
+
+<!-- Modal -->
+<div class="modal fade" id="studentModal" tabindex="-1" aria-labelledby="studentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content px-4">
+            <div class="modal-header">
+                <h5 class="modal-title" id="studentModalLabel">Add Student</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            {% include 'dashboard/students/form_student.html' %}
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End of Modal -->
+
+<h4 class="page-header"><i class='icon bx bx-group'></i> STUDENTS</h4>
+<section class="card">
+    <div class="card-header d-flex justify-content-between">
+        <h4>Students</h4>
+        <div class="d-flex">
+            {% if perms.dashboard.add_student %}
+            <a href="{% url 'dashboard:create_update_student_bulk' %}" class="my-1 mx-2">
+                <button class="btn btn-sm btn-primary d-flex">
+                    <i class="bi bi-plus"></i> Add Bulk
+                </button>
+            </a>
+            <button class="d-flex btn btn-sm btn-primary my-1" data-bs-toggle="modal" data-bs-target="#studentModal">
+                <i class="bi bi-plus"></i> Add Single
+            </button>
+            {% endif %}
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="col-12 mx-auto" style="overflow-x: auto;">
+            <table class="table data-table">
+                <thead class="bg-primary text-light">
+                    <tr>
+                        <th>S/N</th>
+                        <th>Student ID</th>
+                        <th>Title</th>
+                        <th>Surname</th>
+                        <th>Other Names</th>
+                        <th>Class</th>
+                        <th>Gender</th>
+                        <th>Phone Number</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{student.student_id}}</td>
+                        <td>{{student.user.title|title}}</td>
+                        <td>{{student.user.surname|title}}</td>
+                        <td>{{student.user.other_names|title}}</td>
+                        <td>{{student.klass.name }}</td>
+                        <td>{{student.user.gender|title }}</td>
+                        <td>{{student.user.phone }}</td>
+                        <td class="d-flex">
+                            {% if perms.dashboard.change_student %}
+                            <a href="{% url 'dashboard:create_update_student' %}?id={{student.id}}"
+                                class="me-3 d-flex btn btn-sm btn-light">
+                                <i class="bi bi-pencil me-1"></i>
+                                Edit
+                            </a>
+                            {% endif %}
+                            {% if perms.dashboard.delete_student %}
+                            <form action="{% url 'dashboard:delete_model' student.model_name student.id %}"
+                                method="POST" class="requires-confirmation"
+                                data-message="Click on okay to permanently delete '{{student.user.get_name}}'.">
+                                {% csrf_token %}
+                                <input type="hidden" name="student_id" value="{{student.id}}">
+                                <button type="submit" class="btn btn-sm btn-light"><span class="d-flex">
+                                        <i class="bi bi-trash"></i> Delete</span>
+                                </button>
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

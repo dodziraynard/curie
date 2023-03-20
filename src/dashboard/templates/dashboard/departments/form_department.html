@@ -1,0 +1,33 @@
+<form action="{% url 'dashboard:create_update_department' %}" class="needs-validation my-4" method="POST" novalidate>
+    {% csrf_token %}
+    <input type="hidden" name="department_id" value="{{department.id}}">
+    <div class="form-group mt-4">
+        <label for="name">Name</label>
+        <input class="form-control" placeholder="Name e.g, Language Department" value="{{name}}" type="text" name="name"
+            id="name" required>
+        <div class="invalid-feedback">
+            Please this field is required.
+        </div>
+    </div>
+
+    <div class="mt-4 form-group">
+        <label for="hod">Head of Department</label>
+        <select class="form-select" name="hod" id="hod" required>
+            <option value="">Select</option>
+            {% for hod in staff %}
+            <option value="{{hod.id}}" {% if hod.id == department.hod.id %}selected{% endif %}>{{hod.user.get_name}}</option>
+            {% endfor %}
+        </select>
+        <div class="invalid-feedback">
+            Please this field is required.
+        </div>
+
+        <a href="{% url 'dashboard:staff' %}" target="_blank" class="mt-2 text-end d-block text-primary"><i
+                class="bi bi-plus"></i> New staff</a>
+    </div>
+
+    <div class="mt-4 form-group">
+        <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+    </div>
+
+</form>

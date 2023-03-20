@@ -1,0 +1,98 @@
+{% extends 'templates/dashboard/base_template.html' %}
+{% block page_title %}Assistant Head Signature{% endblock %}
+{% block active-sidebar-item-id %}action_center{%endblock%}
+
+{% block breadcrumb %}
+<section class="breadcrumb">
+    <a href="{% url 'dashboard:index' %}" class="">Home <i class="bi bi-chevron-right"></i></a>
+    <a href="{% url 'dashboard:action_center' %}" class="">Action Center <i class="bi bi-chevron-right"></i></a>
+    <a href="{% url 'dashboard:class_teacher_report_filter' %}" class="">Assistant Head Signature <i
+            class="bi bi-chevron-right"></i></a>
+    <a href="" class="active">Data</a>
+</section>
+{% endblock %}
+
+{% block content %}
+
+{% include 'dashboard/class_teacher_report/report_modal.html' %}
+{% include 'dashboard/assistant_head_report/signature_modal.html' %}
+
+<h4 class="page-header"><i class='icon bx bx-group'></i> ASSISTANT HEAD SIGNATURE</h4>
+<section class="card">
+    <div class="card-header d-flex justify-content-between">
+        <h4>Report - {{session.name}}</h4>
+        <div class="">
+            {% if perms.dashboard.append_assistance_head_signature %}
+            <button class="d-flex btn btn-sm btn-primary my-1" data-bs-toggle="modal"
+                data-bs-target="#signatureModal"><i class="bi bi-plus"></i> Signature
+            </button>
+            {% endif %}
+        </div>
+    </div>
+    <div class="card-body">
+        {% if not request.user.signature %}
+        <p class="badge p-2 bg-danger">
+            <i class="bi bi-info-circle me-2"></i>
+            You have not yet uploaded your signature. Please upload your signature to continue.
+        </p>
+        {% endif %}
+
+        <form class="col-12 mx-auto overflow-auto needs-validation" method="POST" novalidate>
+            <input type="hidden" name="session" value="{{session.id}}">
+            <input type="hidden" name="subject" value="{{subject.id}}">
+            <div class="mx-auto" style="max-height: 60vh; overflow-y: auto;">
+
+                {% csrf_token %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>S/N</th>
+                            <th>Student Name</th>
+                            <th>Class</th>
+
+                            <th>Remark</th>
+                            <th>Signature</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if reports %}
+                        {% for report in reports %}
+                        <input type="hidden" name="report_ids" value="{{report.id}}">
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>{{report.student.get_full_name}}</td>
+                            <td>
+                                <input type="text" class="form-control" value="{{report.klass.name}}" disabled>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-light m-0" data-bs-toggle="modal"
+                                    onclick=updateReportIframeSrc("{% url 'pdf:single_report' session.id report.klass.class_id report.student.student_id %}")
+                                    data-bs-target="#reportModal">View Report</button>
+                            </td>
+                            <td>
+                                <img src="{{report.signature_url}}" alt="" height="50">
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="9">
+                                <p class="text-center text-danger">No reports found</p>
+                            </td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% if reports %}
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit"
+                    {% if not request.user.signature %}disabled{% endif %}>Append Signature to all</button>
+            </div>
+            {% endif %}
+        </form>
+    </div>
+</section>
+
+{% endblock %}

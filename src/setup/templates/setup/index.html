@@ -1,0 +1,635 @@
+{% extends 'templates/dashboard/base_template.html' %}
+{% block page_title %}Setup{% endblock %}
+{% block active-sidebar-item-id %}setup{%endblock%}
+
+{% block breadcrumb %}
+<section class="breadcrumb">
+    <a href="{% url 'dashboard:index' %}" class="">Home <i class="bi bi-chevron-right"></i></a>
+    <a href="" class="active">Setup</a>
+</section>
+{% endblock %}
+
+{% block content %}
+<!-- Modals -->
+{% include 'setup/blocks/modals.html' %}
+<!-- End of Modals -->
+
+<section class="system">
+    <hr>
+    <h4>SYSTEM</h4>
+    <div class="row">
+        <div class="col-md-6 p-2 my-3">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <h6>ROLES</h6>
+                    {% if perms.auth.add_group %}
+                    <button class="d-flex btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#roleModal"><i
+                            class="bi bi-plus"></i></button>
+                    {% endif %}
+                </div>
+                <div class="card-body p-2">
+                    <p>Click on the name of a role to configure permissions.</p>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>S/N</th>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for role in roles %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{role.id}}</td>
+                                <td><a href="{% url 'setup:roles_management' role.id %}">{{role.name}}</a> </td>
+                                <td class="d-flex">
+                                    <a href="{% url 'setup:roles_management' role.id %}"
+                                        class="bnt bnt-sm btn-light d-flex">
+                                        <span><i class="bi bi-shield-plus"></i></span><span
+                                            class="ms-1">Permissions</span>
+                                    </a>
+                                    <a href="{% url 'setup:change_role' %}?role_id={{role.id}}"
+                                        class="btn btn-light btn-sm d-flex mx-2">
+                                        <span><i class="bi bi-pencil"></i></span><span class="ms-1">Edit</span>
+                                    </a>
+
+                                    {% if perms.auth.delete_group %}
+                                    <form action="{% url 'dashboard:delete_model' 'group' role.id %}" method="POST"
+                                        class="requires-confirmation"
+                                        data-message="Click on okay to permanently delete '{{role.name}}'">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="role_id" value="{{role.id}}">
+                                        <button type="submit" class="btn btn-sm btn-light">
+                                            <span class="d-flex">
+                                                <span><i class="bi bi-trash"></i> </span>
+                                                <span class="ms-1">Delete</span>
+                                            </span>
+                                        </button>
+                                    </form>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 p-2 my-3">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <h6>TRACKS</h6>
+                    {% if perms.setup.add_track %}
+                    <button class="d-flex btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#trackModal"><i
+                            class="bi bi-plus"></i></button>
+                    {% endif %}
+                </div>
+                <div class="card-body p-2">
+                    <p>A track refers to a batch of students.</p>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>S/N</th>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for track in tracks %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{track.id}}</td>
+                                <td>{{track.name}}</td>
+                                <td class="d-flex">
+                                    <a href="{% url 'setup:create_update_track' %}?track_id={{track.id}}"
+                                        class="btn btn-light btn-sm d-flex mx-2">
+                                        <span><i class="bi bi-pencil"></i></span><span class="ms-1">Edit</span>
+                                    </a>
+
+                                    {% if perms.auth.delete_group %}
+                                    <form action="{% url 'dashboard:delete_model' track.model_name track.id %}"
+                                        method="POST" class="requires-confirmation"
+                                        data-message="Click on okay to permanently delete '{{track.name}}'.">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="track_id" value="{{track.id}}">
+                                        <button type="submit" class="btn btn-sm btn-light">
+                                            <span class="d-flex">
+                                                <span><i class="bi bi-trash"></i> </span>
+                                                <span class="ms-1">Delete</span>
+                                            </span>
+                                        </button>
+                                    </form>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <h4 class="mt-3">REPORTING</h4>
+        <div class="col-md-6 p-2 my-3">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <h6>ATTITUDE</h6>
+                    {% if perms.setup.add_attitude %}
+                    <button class="d-flex btn btn-sm btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#attitudeModal"><i class="bi bi-plus"></i></button>
+                    {% endif %}
+                </div>
+                <div class="card-body p-2">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>S/N</th>
+                                <th>Text</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for attitude in attitudes %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{attitude.text}}</td>
+                                <td class="d-flex">
+                                    <a href="{% url 'setup:create_update_attitude' %}?attitude_id={{attitude.id}}"
+                                        class="btn btn-light btn-sm d-flex mx-2">
+                                        <span><i class="bi bi-pencil"></i></span><span class="ms-1">Edit</span>
+                                    </a>
+
+                                    {% if perms.auth.delete_group %}
+                                    <form action="{% url 'dashboard:delete_model' attitude.model_name attitude.id %}"
+                                        method="POST" class="requires-confirmation"
+                                        data-message="Click on okay to permanently delete '{{attitude.text}}'.">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="attitude_id" value="{{attitude.id}}">
+                                        <button type="submit" class="btn btn-sm btn-light">
+                                            <span class="d-flex">
+                                                <span><i class="bi bi-trash"></i> </span>
+                                                <span class="ms-1">Delete</span>
+                                            </span>
+                                        </button>
+                                    </form>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 p-2 my-3">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <h6>INTEREST</h6>
+                    {% if perms.setup.add_interest %}
+                    <button class="d-flex btn btn-sm btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#interestModal"><i class="bi bi-plus"></i></button>
+                    {% endif %}
+                </div>
+                <div class="card-body p-2">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>S/N</th>
+                                <th>Text</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for interest in interests %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{interest.text}}</td>
+                                <td class="d-flex">
+                                    <a href="{% url 'setup:create_update_interest' %}?interest_id={{interest.id}}"
+                                        class="btn btn-light btn-sm d-flex mx-2">
+                                        <span><i class="bi bi-pencil"></i></span><span class="ms-1">Edit</span>
+                                    </a>
+                                    {% if perms.auth.delete_group %}
+                                    <form action="{% url 'dashboard:delete_model' interest.model_name interest.id %}"
+                                        method="POST" class="requires-confirmation"
+                                        data-message="Click on okay to permanently delete '{{interest.text}}'.">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="interest_id" value="{{interest.id}}">
+                                        <button type="submit" class="btn btn-sm btn-light">
+                                            <span class="d-flex">
+                                                <span><i class="bi bi-trash"></i> </span>
+                                                <span class="ms-1">Delete</span>
+                                            </span>
+                                        </button>
+                                    </form>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 p-2 my-3">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <h6>CONDUCT</h6>
+                    {% if perms.setup.add_conduct %}
+                    <button class="d-flex btn btn-sm btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#conductModal"><i class="bi bi-plus"></i></button>
+                    {% endif %}
+                </div>
+                <div class="card-body p-2">
+                    <table class="table table-sm">
+                        <tr>
+                            <th>S/N</th>
+                            <th>Text</th>
+                            <th>Actions</th>
+                        </tr>
+                        <tbody>
+                            {% for conduct in conducts %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{conduct.text}}</td>
+                                <td class="d-flex">
+                                    <a href="{% url 'setup:create_update_conduct' %}?conduct_id={{conduct.id}}"
+                                        class="btn btn-light btn-sm d-flex mx-2">
+                                        <span><i class="bi bi-pencil"></i></span><span class="ms-1">Edit</span>
+                                    </a>
+
+                                    {% if perms.auth.delete_remark %}
+                                    <form action="{% url 'dashboard:delete_model' conduct.model_name conduct.id %}"
+                                        method="POST" class="requires-confirmation"
+                                        data-message="Click on okay to permanently delete '{{conduct.text}}'.">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="conduct_id" value="{{conduct.id}}">
+                                        <button type="submit" class="btn btn-sm btn-light">
+                                            <span class="d-flex">
+                                                <span><i class="bi bi-trash"></i> </span>
+                                                <span class="ms-1">Delete</span>
+                                            </span>
+                                        </button>
+                                    </form>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 p-2 my-3">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <h6>REMARK</h6>
+                    {% if perms.setup.add_remark %}
+                    <button class="d-flex btn btn-sm btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#remarkModal"><i class="bi bi-plus"></i></button>
+                    {% endif %}
+                </div>
+                <div class="card-body p-2">
+                    <table class="table table-sm">
+                        <tr>
+                            <th>S/N</th>
+                            <th>Text</th>
+                            <th>Actions</th>
+                        </tr>
+                        <tbody>
+                            {% for remark in remarks %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{remark.text}}</td>
+                                <td class="d-flex">
+                                    <a href="{% url 'setup:create_update_remark' %}?remark_id={{remark.id}}"
+                                        class="btn btn-light btn-sm d-flex mx-2">
+                                        <span><i class="bi bi-pencil"></i></span><span class="ms-1">Edit</span>
+                                    </a>
+
+                                    {% if perms.auth.delete_remark %}
+                                    <form action="{% url 'dashboard:delete_model' remark.model_name remark.id %}"
+                                        method="POST" class="requires-confirmation"
+                                        data-message="Click on okay to permanently delete '{{remark.text}}'.">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="remark_id" value="{{remark.id}}">
+                                        <button type="submit" class="btn btn-sm btn-light">
+                                            <span class="d-flex">
+                                                <span><i class="bi bi-trash"></i> </span>
+                                                <span class="ms-1">Delete</span>
+                                            </span>
+                                        </button>
+                                    </form>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-6 p-2 my-3">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <h6>GRADING SYSTEM</h6>
+                    {% if perms.setup.add_gradingsystem %}
+                    <button class="d-flex btn btn-sm btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#gradingSystemModal"><i class="bi bi-plus"></i></button>
+                    {% endif %}
+                </div>
+                <div class="card-body p-2">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>S/N</th>
+                                <th>Min Score</th>
+                                <th>Grade</th>
+                                <th>Remark</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for grading_system in grading_systems %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{grading_system.min_score}}</td>
+                                <td>{{grading_system.grade}}</td>
+                                <td>{{grading_system.remark}}</td>
+                                <td class="d-flex">
+                                    <a href="{% url 'setup:create_update_grading_system' %}?grading_system_id={{grading_system.id}}"
+                                        class="btn btn-light btn-sm d-flex mx-2">
+                                        <span><i class="bi bi-pencil"></i></span><span class="ms-1">Edit</span>
+                                    </a>
+
+                                    {% if perms.setup.delete_gradingsystem %}
+                                    <form
+                                        action="{% url 'dashboard:delete_model' grading_system.model_name grading_system.id %}"
+                                        method="POST" class="requires-confirmation"
+                                        data-message="Click on okay to permanently delete '{{grading_system}}'.">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="grading_system_id" value="{{grading_system.id}}">
+                                        <button type="submit" class="btn btn-sm btn-light">
+                                            <span class="d-flex">
+                                                <span><i class="bi bi-trash"></i> </span>
+                                                <span class="ms-1">Delete</span>
+                                            </span>
+                                        </button>
+                                    </form>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 p-2 my-3">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <h6>SCHOOL SESSIONS</h6>
+                    {% if perms.auth.add_attitude %}
+                    <button class="d-flex btn btn-sm btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#schoolSessionModal"><i class="bi bi-plus"></i></button>
+                    {% endif %}
+                </div>
+                <div class="card-body p-2">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>S/N</th>
+                                <th>Name</th>
+                                <th>Semester</th>
+                                <th>Academic Year</th>
+                                <th>Start</th>
+                                <th>End</th>
+                                <th>Tracks</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for school_session in school_sessions %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{school_session.name}}</td>
+                                <td>{{school_session.semester}}</td>
+                                <td>{{school_session.academic_year}}</td>
+                                <td>{{school_session.start_date}}</td>
+                                <td>{{school_session.end_date}}</td>
+                                <td>
+                                    {% for track in school_session.tracks.all %}
+                                    <span class="badge bg-primary m-1">{{track.name}}</span>
+                                    {% endfor %}
+                                </td>
+                                <td class="d-flex">
+                                    <a href="{% url 'setup:create_update_school_session' %}?school_session_id={{school_session.id}}"
+                                        class="btn btn-light btn-sm d-flex mx-2">
+                                        <span><i class="bi bi-pencil"></i></span><span class="ms-1">Edit</span>
+                                    </a>
+
+                                    {% if perms.setup.delete_schoolsession %}
+                                    <form
+                                        action="{% url 'dashboard:delete_model' school_session.model_name school_session.id %}"
+                                        method="POST" class="requires-confirmation"
+                                        data-message="Click on okay to permanently delete '{{school_session.name}}'.">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="school_session_id" value="{{school_session.id}}">
+                                        <button type="submit" class="btn btn-sm btn-light">
+                                            <span class="d-flex">
+                                                <span><i class="bi bi-trash"></i> </span>
+                                                <span class="ms-1">Delete</span>
+                                            </span>
+                                        </button>
+                                    </form>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <h4 class="mt-3">THE SCHOOL</h4>
+        <div class="col-md-6 p-2 my-3">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <h6>MY SCHOOL</h6>
+                </div>
+                <div class="card-body p-3">
+                    <form action="{% url 'setup:update_school_info' %}" class="needs-validation" method="POST"
+                        enctype="multipart/form-data" novalidate>
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-4 form-group">
+                                <label for="code">Code</label>
+                                <input type="text" class="form-control" id="code" name="code" value="{{school.code}}"
+                                    required>
+                                <div class="invalid-feedback">
+                                    Please enter this filed is required.
+                                </div>
+                            </div>
+                            <div class="col-md-8 form-group">
+                                <label for="name">Name</label>
+                                <input type="text" class="form-control" id="name" name="name" value="{{school.name}}"
+                                    required>
+                                <div class="invalid-feedback">
+                                    Please enter this filed is required.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 form-group">
+                                <label for="phone">Phone</label>
+                                <input type="text" class="form-control" id="phone" name="phone"
+                                    pattern="0[1-9]{1}[0-9]{8}" value="{{school.phone}}">
+                                <div class="invalid-feedback">
+                                    Please enter a valid 10-digit phone number.
+                                </div>
+                            </div>
+                            <div class="col-md-8 form-group">
+                                <label for="email_address">Email Address</label>
+                                <input type="text" class="form-control" id="email_address" name="email_address"
+                                    value="{{school.email_address}}">
+                            </div>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label for="address">Address</label>
+                            <textarea class="form-control" id="address" name="address"
+                                rows="3">{{school.address}}</textarea>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label for="logo">Logo</label>
+                            <br>
+                            {% if school.logo %}
+                            Current: <a href="{{school.get_logo_url}}"><img src="{{school.get_logo_url}}"
+                                    alt="{{school.name}}" height="50"></a>
+                            {% endif %}
+                            <input type="file" class="form-control" id="logo" name="logo">
+                            <div class="invalid-feedback">
+                                Please enter this filed is required.
+                            </div>
+                        </div>
+
+
+                        <div class="form-group mt-3">
+                            <label for="head_teacher">Head Teacher</label>
+                            <select class="form-select" name="head_teacher_id" id="head_teacher" required>
+                                <option value="">Select Head Teacher</option>
+                                {% for teacher in staff %}
+                                <option value="{{teacher.id}}" {% if school.head_teacher.id == teacher.id %}selected{% endif %}>
+                                    {{teacher.user.get_name}}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <div class="invalid-feedback">
+                                Please enter this filed is required.
+                            </div>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label for="assistant_head_teacher">Ass. Head Teacher</label>
+                            <select class="form-select" name="assistant_head_teacher_id" id="assistant_head_teacher"
+                                required>
+                                <option value="">Select Head Ass. Teacher</option>
+                                {% for teacher in staff %}
+                                <option value="{{teacher.id}}" {% if school.assistant_head_teacher.id == teacher.id %}selected{% endif %}>
+                                    {{teacher.user.get_name}}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <div class="invalid-feedback">
+                                Please enter this filed is required.
+                            </div>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label for="current_session">Current School Session</label>
+                            <select class="form-select" name="current_session_id" id="current_session" required>
+                                <option value="">Select session</option>
+                                {% for session in school_sessions %}
+                                <option value="{{session.id}}" {% if school.current_session.id == session.id %}selected{% endif %}>
+                                    {{session.name}}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <div class="invalid-feedback">
+                                Please enter this filed is required.
+                            </div>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label for="current_track">Current Track</label>
+                            <select class="form-select" name="current_track_id" id="current_track" required>
+                                <option value="">Select track</option>
+                                {% for track in tracks %}
+                                <option value="{{track.id}}" {% if school.current_track.id == track.id %}selected{% endif %}>
+                                    {{track.name}}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <div class="invalid-feedback">
+                                Please enter this filed is required.
+                            </div>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 p-2 my-3">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <h6>SMS CONFIG</h6>
+                </div>
+                <div class="card-body p-3">
+                    <form class="needs-validation" action="{% url 'setup:update_school_info' %}" method="POST"
+                        novalidate>
+                        {% csrf_token %}
+                        <div class="d-flex align-items-center">
+                            <div class="col-md-4 form-group">
+                                <label for="sms_sender_id">Sender SMS ID</label>
+                                <input type="text" class="form-control" id="sms_sender_id" name="sms_sender_id"
+                                    maxlength="11" value="{{school.sms_sender_id}}" required>
+                                <div class="invalid-feedback">
+                                    Please this field is required.
+                                </div>
+                            </div>
+                            <div class="col-md-8 mt-4 ps-3 form-group">
+                                <label for="name">SMS Enabled</label>
+                                <input class="form-check-input" value="1" type="checkbox" name="sms_active" disabled
+                                    {% if school.sms_active %}checked{% endif %}>
+                            </div>
+                        </div>
+                        <div class="form-group mt-3">
+                            <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+</section>
+{% endblock %}

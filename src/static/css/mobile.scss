@@ -1,0 +1,104 @@
+$breakpoint-tablet: 820px;
+@media (max-width: $breakpoint-tablet) {
+  .sidebar {
+    position: fixed;
+    top: 0.5em;
+    left: 0;
+    height: 100%;
+    width: 0;
+    background-color: $background-light;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 0.4em;
+  }
+  
+  .close-sidebar,
+  .open-sidebar {
+    display: flex !important;
+  }
+
+  .main-content {
+    left: 0;
+    width: 100vw;
+    padding-inline: 0.5em;
+    padding-top: 1em;
+
+    // Navbar
+    .nav {
+      background-color: $background-light;
+      height: $nav-height;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      padding: 0.5em 1em;
+      position: sticky;
+      top: 0;
+      border-radius: 0.4em;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .notification {
+        position: relative;
+        cursor: pointer;
+
+        &::after {
+          content: attr(data-count);
+          position: absolute;
+          top: -0.7em;
+          right: -0.7em;
+          background-color: $primary;
+          color: white;
+          width: 1.5em;
+          height: 1.5em;
+          justify-content: center;
+          align-items: center;
+          display: flex;
+          border-radius: 50%;
+          font-size: 0.8em;
+        }
+      }
+
+      .avatar {
+        height: calc(#{$nav-height} - 0.8em);
+        width: calc(#{$nav-height} - 0.8em);
+        background-color: rgba($primary, 0.1);
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: 0.1em;
+          right: 0.1em;
+          background-color: $success;
+          color: white;
+          width: 0.9em;
+          height: 0.9em;
+          border: 2px solid white;
+          border-radius: 50%;
+        }
+
+        img {
+          height: calc(#{$nav-height} - 1.5em);
+        }
+      }
+    }
+
+    .breadcrumb {
+      background-color: $white;
+      margin: 1em auto;
+      border-radius: 4px;
+      padding: 0.5em;
+    }
+
+    footer {
+      background-color: $background-light;
+      padding: 0.5em;
+      text-align: center;
+      font-size: 0.8em;
+      color: rgba($black, 0.7);
+      margin-top: 2em;
+    }
+  }
+}

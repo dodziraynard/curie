@@ -1,0 +1,26 @@
+{% extends 'templates/dashboard/base_template.html' %}
+{% block page_title %}Setup{% endblock %}
+{% block active-sidebar-item-id %}setup{%endblock%}
+
+{% block breadcrumb %}
+<section class="breadcrumb">
+    <a href="{% url 'dashboard:index' %}" class="">Home <i class="bi bi-chevron-right"></i></a>
+    <a href="" class="active">Setup</a>
+</section>
+{% endblock %}
+
+{% block content %}
+
+<div class="row col-md-11 mx-auto">
+    <section class="col-md-6 mx-auto">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <h6>REMARK</h6>
+            </div>
+            <div class="card-body">
+                {% include 'setup/blocks/forms/form_remark.html' %}
+            </div>
+        </div>
+    </section>
+</div>
+{%endblock%}

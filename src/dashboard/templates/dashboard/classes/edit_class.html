@@ -1,0 +1,28 @@
+{% extends 'templates/dashboard/base_template.html' %}
+{% block page_title %}Class{% endblock %}
+{% block active-sidebar-item-id %}classes{%endblock%}
+
+{% block breadcrumb %}
+<section class="breadcrumb">
+    <a href="{% url 'dashboard:index' %}" class="">Home <i class="bi bi-chevron-right"></i></a>
+    <a href="{% url 'dashboard:classes' %}">Class <i class="bi bi-chevron-right"></i></a>
+    <a class="active">{{department.name|title}}</a>
+</section>
+{% endblock %}
+
+{% block content %}
+
+<div class="row col-md-11 mx-auto">
+    <section class="col-md-6 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between">
+                    <h6>CLASS</h6>
+                </div>
+            </div>
+            <div class="card-body">
+                {% include 'dashboard/classes/form_class.html' %}
+            </div>
+    </section>
+</div>
+{% endblock %}

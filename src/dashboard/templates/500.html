@@ -1,0 +1,19 @@
+{% extends 'templates/dashboard/base_template.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="col-md-10 mx-auto col-11">
+    <div class="row col-md-10 col-12 mx-auto">
+        <div class="col-12 mx-auto">
+            <h1 class="text text-center">500</h1>
+            <h6 class="text text-center">Internal Server Error</h6>
+            <p class="text text-center">Umm, unexpected error occured.</p>
+        </div>
+        <p class="text text-center"><a href="{% url 'dashboard:index' %}" class="btn btn-primary">Home</a></p>
+    </div>
+</div>
+
+
+{%endblock%}

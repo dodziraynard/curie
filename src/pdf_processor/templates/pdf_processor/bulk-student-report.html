@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <title>{{student.get_full_name}} REPORT</title>
+</head>
+
+<style>
+    body {
+        font-family: 'Redressed', cursive;
+    }
+</style>
+
+<body>
+    {% if not data%}
+    <h3 style="color: red">No result found.</h3>
+    {% else %}
+
+    {% for records, session_report in data %}
+
+    {% include 'pdf_processor/blocks/report-ui.html' %}
+
+    {% endfor %}
+
+    {% endif %}
+</body>
+
+</html>

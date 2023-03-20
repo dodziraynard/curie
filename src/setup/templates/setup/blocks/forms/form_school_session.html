@@ -1,0 +1,64 @@
+<form action="{% url 'setup:create_update_school_session' %}" class="needs-validation my-4" method="POST" novalidate>
+    {% csrf_token %}
+    <input type="hidden" name="school_session_id" value="{{school_session.id}}">
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input class="form-control" placeholder="E.g., 2022/2023 Sem 1" value="{{name}}" type="text" name="name"
+            id="name" required>
+        <div class="invalid-feedback">
+            Please this field is required.
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="semester">Semester</label>
+        <select class="form-control" name="semester" id="semester" required>
+            <option value="">Choose</option>
+            <option value="1" {% if semester == 1 %}selected{% endif %}>1</option>
+            <option value="2" {% if semester == 2 %}selected{% endif %}>2</option>
+        </select>
+        <div class="invalid-feedback">
+            Please this field is required.
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="academic_year">Academic Year</label>
+        <input class="form-control" placeholder="E.g., 2022/2023" value="{{academic_year}}" type="text"
+            name="academic_year" id="academic_year" required>
+        <div class="invalid-feedback">
+            Please this field is required.
+        </div>
+    </div>
+
+    <div class="mt-4 form-group">
+        <p>Tracks</p>
+        {% for track in tracks %}
+        <div class="form-check">
+            <label for="filed_{{track.id}}">{{track.name}}</label>
+            <input class="form-check-input" type="checkbox" value="{{track.id}}" name="tracks" id="filed_{{track.id}}"
+                {% if track in school_session.tracks.all or track.id in tracks %}checked{% endif %}>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="mt-4 form-group">
+        <label for="start_date">Start Date</label>
+        <input class="form-control" value="{{start_date}}" type="date" name="start_date" id="start_date" required>
+        <div class="invalid-feedback">
+            Please this field is required.
+        </div>
+    </div>
+
+    <div class="mt-4 form-group">
+        <label for="end_date">End Date</label>
+        <input class="form-control" value="{{end_date}}" type="date" name="end_date" id="end_date" required>
+        <div class="invalid-feedback">
+            Please this field is required.
+        </div>
+    </div>
+
+    <div class="form-group my-3">
+        <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+    </div>
+</form>

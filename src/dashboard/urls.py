@@ -1,0 +1,67 @@
+from django.urls import path
+
+from . import views
+
+# yapf: disable
+
+app_name = "dashboard"
+urlpatterns = [
+    path('', views.IndexView.as_view(), name='index'),
+    path('delete/<str:model_name>/<str:instance_id>', views.DeleteModelView.as_view(), name='delete_model'),
+    path('model_agnostic_image_upload/<str:model_name>/<str:model_id>/<str:field_name>', views.ModelAgnosticImageUploadView.as_view(), name='model_agnostic_image_upload'),
+    path('crop-model-image/<str:model_name>/<str:model_id>/<str:field_name>', views.CropModelImageView.as_view(), name='crop_model_image'),
+
+
+    # Students
+    path('students/', views.StudentsView.as_view(), name='students'),
+    path('students/create-update', views.CreateUpdateStudentView.as_view(), name='create_update_student'),
+    path('students/create-update-bulk', views.AddBulkStudents.as_view(), name='create_update_student_bulk'),
+
+    # Subjects
+    path('subjects/', views.SubjectsView.as_view(), name='subjects'),
+    path('subjects/create-update', views.CreateUpdateSubjectView.as_view(), name="create_update_subject"),
+
+    # Courses
+    path('courses/', views.CoursesView.as_view(), name='courses'),
+    path('courses/create-update', views.CreateUpdateCourseView.as_view(), name="create_update_course"),
+
+    # Department
+    path('departments/', views.DepartmentsView.as_view(), name='departments'),
+    path('departments/create-update', views.CreateUpdateDepartmentView.as_view(), name="create_update_department"),
+
+    # Staff
+    path('staff/', views.StaffView.as_view(), name='staff'),
+    path('staff/create-update', views.CreateUpdateStaffView.as_view(), name="create_update_staff"),
+
+    # Staff
+    path('classes/', views.ClassesView.as_view(), name='classes'),
+    path('classes/create-update', views.CreateUpdateClassView.as_view(), name="create_update_class"),
+
+    # House
+    path('houses/', views.HousesView.as_view(), name='houses'),
+    path('houses/create-update', views.CreateUpdateHouseView.as_view(), name="create_update_house"),
+
+    # Action Center
+    path('action-center/', views.ActionCenterView.as_view(), name='action_center'),
+    path('action-center/subject-mapping', views.SubjectMappingView.as_view(), name='subject_mapping'),
+    path('action-center/student-promotion', views.StudentPromotionView.as_view(), name='student_promotion'),
+    path('action-center/student-promotion-revert', views.RevertPromotionView.as_view(), name='student_promotion_revert'),
+    path('action-center/academic-record-selection', views.AcademicRecordSelectionView.as_view(), name='academic_record_selection'),
+    path('action-center/academic-record-data', views.AcademicRecordDataView.as_view(), name='academic_record_data'),
+
+    # Reporting
+    path('reporting/index', views.ReportingIndexView.as_view(), name='reporting_index'),
+    path('reporting/student-full-report', views.StudentFullReportView.as_view(), name='student_full_report'),
+
+    # Class teacher reporting
+    path('reporting/class-teacher-report-filter', views.ClassTeacherSessionReportFilterView.as_view(), name='class_teacher_report_filter'),
+    path('reporting/class-teacher-report-data', views.ClassTeacherSessionReportDataView.as_view(), name='class_teacher_report_data'),
+
+    # House master reporting
+    path('reporting/house-master-report-filter', views.HouseMasterSessionReportFilterView.as_view(), name='house_master_report_filter'),
+    path('reporting/house-master-report-data', views.HouseMasterSessionReportDataView.as_view(), name='house_master_report_data'),
+
+    # House master reporting
+    path('reporting/assistant-head-report-filter', views.AssistantHeadSessionReportFilterView.as_view(), name='assistant_head_report_filter'),
+    path('reporting/assistant-head-report-data', views.AssistantHeadSessionReportDataView.as_view(), name='assistant_head_report_data'),
+]

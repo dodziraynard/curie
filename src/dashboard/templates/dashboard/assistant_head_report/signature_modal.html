@@ -1,0 +1,43 @@
+<div class="modal fade" id="signatureModal" tabindex="-1" aria-labelledby="signatureModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content px-4">
+            <div class="modal-header">
+                <h5 class="modal-title" id="signatureModalLabel">Signature</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="croppable-container col-md-4 mx-auto">
+                    <form
+                        action="{% url 'dashboard:crop_model_image' request.user.model_name request.user.id 'signature' %}"
+                        class="crop-form" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div>
+                            <img class="croppable" src="{{request.user.signature_url}}" alt="signature">
+                        </div>
+                        <input type="hidden" name="cropdata" class="cropdata">
+                        <button type="submit" class="btn btn-sm btn-primary btn-crop-image"><small>Save</small></button>
+                    </form>
+                </div>
+
+                <form
+                    action="{% url 'dashboard:model_agnostic_image_upload' request.user.model_name request.user.id 'signature' %}"
+                    method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <label for="image">Signature</label>
+                    <input type="file" class="form-control" id="image" name="image" required>
+                    <div class="invalid-feedback">
+                        Please enter a signature.
+                    </div>
+
+                    <div class="form-group my-4 d-flex justify-content-end">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

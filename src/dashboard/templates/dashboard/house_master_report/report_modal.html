@@ -1,0 +1,29 @@
+<div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content px-4">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reportModalLabel">Report</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="height:80vh">
+                <div class="embed-responsive embed-responsive-4by3">
+                    <iframe id="report-iframe" frameborder="0" frameborder="0"
+                        style="
+                                overflow: hidden;
+                                overflow-x: hidden;
+                                overflow-y: hidden;
+                                height: 100%;
+                                width: 100%;
+                                position: absolute;
+                                top: 0px;
+                                left: 0px;
+                                right: 0px;
+                                bottom: 0px;" height="100%" width="100"></iframe>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a id="report-preview-button" class="btn btn-primary" target="_blank">Open in new table</a>
+            </div>
+        </div>
+    </div>
+</div>

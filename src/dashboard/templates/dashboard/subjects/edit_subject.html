@@ -1,0 +1,25 @@
+{% extends 'templates/dashboard/base_template.html' %}
+{% block page_title %}Subjects{% endblock %}
+{% block active-sidebar-item-id %}subjects{%endblock%}
+
+{% block breadcrumb %}
+<section class="breadcrumb">
+    <a href="{% url 'dashboard:index' %}" class="">Home <i class="bi bi-chevron-right"></i></a>
+    <a href="{% url 'dashboard:subjects' %}">Subjects <i class="bi bi-chevron-right"></i></a>
+    <a class="active">{{subject.name|title}}</a>
+</section>
+{% endblock %}
+
+{% block content %}
+
+<div class="row col-md-11 mx-auto">
+    <section class="col-md-6 mx-auto">
+        <div class="card p-4">
+            <div class="d-flex justify-content-between">
+                <h6>SUBJECT</h6>
+            </div>
+            {% include 'dashboard/subjects/form_subject.html' %}
+        </div>
+    </section>
+</div>
+{% endblock %}

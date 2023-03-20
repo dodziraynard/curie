@@ -1,0 +1,88 @@
+<form action="{% url 'dashboard:create_update_staff' %}" class="needs-validation my-4" method="POST" novalidate>
+    {% csrf_token %}
+    <input type="hidden" name="staff_id" value="{{staff.id}}">
+    <div class="form-group">
+        <label for="name">Staff ID</label>
+        <input class="form-control" placeholder="E.g., 1092" value="{{username}}" type="text" name="username"
+            id="username" required>
+        <div class="invalid-feedback">
+            Please this field is required.
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group col-md-2 mt-4">
+            <label for="name">Title</label>
+            <select class="form-select" name="title" id="title" required>
+                <option value="">--Click to select--</option>
+                <option value="mr" {% if title == 'mr' %}selected{% endif %}>Mr</option>
+                <option value="mrs" {% if title == 'mrs' %}selected{% endif %}>Mrs</option>
+            </select>
+            <div class="invalid-feedback">
+                Please this field is required.
+            </div>
+        </div>
+        <div class="form-group col-md-4 mt-4">
+            <label for="name">Surname</label>
+            <input class="form-control" placeholder="E.g, Mensah" value="{{surname}}" type="text" name="surname"
+                id="name" required>
+            <div class="invalid-feedback">
+                Please this field is required.
+            </div>
+        </div>
+
+        <div class="form-group col-md-6 mt-4">
+            <label for="name">Other names</label>
+            <input class="form-control" placeholder="E.g, John" value="{{other_names}}" type="text" name="other_names"
+                id="name" required>
+            <div class="invalid-feedback">
+                Please this field is required.
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group col-md-6 mt-4">
+            <label for="name">Gender</label>
+            <select class="form-select" name="gender" id="gender" required>
+                <option value="">--Click to select--</option>
+                <option value="male" {% if gender == 'male' %}selected{% endif %}>Male</option>
+                <option value="female" {% if gender == 'female' %}selected{% endif %}>Female</option>
+            </select>
+            <div class="invalid-feedback">
+                Please this field is required.
+            </div>
+        </div>
+        <div class="form-group col-md-5 mt-4">
+            <label for="phone">Phone Number</label>
+            <input class="form-control" placeholder="E.g, 024*******" value="{{phone}}" type="text" name="phone"
+                maxlength="10" minlength="10" pattern="0[0-9]{9}" id="phone" required>
+            <div class="invalid-feedback">
+                Please enter a valid 10-digit phone number.
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="form-group col-md-6">
+            <label for="photo">Photo</label>
+            <input class="form-control" type="file" name="photo" id="photo">
+            <div class="invalid-feedback">
+                Please this field is required.
+            </div>
+        </div>
+
+        <div class="form-group col-md-6">
+            <div class="form-check mt-4">
+                <label for="has_left">Has left</label>
+                <input class="form-check-input" type="checkbox" value="1" name="has_left" id="has_left"
+                    {% if has_left %}checked{% endif %}>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4 form-group">
+        <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+    </div>
+
+</form>

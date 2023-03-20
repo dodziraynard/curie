@@ -1,0 +1,81 @@
+{% extends 'templates/accounts/base_template.html' %}
+{% block page_title %}Home{% endblock %}
+{% load static %}
+<h1>Hello</h1>
+{% block content %}
+<div class="container" style="width:45rem">
+  <h3 class="text-center"> Add Users </h3>
+  <div class="card card-shadow">
+    <div class="card-body">
+      <form class="col-md-11 mx-auto" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row mt-2">
+          <div class="col-md-6 mb-3">
+            <label class="font-weight-bold" for="fullname">First Name</label>
+            <input placeholder="First Name" type="text" name="first_name" id="first_name" value=""
+              class="mb-2 form-control-lg form-control">
+          </div>
+          <div class="col-md-6">
+            <label class="font-weight-bold" for="fullname">Last Name</label>
+            <input placeholder="Last Name" type="text" name="last_name" id="last_name" value=""
+              class="mb-2 form-control-lg form-control">
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="font-weight-bold" for="fullname">Other Names</label>
+            <input placeholder="Other Names" type="text" name="other_name" id="other_name" value=""
+              class="mb-2 form-control-lg form-control">
+          </div>
+
+          <div class="col-md-3 ">
+            <label class="font-weight-bold" for="gender">Gender</label>
+            <select class="font-weight-bold border rounded" name="gender" id="gender" style="height:3rem">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                  </select>
+          </div>
+        </div>
+
+        <label class="font-weight-bold" for="email_address">Email Address</label>
+        <input placeholder="email address" type="email" name="email_address"
+          class="mb-2 form-control-lg form-control  mb-3">
+
+        <label class="font-weight-bold" for="phone">Telephone</label>
+        <input placeholder="0206521297" type="text" name="phone" id="phone" value=""
+          class="mb-2 form-control-lg form-control mb-3">
+
+        <div class="form-group">
+          <label class="font-weight-bold" for="phot">Photogragh</label>
+          <input class="form-control  mb-3" type="file" name="photo">
+        </div>
+
+        <label class="font-weight-bold" for="fullname">Staff ID</label>
+        <input placeholder="Staff ID" type="text" name="staff_id" id="staff_id" value=""
+          class="mb-2 form-control-lg form-control mb-3">
+
+        <div class="form-group mt-4">
+          <label class="font-weight-bold" for="password"> Password</label>
+          <input placeholder="Password" type="password" name="password1" id="password1"
+            class="mb-2 form-control-lg form-control mb-3">
+        </div>
+
+        <label class="font-weight-bold" for="repeat_password">Confirm Password</label>
+        <input placeholder="Confirm Password" name="password2" id="password2" type="password"
+          class="mb-2 form-control-lg form-control">
+
+
+        <div class="form-group mt-3" ;>
+          <button type="submit" class="btn btn-primary">Create</button>
+          <a href="#">
+            <button class="btn btn-primary text-white">Cancel</button>
+          </a>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'templates/dashboard/base_template.html' %}
+{% block page_title %}Academic Record{% endblock %}
+{% block active-sidebar-item-id %}action_center{%endblock%}
+
+{% block breadcrumb %}
+<section class="breadcrumb">
+    <a href="{% url 'dashboard:index' %}" class="">Home <i class="bi bi-chevron-right"></i></a>
+    <a href="{% url 'dashboard:action_center' %}" class="">Action Center <i class="bi bi-chevron-right"></i></a>
+    <a href="" class="active">Academic Record</a>
+</section>
+{% endblock %}
+
+{% block content %}
+
+<h4 class="page-header"><i class='icon bx bx-group'></i> ACADEMIC RECORD</h4>
+<section class="card">
+    <div class="card-header d-flex justify-content-between">
+        <h4>Records</h4>
+    </div>
+    <div class="card-body">
+        <form action="{% url 'dashboard:academic_record_data' %}"
+            class="col-md-5 mx-auto overflow-auto needs-validation" novalidate>
+            <div class="form-group my-2">
+                <label for="session">School Session</label>
+                <select class="form-select" name="session" id="session" required>
+                    {% for session in sessions %}
+                        <option value="{{session.id}}">{{session.name}}</option>
+                    {% endfor %}
+                </select>
+                <div class="invalid-feedback">
+                    Please select an academic year.
+                </div>
+            </div>
+
+            <div class="form-group my-2">
+                <label for="subject">Subject</label>
+                <select class="form-select" name="subject" id="subject" required>
+                    <option value="">Select Subject</option>
+                    {% for subject in subjects %}
+                        <option value="{{subject.id}}">{{subject.name}}</option>
+                    {% endfor %}
+                </select>
+                <div class="invalid-feedback">
+                    Please select an academic year.
+                </div>
+            </div>
+
+            <div class="form-group my-2">
+                <p class="m-0">Classes</p>
+                {% for class in classes %}
+                <div class="form-check">
+                    <label for="filed_{{class.id}}">{{class.name}}</label>
+                    <input class="form-check-input" type="checkbox" value="{{class.id}}" name="classes"
+                        id="filed_{{class.id}}">
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="form-group my-4 d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary">View/Update Record</button>
+            </div>
+        </form>
+    </div>
+</section>
+
+{% endblock %}

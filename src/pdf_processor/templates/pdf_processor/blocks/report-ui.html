@@ -1,0 +1,323 @@
+<div>
+    <div style="font-family: 'Roboto', sans-serif;;">
+        <h1 style="text-align: center;  margin: 0;">GHANA EDUCATION SERVICE</h1>
+        <h1
+            style="text-align: center; margin: 0; padding-top: 0.5em; font-size: 2.5em; background-color: rgb(240, 240, 240);">
+            {{school.name}}
+        </h1>
+        <table>
+            <tr>
+                <td>
+                    <h3 style="margin: 0;">
+                        {{school.address|safe}}
+                    </h3>
+                </td>
+                <td>
+                    <p style="text-align: center; padding: 0; margin: 0"><img src="{{school.logo_url}}" alt="crest"
+                            height="60"></p>
+                </td>
+                <td>
+                    <table>
+                        <tr>
+                            <td>
+                                <p style="text-align: right;">Contact: </p>
+                            </td>
+                            <td colspan="2">
+                                <h3 style="text-align: right;">{{school.phone}}</h3>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p style="text-align: right;">Email: </p>
+                            </td>
+                            <td colspan="2">
+                                <h3 style="text-align: right;">{{school.email_address}}</h3>
+                            </td>
+                        </tr>
+
+                    </table>
+                </td>
+            </tr>
+            </tr>
+        </table>
+
+        <table>
+            <tr>
+                <td>
+                    <table>
+                        <tr>
+                            <td>
+                                <p style="text-align: left;">Student ID: </p>
+                            </td>
+                            <td>
+                                <h6 style="text-align: left;">{{records.first.student.student_id}}</h6>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p style="text-align: left;">Surname: </p>
+                            </td>
+                            <td>
+                                <h6 style="text-align: left;">{{records.first.student.user.surname}}</h6>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p style="text-align: left;">Other Names: </p>
+                            </td>
+                            <td>
+                                <h6 style="text-align: left;">{{records.first.student.user.other_names}}</h6>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p style="text-align: left;">House: </p>
+                            </td>
+                            <td>
+                                <h6 style="text-align: left;">{{records.first.student.house}}</h6>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td>
+                    <p style="text-align: center; padding: 0; margin: 0">
+                        <img src="{{records.first.student.logo_url}}" height="60">
+                    </p>
+                </td>
+                <td>
+                    <table>
+                        <tr>
+                            <td>
+                                <p style="text-align: right;">Academic Year: </p>
+                            </td>
+                            <td colspan="2">
+                                <h6 style="text-align: right;">{{records.first.session.academic_year}}</h6>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p style="text-align: right;">Semester: </p>
+                            </td>
+                            <td colspan="2">
+                                <h6 style="text-align: right;">{{records.first.session.semester}}</h6>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p style="text-align: right;">Course: </p>
+                            </td>
+                            <td colspan="2">
+                                <h6 style="text-align: right;">{{records.first.student.course.name}}</h6>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p style="text-align: right;">Class: </p>
+                            </td>
+                            <td colspan="2">
+                                <h6 style="text-align: right;">{{records.first.klass.name}}</h6>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <h1 style="text-align: center;  margin: 0.4em 0 0 0; padding-top: 1em; background-color: #f0f0f0;">
+        STUDENT REPORT SHEET</h1>
+    <br>
+    <table style="border: 1px solid gray;">
+        <thead>
+            <tr style="padding: 0.3em;">
+                <th colspan="2">
+                    <h2>Subject</h2>
+                </th>
+                <th>
+                    <h2>Class Score</h2>
+                </th>
+                <th>
+                    <h2>Exam Score</h2>
+                </th>
+                <th>
+                    <h2>Total</h2>
+                </th>
+                <th>
+                    <h2>Grade</h2>
+                </th>
+                <th>
+                    <h2>Remark</h2>
+                </th>
+                <th>
+                    <h2>Position</h2>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr style="padding: 0.2em; background-color: #f0f0f0;">
+                <td colspan="7">
+                    <h3 style="text-align: center; padding: 1em auto 0.5em auto;">CORE SUBJECTS</h3>
+                </td>
+            </tr>
+            {% for record in records %}
+            {% if not record.subject.is_elective %}
+            <tr style="padding: 0.5em;">
+                <td colspan="2">
+                    <h3 style="text-align: center;">{{record.subject.name}}</h3>
+                </td>
+                <td>
+                    <h3 style="text-align: center;">{{record.class_score}}</h3>
+                </td>
+                <td>
+                    <h3 style="text-align: center;">{{record.exam_score}}</h3>
+                </td>
+                <td>
+                    <h3 style="text-align: center;">{{record.total}}</h3>
+                </td>
+                <td>
+                    <h3 style="text-align: center;">{{record.grade}}</h3>
+                </td>
+                <td>
+                    <h3 style="text-align: center;">{{record.remark}}</h3>
+                </td>
+                <td>
+                    <h3 style="text-align: center;">{{record.rank}}</h3>
+                </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+
+            <tr style="padding: 0.2em; background-color: #f0f0f0;">
+                <td colspan="7">
+                    <h3 style="text-align: center; padding: 1em auto 0.5em auto;">ELECTIVE SUBJECTS</h3>
+                </td>
+            </tr>
+            {% for record in records %}
+            {% if record.subject.is_elective %}
+            <tr style="padding: 0.5em;">
+                <td colspan="2">
+                    <h3 style="text-align: center;">{{record.subject.name}}</h3>
+                </td>
+                <td>
+                    <h3 style="text-align: center;">{{record.class_score}}</h3>
+                </td>
+                <td>
+                    <h3 style="text-align: center;">{{record.exam_score}}</h3>
+                </td>
+                <td>
+                    <h3 style="text-align: center;">{{record.total}}</h3>
+                </td>
+                <td>
+                    <h3 style="text-align: center;">{{record.grade}}</h3>
+                </td>
+                <td>
+                    <h3 style="text-align: center;">{{record.remark}}</h3>
+                </td>
+                <td>
+                    <h3 style="text-align: center;">{{record.rank}}</h3>
+                </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <br>
+    <table>
+        <tbody>
+            <tr style="margin-bottom: 0; padding-top: 0.5em;">
+                <td>
+                    <p style="font-size: 1.3em;">Promotion:</p>
+                </td>
+                <td colspan="5" style="border-bottom: 1px solid black;">
+                    <p style="font-size: 1.3em; margin-left: 5em;">
+                        <b>
+                            {% if session_report.promotion %}
+                            {{session_report.promotion}}
+                            {% else %}
+                            -
+                            {% endif %}
+                        </b>
+                    </p>
+                </td>
+            </tr>
+            <tr style="margin-bottom: 0; padding-top: 0.5em;">
+                <td>
+                    <p style="font-size: 1.3em;">Attendance:</p>
+                </td>
+                <td colspan="5" style="border-bottom: 1px solid black;">
+                    <p style="font-size: 1.3em; margin-left: 5em;">
+                        {{session_report.attendance}}/{{session_report.total_attendance}}</p>
+                </td>
+            </tr>
+            <tr style="margin-bottom: 0; padding-top: 0.5em;">
+                <td>
+                    <p style="font-size: 1.3em;">Attitude:</p>
+                </td>
+                <td colspan="5" style="border-bottom: 1px solid black;">
+                    <p style="font-size: 1.3em; margin-left: 5em;">{{session_report.attitude.text}}</p>
+                </td>
+            </tr>
+            <tr style="margin-bottom: 0; padding-top: 0.5em;">
+                <td>
+                    <p style="font-size: 1.3em;">Interest:</p>
+                </td>
+                <td colspan="5" style="border-bottom: 1px solid black;">
+                    <p style="font-size: 1.3em; margin-left: 5em;">{{session_report.interest.text}}</p>
+                </td>
+            </tr>
+            <tr style="margin-bottom: 0; padding-top: 0.5em;">
+                <td>
+                    <p style="font-size: 1.3em;">Conduct:</p>
+                </td>
+                <td colspan="5" style="border-bottom: 1px solid black;">
+                    <p style="font-size: 1.3em; margin-left: 5em;">{{session_report.conduct.text}}</p>
+                </td>
+            </tr>
+
+            <tr style="margin-bottom: 0; padding-top: 0.5em;">
+                <td colspan="2">
+                    <p style="font-size: 1.3em;">Form Master/Mistress Remark:</p>
+                </td>
+                <td colspan="4" style="border-bottom: 1px solid black;">
+                    <p style="font-size: 1.3em; margin-left: 5em;">{{session_report.class_teacher_remark.text}}</p>
+                </td>
+            </tr>
+
+            <tr style="margin-bottom: 0; padding-top: 0.5em;">
+                <td colspan="2">
+                    <p style="font-size: 1.3em;">House Master/Mistress Remark:</p>
+                </td>
+                <td colspan="4" style="border-bottom: 1px solid black;">
+                    <p style="font-size: 1.3em; margin-left: 5em;">{{session_report.house_master_remark.text}}</p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <br>
+
+    <table>
+        <tbody>
+            <tr>
+                <td colspan="2"></td>
+                <td>
+                    <p style="text-align: center; margin:0; padding:0;">
+                        <img src="{{session_report.signature_url}}" alt="" height="50">
+                    </p>
+                    <p style="font-size: 1.5em; text-align: center; margin:0; padding:0;">....................</p>
+                    <p style="font-size: 1.5em; text-align: center; margin:0; padding:0;">
+                        {{school.assistant_head_teacher.user.get_name}}</p>
+                    <p style="font-size: 1.5em; text-align: center; margin:0; padding:0;">ASSISTANT HEADMASTER</p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div id="footer_content">
+        <p style="text-align: left;" style="margin:0">
+            <i>Printed @ {{current_time}}</i>
+        </p>
+    </div>
+</div>
+
+<pdf:nextpage></pdf:nextpage>

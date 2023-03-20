@@ -1,0 +1,51 @@
+{% extends 'templates/accounts/base_template.html' %}
+{% block page_title %}Login{% endblock %}
+{% load static %}
+
+{% block content %}
+<div class="min-vh-100 d-flex justify-content-center align-items-center">
+  <div class="col-lg-3 col-md-6 my-auto">
+    <div class="card-shadow bg-white p-4">
+      <div class="mb-4 d-flex justify-content-center">
+        <img src="{%static 'images/logo.png'%}" height="100" />
+      </div>
+      <p class="mb-4 text-center ">Please sign in</p>
+
+      {% for message in messages %}
+      <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+        {{message}}
+      </div>
+      {% endfor %}
+
+      <form class="mb-3" method="POST">
+        {% csrf_token %}
+        <div class="form-floating mb-3">
+          <input type="text" class="form-control" id="floatingInput" name="username" value="{{username}}">
+          <label for="floatingInput">
+            Username
+          </label>
+        </div>
+        <div class="form-floating mb-3">
+          <input type="password" class="form-control" id="floatingpassword" name="password" value="{{password}}">
+          <label for="floatingpassword">
+            Password
+          </label>
+        </div>
+
+        <div class="d-flex">
+          <button type="submit" class="w-100 btn btn-primary">Sign in</button>
+        </div>
+
+        <div class="d-flex justify-content-between mt-5">
+          <a href="" title="Forgot Password" class="text-decoration-none">Forgot Password?</a>
+          <a href="">Register</a>
+        </div>
+      </form>
+
+      <div>
+        <p>Copyright © 2022 All Rights <span>Reserved</span></p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
