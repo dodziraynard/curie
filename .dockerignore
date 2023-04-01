@@ -21,7 +21,7 @@ logs
 node_modules
 **node_modules
 **/node_modules
-**/uploads
+**/assets
 web/media
 web/static/CACHE
 stats
@@ -33,4 +33,5 @@ nginx
 README.md
 db.sqlite3
 
-uploads
+assets
+.vscode

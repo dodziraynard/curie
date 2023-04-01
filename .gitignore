@@ -134,3 +134,6 @@ dmypy.json
 uploads
 **/generated_sheets/**
 staticfiles
+node_modules
+**node_modules
+**/node_modules
