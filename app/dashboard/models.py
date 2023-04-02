@@ -10,38 +10,48 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
+# yapf: disable
+class Relative(ModelMixin):
+    RELATIONSHIP_STATUS = [
+        ("mother", "mother"),
+        ("father", "father"),
+        ("guardian", "guardian"),
+    ]
+    fullname = models.CharField(max_length=200, null=True, blank=True)
+    address = models.TextField(null=True, blank=True)
+    occupation = models.CharField(max_length=100, null=True, blank=True)
+    phone = models.CharField(max_length=10, null=True, blank=True)
+    education = models.CharField(max_length=100, null=True, blank=True)
+    religion = models.CharField(max_length=100, null=True, blank=True)
+    spouses = models.IntegerField(null=True, blank=True)
+    date_of_demise = models.DateField(null=True, blank=True)
+    relationship = models.CharField(max_length=100, choices=RELATIONSHIP_STATUS)
+    user = models.OneToOneField(User,related_name="relative",on_delete=models.SET_NULL, null=True, blank=True)
+
+
+#yapf: disable
 class Student(ModelMixin):
     student_id = models.CharField(max_length=100, unique=True)
-    klass = models.ForeignKey("Klass",
-                              related_name="students",
-                              on_delete=models.SET_NULL,
-                              blank=True,
-                              null=True)
-    electives = models.ManyToManyField("Subject",
-                                       related_name="students",
-                                       blank=True)
-    house = models.ForeignKey("House",
-                              on_delete=models.SET_NULL,
-                              blank=True,
-                              null=True)
+    klass = models.ForeignKey("Klass",related_name="students",on_delete=models.SET_NULL,blank=True,null=True)
+    electives = models.ManyToManyField("Subject",related_name="students",blank=True)
+    house = models.ForeignKey("House",on_delete=models.SET_NULL,blank=True,null=True)
     bio = models.TextField(null=True, blank=True)
-    track = models.ForeignKey(Track,
-                              on_delete=models.SET_NULL,
-                              null=True,
-                              blank=True)
-    course = models.ForeignKey("Course",
-                               on_delete=models.SET_NULL,
-                               null=True,
-                               blank=True)
+    track = models.ForeignKey(Track,on_delete=models.SET_NULL,null=True,blank=True)
+    course = models.ForeignKey("Course",on_delete=models.SET_NULL,null=True,blank=True)
     father = models.CharField(max_length=200, null=True, blank=True)
     mother = models.CharField(max_length=200, null=True, blank=True)
     completed = models.BooleanField(default=False)
-    user = models.OneToOneField(User,
-                                related_name="student",
-                                on_delete=models.CASCADE)
+    user = models.OneToOneField(User,related_name="student",on_delete=models.CASCADE)
     last_promotion_date = models.DateField(default=timezone.now)
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
+    dob = models.DateField(null=True, blank=True)
+    relatives = models.ManyToManyField(Relative, related_name="students")
+    religion = models.CharField(max_length=200, null=True, blank=True)
+    religious_denomination = models.CharField(max_length=200, null=True, blank=True)
+    home_town = models.CharField(max_length=100, null=True, blank=True)
+    other_tongue = models.CharField(max_length=100, null=True, blank=True)
+    last_school_attended = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
         db_table = "students"
@@ -94,7 +104,7 @@ class Student(ModelMixin):
 
         self.save()
         return True, True
-    
+
     def logo_url(self):
         if self.user:
             return self.user.get_photo_url()
@@ -116,7 +126,7 @@ class Klass(ModelMixin):
                                       related_name="classes",
                                       null=True,
                                       on_delete=models.SET_NULL)
-    form = models.IntegerField(default=1)
+    stage = models.IntegerField(default=1)
     stream = models.CharField(max_length=5)
     course = models.ForeignKey("Course",
                                related_name="classes",

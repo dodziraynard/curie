@@ -1,35 +1,71 @@
-<form action="{% url 'dashboard:create_update_course' %}" class="needs-validation my-4" method="POST" novalidate>
+<form action="{% url 'accounts:create_update_user' %}" class="needs-validation my-4" method="POST" novalidate>
     {% csrf_token %}
-    <input type="hidden" name="course_id" value="{{course.id}}">
-    <div class="form-group">
-        <label for="name">Code</label>
-        <input class="form-control" placeholder="E.g., BUS" value="{{code}}" type="text" name="code" id="code" required>
-        <div class="invalid-feedback">
-            Please this field is required.
+    <input type="hidden" name="id" value="{{id}}">
+    <div class="col-md-8 mx-auto">
+        <div class="form-group my-3">
+            <label for="name">Username</label>
+            <input class="form-control" placeholder="Username" value="{{username}}" type="text" name="username"
+                id="username" required>
+            <div class="invalid-feedback">
+                Please this field is required.
+            </div>
         </div>
-    </div>
-    <div class="form-group mt-4">
-        <label for="name">Name</label>
-        <input class="form-control" placeholder="Name e.g, Business" value="{{name}}" type="text" name="name" id="name"
-            required>
-        <div class="invalid-feedback">
-            Please this field is required.
-        </div>
-    </div>
 
-    <div class="mt-4 form-group">
-        <p>Electives</p>
-        {% for subject in subjects|dictsort:"name" %}
-        <div class="form-check">
-            <label for="filed_{{subject.id}}">{{subject.name}}</label>
-            <input class="form-check-input" type="checkbox" value="{{subject.id}}" name="subjects"
-                id="filed_{{subject.id}}"
-                {% if subject in course.subjects.all or subject.id in subjects %}checked{% endif %}>
+        <div class="form-group my-3">
+            <label for="name">Surname</label>
+            <input class="form-control" placeholder="Surname" value="{{surname}}" type="text" name="surname"
+                id="surname" required>
+            <div class="invalid-feedback">
+                Please this field is required.
+            </div>
         </div>
-        {% endfor %}
 
-        <a href="{% url 'dashboard:subjects' %}" target="_blank" class="mt-2 text-end d-block text-primary"><i
-                class="bi bi-plus"></i> New subject</a>
+        <div class="form-group my-3">
+            <label for="name">Other Names</label>
+            <input class="form-control" placeholder="Other Names" value="{{other_names}}" type="text" name="other_names"
+                id="other_names" required>
+            <div class="invalid-feedback">
+                Please this field is required.
+            </div>
+        </div>
+
+        <div class="form-group my-3">
+            <label for="name">Gender</label>
+            <select name="gender" id="gender" class="form-select" required>
+                <option value="">Choose gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select>
+            <div class="invalid-feedback">
+                Please this field is required.
+            </div>
+        </div>
+
+        <div class="form-group my-3">
+            <label for="other_names">Phone</label>
+            <input class="form-control" placeholder="Phone" value="{{phone}}" type="text" name="phone" id="type"
+                required>
+            <div class="invalid-feedback">
+                Please this field is required.
+            </div>
+        </div>
+
+        <div class="form-group my-3">
+            <label for="password">Password</label>
+            <input class="form-control" placeholder="Password" type="password" name="password" id="password">
+            <div class="invalid-feedback">
+                Please this field is required.
+            </div>
+        </div>
+
+        <div class="form-group my-3">
+            <label for="password">Confirm Password</label>
+            <input class="form-control" placeholder="Confirm Password" type="confirm_password" name="confirm_password"
+                id="confirm_password">
+            <div class="invalid-feedback">
+                Please this field is required.
+            </div>
+        </div>
     </div>
 
     <div class="mt-4 form-group">

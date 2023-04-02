@@ -1,12 +1,12 @@
 {% extends 'templates/dashboard/base_template.html' %}
-{% block page_title %}Courses{% endblock %}
-{% block active-sidebar-item-id %}courses{%endblock%}
+{% block page_title %}Users{% endblock %}
+{% block active-sidebar-item-id %}users{%endblock%}
 
 {% block breadcrumb %}
 <section class="breadcrumb">
     <a href="{% url 'dashboard:index' %}" class="">Home <i class="bi bi-chevron-right"></i></a>
-    <a href="{% url 'dashboard:courses' %}">Courses <i class="bi bi-chevron-right"></i></a>
-    <a class="active">{{course.name|title}}</a>
+    <a href="{% url 'dashboard:courses' %}">Users <i class="bi bi-chevron-right"></i></a>
+    <a class="active">{{user.get_name|title}}</a>
 </section>
 {% endblock %}
 
@@ -16,9 +16,9 @@
     <section class="col-md-6 mx-auto">
         <div class="card p-4">
             <div class="d-flex justify-content-between">
-                <h6>COURSES</h6>
+                <h6>USER</h6>
             </div>
-            {% include 'dashboard/courses/form_course.html' %}
+            {% include 'accounts/users/form_user.html' %}
         </div>
     </section>
 </div>

@@ -4,6 +4,7 @@ from django.utils import timezone
 
 
 class ModelMixin(models.Model):
+    id = models.AutoField(primary_key=True, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     deleted = models.BooleanField(default=False)
@@ -21,6 +22,7 @@ class ModelMixin(models.Model):
 
 # Just for permissions
 class SetupPerms(models.Model):
+
     class Meta:
         managed = False  # No database table creation or deletion  \
         # operations will be performed for this model.
@@ -56,7 +58,7 @@ class Track(ModelMixin):
     name = models.CharField(max_length=255)
 
     def __str__(self):
-        return self.text
+        return self.name
 
 
 class Attitude(ModelMixin):

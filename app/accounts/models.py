@@ -8,6 +8,7 @@ import geocoder
 
 class UserManger(BaseUserManager):
     """Define a model manager for User model"""
+
     def _create_user(self, username, password=None, **extra_fields):
         """Create and save a User with the given email and password."""
         if not username:
@@ -36,8 +37,11 @@ class UserManger(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    get_pin = lambda: "".join(
-        sample(list(map(str, [1, 2, 3, 4, 5, 6, 7, 8, 9, 0])), 5))
+
+    def get_pin():
+        return "".join(
+            sample(list(map(str, [1, 2, 3, 4, 5, 6, 7, 8, 9, 0])), 4))
+
     username = models.CharField(max_length=30, unique=True)
     surname = models.CharField(max_length=30, null=True, blank=True)
     other_names = models.CharField(max_length=255, null=True, blank=True)
@@ -48,7 +52,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                                   null=True,
                                   blank=True)
     gender = models.CharField(max_length=20, blank=True, null=True)
-    temporal_pin = models.CharField(max_length=10, null=True, blank=True)
+    temporal_pin = models.CharField(max_length=10, default=get_pin)
     dob = models.DateTimeField(null=True, blank=True)
 
     activated = models.BooleanField(default=False)
@@ -59,6 +63,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
+    changed_password = models.BooleanField(default=False)
 
     objects = UserManger()
 
@@ -97,7 +102,11 @@ class User(AbstractBaseUser, PermissionsMixin):
             self.gender = self.gender.lower()
         if self.title:
             self.title = self.title.lower()
-        super().save(*args, **kwargs)
+
+        if not self.changed_password:
+            self.set_password(self.temporal_pin)
+
+        return super().save(*args, **kwargs)
 
 
 class ActivityLog(models.Model):

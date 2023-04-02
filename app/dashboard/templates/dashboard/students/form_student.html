@@ -3,14 +3,25 @@
     <input type="hidden" name="id" value="{{student.id}}">
     <h5>BIOGRAPHY</h5>
     <hr>
-    <div class="form-group">
-        <label for="name">Student ID</label>
-        <input class="form-control" placeholder="E.g., 10739443" value="{{student_id}}" type="text" name="student_id"
-            id="student_id" required>
-        <div class="invalid-feedback">
-            Please this field is required.
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label for="name">Student ID</label>
+            <input class="form-control" placeholder="10739443" value="{{student_id}}" type="text"
+                name="student_id" id="student_id" required>
+            <div class="invalid-feedback">
+                Please this field is required.
+            </div>
+        </div>
+
+        <div class="form-group col-md-6">
+            <label for="dob">Date of Birth</label>
+            <input class="form-control" type="date" name="dob" id="dob" value="{{dob}}" required>
+            <div class="invalid-feedback">
+                Please this field is required.
+            </div>
         </div>
     </div>
+    
     <div class="row">
         <div class="form-group col-md-2 mt-4">
             <label for="name">Title</label>
@@ -25,7 +36,7 @@
         </div>
         <div class="form-group col-md-4 mt-4">
             <label for="name">Surname</label>
-            <input class="form-control" placeholder="E.g, Mensah" value="{{surname}}" type="text" name="surname"
+            <input class="form-control" placeholder="Mensah" value="{{surname}}" type="text" name="surname"
                 id="name" required>
             <div class="invalid-feedback">
                 Please this field is required.
@@ -34,7 +45,7 @@
 
         <div class="form-group col-md-6 mt-4">
             <label for="name">Other names</label>
-            <input class="form-control" placeholder="E.g, John" value="{{other_names}}" type="text" name="other_names"
+            <input class="form-control" placeholder="John" value="{{other_names}}" type="text" name="other_names"
                 id="name" required>
             <div class="invalid-feedback">
                 Please this field is required.
@@ -54,15 +65,6 @@
                 Please this field is required.
             </div>
         </div>
-        <div class="form-group col-md-4 mt-4">
-            <label for="phone">Phone Number</label>
-            <input class="form-control" placeholder="E.g, 024*******" value="{{phone}}" type="text" name="phone"
-                maxlength="10" minlength="10" pattern="0[0-9]{9}" id="phone" required>
-            <div class="invalid-feedback">
-                Please enter a valid 10-digit phone number.
-            </div>
-        </div>
-
         <div class="form-group col-md-6 mt-4">
             <label for="photo">Photo</label>
             <input class="form-control" type="file" name="photo" id="photo">
@@ -71,18 +73,54 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="form-group col-md-6 mt-4">
+            <label for="last_school_attended">Last School Attended</label>
+            <input class="form-control" type="text" name="last_school_attended" id="last_school_attended" value="{{last_school_attended}}" required>
+            <div class="invalid-feedback">
+                Please this field is required.
+            </div>
+        </div>
+
+        <div class="form-group col-md-6 mt-4">
+            <label for="home_town">Home Town</label>
+            <input class="form-control" type="text" name="home_town" id="home_town" value="{{home_town}}" required>
+            <div class="invalid-feedback">
+                Please this field is required.
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="form-group col-md-6 mt-4">
+            <label for="religion">Religion</label>
+            <input class="form-control" type="text" name="religion" id="religion" value="{{religion}}" required>
+            <div class="invalid-feedback">
+                Please this field is required.
+            </div>
+        </div>
+        <div class="form-group col-md-6 mt-4">
+            <label for="religious_denomination">Religion Denomination</label>
+            <input class="form-control" type="text" name="religious_denomination" id="religious_denomination" value="{{religious_denomination}}">
+            <div class="invalid-feedback">
+                Please this field is required.
+            </div>
+        </div>
+    </div>
+    
 
     <div class="row">
         <div class="form-group col-md-2 mt-4">
             <label for="start_date">Start Date</label>
-           <input class="form-control" type="date" name="start_date" id="start_date" value="{{start_date}}">
+            <input class="form-control" type="date" name="start_date" id="start_date" value="{{start_date}}">
             <div class="invalid-feedback">
                 Please this field is required.
             </div>
         </div>
         <div class="form-group col-md-4 mt-4">
-            <label for="end_date">End Date</label>
-           <input class="form-control" type="date" name="end_date" id="end_date" value="{{end_date}}">
+            <label for="end_date">Completion Date</label>
+            <input class="form-control" type="date" name="end_date" id="end_date" value="{{end_date}}">
             <div class="invalid-feedback">
                 Please this field is required.
             </div>
@@ -91,12 +129,141 @@
         <div class="form-group col-md-4 mt-4">
             <div class="form-check mt-4">
                 <label for="completed">Completed</label>
-                <input class="form-check-input" type="checkbox" value="1" name="completed" id="completed"
-                    {% if completed %}checked{% endif %}>
+                <input class="form-check-input" 
+                type="checkbox" value="1" name="completed" id="completed"
+                 {% if completed %}checked{% endif %}>
             </div>
         </div>
     </div>
-    
+
+    <h5 class="mt-5">RELATIVES</h5>
+    <hr>
+    <h6>FATHER</h6>
+    <div class="form-group col-md-6 mb-4">
+        <small>Just enter the id ID of this individual already exists int the system.</small>
+        <input type="text" class="form-control" value="{{father_id}}" placeholder="ID (if Exists)" name="mother_relative_id" {% if father_id %}readonly{% endif %}>
+        <div class="invalid-feedback">
+            Please this field is required.
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="form-group col-md-6">
+            <label for="father_fullname">Full Name</label>
+            <input type="text" class="form-control" placeholder="Full Name" name="father_fullname" value="{{father_fullname}}">
+            <div class="invalid-feedback">
+                Please this field is required.
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="father_phone">Phone</label>
+            <input class="form-control" placeholder="0240000001" value="{{father_phone}}" type="text" name="father_phone"
+                maxlength="10" minlength="10" pattern="0[0-9]{9}" id="father_phone" required>
+            <div class="invalid-feedback">
+                Please this field is required.
+            </div>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="form-group col-md-6">
+            <label for="father_occupation">Occupation</label>
+            <input type="text" class="form-control" placeholder="Occupation" name="father_occupation" value="{{father_occupation}}">
+            <div class="invalid-feedback">
+                Please this field is required.
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="father_address">Address</label>
+            <textarea  class="form-control" placeholder="Address" name="father_address">{{father_address}}</textarea>
+            <div class="invalid-feedback">
+                Please this field is required.
+            </div>
+        </div>
+    </div>
+
+    <h6 class="mt-4">MOTHER</h6>
+    <div class="form-group col-md-6 mb-4">
+        <small>Just enter the id ID of this individual already exists int the system.</small>
+        <input type="text" class="form-control" placeholder="ID (if Exists)" value="{{mother_id}}" name="mother_relative_id" {% if mother_id %}readonly{% endif %}>
+        <div class="invalid-feedback">
+            Please this field is required.
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="form-group col-md-6">
+            <label for="mother_fullname">Full Name</label>
+            <input type="text" class="form-control" placeholder="Full Name" name="mother_fullname" value="{{mother_fullname}}">
+            <div class="invalid-feedback">
+                Please this field is required.
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="mother_phone">Phone</label>
+            <input class="form-control" placeholder="0240000001" value="{{mother_phone}}" type="text" name="mother_phone"
+            maxlength="10" minlength="10" pattern="0[0-9]{9}" id="mother_phone" required>
+            <div class="invalid-feedback">
+                Please this field is required.
+            </div>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="form-group col-md-6">
+            <label for="mother_occupation">Occupation</label>
+            <input type="text" class="form-control" placeholder="Occupation" name="mother_occupation" value="{{mother_occupation}}">
+            <div class="invalid-feedback">
+                Please this field is required.
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="mother_address">Address</label>
+            <textarea  class="form-control" placeholder="Address" name="mother_address">{{mother_address}}</textarea>
+            <div class="invalid-feedback">
+                Please this field is required.
+            </div>
+        </div>
+    </div>
+
+    <h6 class="mt-4">GUARDIAN</h6>
+    <div class="form-group col-md-6 mb-4">
+        <small>Just enter the id ID of this individual already exists int the system.</small>
+        <input type="text" class="form-control" placeholder="ID (if Exists)" value="{{guardian_id}}" name="guardian_relative_id" {% if guardian_id %}readonly{% endif %}>
+        <div class="invalid-feedback">
+            Please this field is required.
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="form-group col-md-6">
+            <label for="guardian_fullname">Full Name</label>
+            <input type="text" class="form-control" placeholder="Full Name" value="{{guardian_fullname}}" name="guardian_fullname">
+            <div class="invalid-feedback">
+                Please this field is required.
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="guardian_phone">Phone</label>
+            <input class="form-control" placeholder="0240000001" value="{{guardian_phone}}" type="text" name="guardian_phone"
+            maxlength="10" minlength="10" pattern="0[0-9]{9}" id="guardian_phone" required>
+            <div class="invalid-feedback">
+                Please this field is required.
+            </div>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="form-group col-md-6">
+            <label for="guardian_occupation">Occupation</label>
+            <input type="text" class="form-control" placeholder="Occupation" value="{{guardian_occupation}}" name="guardian_occupation">
+            <div class="invalid-feedback">
+                Please this field is required.
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="guardian_address">Address</label>
+            <textarea  class="form-control" placeholder="Address" name="guardian_address">{{guardian_address}}</textarea>
+            <div class="invalid-feedback">
+                Please this field is required.
+            </div>
+        </div>
+    </div>
+
     <h5 class="mt-5">SCHOOL INFO</h5>
     <hr>
     <div class="form-group">
@@ -163,8 +330,8 @@
         <div class="form-check">
             <label for="filed_{{subject.id}}">{{subject.name}}</label>
             <input class="form-check-input" type="checkbox" value="{{subject.id}}" name="elective_ids"
-                id="filed_{{subject.id}}"
-                {% if subject in student.electives.all or subject.id in elective_ids %}checked{% endif %}>
+                id="filed_{{subject.id}}" 
+                {% if subject in student.electives.all or subject.id in elective_ids%}checked{% endif %}>
         </div>
         {% endfor %}
 

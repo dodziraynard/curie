@@ -11,6 +11,23 @@
 
 {% block content %}
 
+<!-- Modal -->
+<div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content px-4">
+            <div class="modal-header">
+                <h5 class="modal-title" id="userModalLabel">Add User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            {% include 'accounts/users/form_user.html' %}
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End of Modal -->
+
 
 <h4 class="page-header"><i class='icon bx bx-group'></i> USERS</h4>
 <section class="card">
@@ -51,7 +68,7 @@
                         <td>{{user.gender}}</td>
                         <td class="d-flex">
                             {% if perms.accounts.change_user %}
-                            <a href=""
+                            <a href="{% url 'accounts:create_update_user' %}?id={{user.id}}"
                                 class="me-3 d-flex btn btn-sm btn-light">
                                 <i class="bi bi-pencil me-1"></i>
                                 Edit

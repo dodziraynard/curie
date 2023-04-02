@@ -21,6 +21,7 @@ def generate_superuser(apps, schema_editor):
         if created:
             superuser.set_password(password)
             superuser.is_superuser = True
+            superuser.changed_password = True
             superuser.is_staff = True
             superuser.save()
     except IntegrityError as e:

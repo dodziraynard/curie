@@ -50,7 +50,7 @@
                         <th>Name</th>
                         <th>Class Teacher</th>
                         <th>Stream</th>
-                        <th>Form</th>
+                        <th>Stage</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -62,7 +62,7 @@
                         <td>{{class.name}}</td>
                         <td>{{class.class_teacher.user.get_name}}</td>
                         <td>{{class.stream}}</td>
-                        <td>{{class.form}}</td>
+                        <td>{{class.stage}}</td>
                         <td class="d-flex">
                             {% if perms.dashboard.change_class %}
                             <a href="{% url 'dashboard:create_update_class' %}?id={{class.id}}"
