@@ -1,0 +1,76 @@
+{% extends 'templates/dashboard/base_template.html' %}
+{% block page_title %}Notifications{% endblock %}
+{% block active-sidebar-item-id %}notifications{%endblock%}
+
+{% block breadcrumb %}
+<section class="breadcrumb">
+    <a href="{% url 'dashboard:index' %}" class="">Home <i class="bi bi-chevron-right"></i></a>
+    <a href="" class="active">Notifications</a>
+</section>
+{% endblock %}
+
+{% block content %}
+
+
+<h4 class="page-header"><i class='icon bx bx-group'></i> NOTIFICATIONS</h4>
+<section class="card">
+    <div class="card-body">
+        <form class="d-flex align-items-center my-3">
+            <input type="search" class="form-control" value="{{query}}" name="query" placeholder="Search numbers">
+            <span class="mx-1">From</span>
+            <input type="date" class="form-control" name="from_date" value="{{from_date}}">
+            <span class="mx-1">To</span>
+            <input type="date" class="form-control" name="to_date" value="{{to_date}}">
+            <select name="status" id="status" class="form-select">
+                <option value="">All</option>
+                <option value="new" {% if status == 'new' %}selected{% endif %}>New</option>
+                <option value="failed" {% if status == 'failed' %}selected{% endif %}>Failed</option>
+                <option value="delivered" {% if status == 'delivered' %}selected{% endif %}>Delivered</option>
+            </select>
+            <button class="btn btn-sm btn-primary mx-2">Load</button>
+        </form>
+        <div class="col-12 mx-auto" style="overflow-x: auto;">
+            <table class="table data-table">
+                <thead class="bg-primary text-light">
+                    <tr>
+                        <th>S/N</th>
+                        <th>Message</th>
+                        <th>Destination</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Initiated By</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for notification in notifications %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>
+                            <pre>{{notification.text}}</pre>
+                        </td>
+                        <td>{{notification.destination}}</td>
+                        <td>{{notification.created_at}}</td>
+                        <td><span class="badge bg-primary">{{notification.status}}</span></td>
+                        <td><span class="badge bg-primary">{{notification.initiated_by.get_name}}</span></td>
+                        <td class="d-flex">
+                            {% if perms.dashboard.change_notification %}
+                            <form action="" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="notification_id" value="{{notification.id}}">
+                                <button href="" class="me-3 d-flex btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-send me-1"></i>
+                                    Resend
+                                </button>
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

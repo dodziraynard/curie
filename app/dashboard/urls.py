@@ -64,4 +64,15 @@ urlpatterns = [
     # House master reporting
     path('reporting/assistant-head-report-filter', views.AssistantHeadSessionReportFilterView.as_view(), name='assistant_head_report_filter'),
     path('reporting/assistant-head-report-data', views.AssistantHeadSessionReportDataView.as_view(), name='assistant_head_report_data'),
+
+    # Notifications
+    path('notifications/', views.NotificationIndexView.as_view(), name='notifications'),
+    path('notifications/history', views.NotificationHistoryView.as_view(), name='notification_history'),
+    path('notifications/compose-sms/', views.ComposeSMS.as_view(), name='compose_sms'),
+    path('notifications/preview-sms/', views.PreviewSMS.as_view(), name='preview_sms'),
+    path('notifications/send-pin-sms/', views.SendPINNotification.as_view(), name='send_pin_sms'),
+    path('notifications/confirm-pin-notification/', views.ConfirmPINNotification.as_view(), name='confirm_pin_notification'),
+    
+    path('notifications/report-notifications/', views.SendReportNotification.as_view(), name='report_notifications'),
+    path('notifications/report-notification-confirmation/', views.ConfirmReportNotification.as_view(), name='report_notification_confirmation'),
 ]

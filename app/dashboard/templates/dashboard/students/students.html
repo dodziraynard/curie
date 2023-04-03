@@ -71,7 +71,7 @@
                         <td>{{student.user.other_names|title}}</td>
                         <td>{{student.klass.name }}</td>
                         <td>{{student.user.gender|title }}</td>
-                        <td>{{student.user.phone }}</td>
+                        <td>{{student.sms_number }}</td>
                         <td class="d-flex">
                             {% if perms.dashboard.change_student %}
                             <a href="{% url 'dashboard:create_update_student' %}?id={{student.id}}"

@@ -24,6 +24,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('setup/', include('setup.urls')),
     path('pdf/', include('pdf_processor.urls')),
+    path('api/v1/', include('graphql_api.urls')),
 ]
 
 if settings.DEBUG:
@@ -34,7 +35,6 @@ if settings.DEBUG:
                           document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL,
                           document_root=settings.STATIC_ROOT)
-
 
 # Customize django admin page.
 admin.site.site_header = "LMS SYSTEM ADMINISTRATION"  # default: "Django Administration"

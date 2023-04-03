@@ -23,15 +23,12 @@
     </div>
     
     <div class="row">
-        <div class="form-group col-md-2 mt-4">
-            <label for="name">Title</label>
-            <select class="form-select" name="title" id="title" required>
-                <option value="">--Click to select--</option>
-                <option value="mr" {% if title == 'mr' %}selected{% endif %}>Mr</option>
-                <option value="mrs" {% if title == 'mrs' %}selected{% endif %}>Mrs</option>
-            </select>
+        <div class="form-group col-md-4 mt-4">
+            <label for="sms_number">SMS Number</label>
+            <input class="form-control" placeholder="0240000001" value="{{sms_number}}" type="text" name="sms_number"
+                maxlength="10" minlength="10" pattern="0[0-9]{9}" id="sms_number" required>
             <div class="invalid-feedback">
-                Please this field is required.
+                Please enter a valid 10-digit phone number.
             </div>
         </div>
         <div class="form-group col-md-4 mt-4">

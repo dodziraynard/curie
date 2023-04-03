@@ -6,6 +6,8 @@ from lms.utils.functions import get_current_session
 from setup.models import (Attitude, Conduct, GradingSystem, Interest,
                           ModelMixin, Remark, SchoolSession, Track)
 from django.contrib.auth import get_user_model
+from django.conf import settings
+import requests
 
 User = get_user_model()
 
@@ -40,7 +42,8 @@ class Student(ModelMixin):
     course = models.ForeignKey("Course",on_delete=models.SET_NULL,null=True,blank=True)
     father = models.CharField(max_length=200, null=True, blank=True)
     mother = models.CharField(max_length=200, null=True, blank=True)
-    completed = models.BooleanField(default=False)
+    sms_number = models.CharField(max_length=10, null=True, blank=True)
+    completed = models.BooleanField(default=False, db_index=True)
     user = models.OneToOneField(User,related_name="student",on_delete=models.CASCADE)
     last_promotion_date = models.DateField(default=timezone.now)
     start_date = models.DateField(null=True, blank=True)
@@ -273,12 +276,12 @@ class Record(ModelMixin):
                                    on_delete=models.PROTECT)
     grade = models.CharField(max_length=5, blank=True, null=True)
     remark = models.CharField(max_length=20, blank=True, null=True)
-    position = models.CharField(max_length=5, blank=True, null=True)
     session = models.ForeignKey(SchoolSession,
                                 on_delete=models.SET_NULL,
                                 null=True)
+    group_tag = models.CharField(max_length=100, null=True, blank=True, db_index=True)
     roll_no = models.IntegerField(blank=True, null=True)
-    rank = models.CharField(max_length=20, blank=True, null=True)
+    position = models.IntegerField(null=True, blank=True)
 
     class Meta:
         permissions = [
@@ -290,9 +293,12 @@ class Record(ModelMixin):
     def __str__(self):
         return self.student.get_full_name()
 
+    @property
+    def rank(self):
+        return f"{self.position}/{self.roll_no}"
+
     def save(self, *args, **kwargs):
         if self.class_score and self.exam_score and self.total_class_score and self.total_exam_score:
-            self.rank = f"{self.position}/{self.roll_no}"
             self.total = round(
                 30 * float(self.class_score / self.total_class_score) +
                 70 * float(self.exam_score / self.total_exam_score))
@@ -306,6 +312,18 @@ class Record(ModelMixin):
                 self.grade = "F"
                 self.remark = "Fail"
         super(Record, self).save(*args, **kwargs)
+
+    def compute_position(self):
+        totals = set()
+        records = Record.objects.filter(group_tag=self.group_tag)
+        for record in records:
+            totals.add(record.total)
+        totals = sorted(list(totals))
+
+        for record in records:
+            record.position =  totals.index(record.total) + 1
+            record.roll_no = len(records)
+            record.save()
 
 
 class SubjectMapping(ModelMixin):
@@ -350,7 +368,7 @@ class SessionReport(ModelMixin):
     session = models.ForeignKey(SchoolSession,
                                 on_delete=models.SET_NULL,
                                 null=True)
-    klass = models.ForeignKey("klass",
+    klass = models.ForeignKey("Klass",
                               null=True,
                               blank=True,
                               on_delete=models.CASCADE)
@@ -437,9 +455,50 @@ class StudentPromotionHistory(ModelMixin):
     session = models.ForeignKey(SchoolSession,
                                 on_delete=models.SET_NULL,
                                 null=True)
-
     class Meta:
         db_table = "student_promotion_history"
 
     def __str__(self):
         return f"{self.student.get_full_name()} - {self.new_class} {self.old_class}"
+
+
+class Notification(models.Model):
+    PURPOSE_CHOICES = [
+        ("PIN_RESET","PIN_RESET"),
+        ("REPORT","REPORT"),
+        ("GENERAL","GENERAL"),
+    ]
+    text = models.TextField()
+    id_tag = models.CharField(max_length=50,null=True, blank=True)
+    sender_id = models.CharField(max_length=100, null=True, blank=True)
+    status = models.CharField(max_length=100)
+    destination = models.CharField(max_length=50)
+    type = models.CharField(max_length=50,default="sms")
+    purpose = models.CharField(max_length=50, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    initiated_by = models.ForeignKey(User, on_delete=models.PROTECT)
+    response_data = models.TextField(null=True, blank=True)
+
+    def send(self):
+        from setup.models import School
+
+        message = self.text
+        phone = "233" + self.destination[1:]
+        sender_id = School.objects.first().sms_sender_id
+
+        api_key = settings.ARKESEL_API_KEY
+        if not (api_key and sender_id): return
+
+        message = message.replace(" ", "+")
+
+        url = f"https://sms.arkesel.com/sms/api?action=send-sms&api_key={api_key}&to={phone}&from={sender_id}&sms={message}"
+        response = requests.get(url)
+        self.response_data = response.text
+
+        if response.json().get("code", "").lower() == "ok":
+            self.status = "delivered"
+        else:
+            self.status = "failed"
+
+        self.save()

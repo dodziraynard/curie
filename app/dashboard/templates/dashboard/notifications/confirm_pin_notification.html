@@ -1,0 +1,41 @@
+{% extends 'templates/dashboard/base_template.html' %}
+{% block page_title %}Confirm PIN Notification{% endblock %}
+{% block active-sidebar-item-id %}notifications{%endblock%}
+
+{% load static %}
+
+{% block breadcrumb %}
+<section class="breadcrumb">
+    <a href="{% url 'dashboard:index' %}" class="">Home <i class="bi bi-chevron-right"></i></a>
+    <a href="" class="active">Confirm PIN Notification</a>
+</section>
+{% endblock %}
+
+{% block content %}
+
+<h4 class="page-header"><i class='icon bx bx-group'></i> Confirm PIN Notification</h4>
+<section class="card">
+    <div class="card-header d-flex justify-content-between">
+        <h4>Confirm PIN Notification</h4>
+    </div>
+    <div class="card-body">
+        <form class="col-md-10 mx-auto overflow-auto needs-validation" method="POST" novalidate>
+            {% csrf_token %}
+            <div class="col-md-5 mx-auto" style="height: 40vh; overflow: auto;">
+                <h5>Recipients by their usernames</h5>
+                <hr>
+                <div>
+                    {% for username in usernames %}
+                    <span class="badge bg-primary">{{username}}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            <hr>
+            <div class="form-group my-5 d-flex justify-content-center">
+                <button class="btn btn-primary"><i class="bi bi-send"></i> SEND</button>
+            </div>
+        </form>
+    </div>
+</section>
+
+{% endblock %}

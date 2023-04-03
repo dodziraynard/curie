@@ -1,0 +1,76 @@
+{% extends 'templates/dashboard/base_template.html' %}
+{% block page_title %}User PIN Notification{% endblock %}
+{% block active-sidebar-item-id %}notifications{%endblock%}
+
+{% load static %}
+
+{% block breadcrumb %}
+<section class="breadcrumb">
+    <a href="{% url 'dashboard:index' %}" class="">Home <i class="bi bi-chevron-right"></i></a>
+    <a href="" class="active">User PIN Notification</a>
+</section>
+{% endblock %}
+
+{% block content %}
+
+<h4 class="page-header"><i class='icon bx bx-group'></i> User PIN Notification</h4>
+<section class="card">
+    <div class="card-header d-flex justify-content-between">
+        <h4>User PIN Notification</h4>
+    </div>
+    <div class="card-body">
+        <form class="col-md-10 mx-auto overflow-auto needs-validation" method="POST" novalidate
+            enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="col-md-8 mx-auto">
+                <div class="form-group">
+                    <strong for="included_ids">Usernames (e.g., Staff IDs and Student IDs)</strong><br>
+                    <small class="text-muted">List of usersname to send their PINs separated by comma.</small> <br>
+                    <small class="text-muted">Invalid ID/usernames will be ignored.</small>
+                    <textarea name="included_ids" id="included_ids" rows="4" class="form-control"></textarea>
+                    <div class="invalid-feedback">
+                        Please message is required.
+                    </div>
+                </div>
+
+                <p class="m-0 mt-2"><b>Also</b></p>
+                <div class="ms-2 form-group">
+                    <input type="checkbox" name="all_staff" id="all_staff" class="form-check-input">
+                    <label for="all_staff">Include all staff</label>
+                </div>
+
+                <div class="ms-2 form-group">
+                    <input type="checkbox" name="all_students" id="all_students" class="form-check-input">
+                    <label for="all_students">Include all students</label>
+                </div>
+
+                <p class="m-0 mt-3"><b>Then exclude</b></p>
+                <div class="form-group">
+                    <small class="text-muted">List of usersnames to exclude. </small> <br>
+                    <small class="text-muted">Invalid ID/usernames will be ignored.</small>
+                    <textarea name="excluded_ids" id="excluded_ids" rows="4" class="form-control"></textarea>
+                    <div class="invalid-feedback">
+                        Please message is required.
+                    </div>
+                </div>
+
+                <p class="m-0 mt-5"><b>Before sending the notification,</b></p>
+                <div class="form-group">
+                    <input type="checkbox" name="reset_pin" id="reset_pin" class="form-check-input">
+                    <label for="reset_pin" class="text-danger">Reset PIN
+                        <small class="text-muted">
+                            (Reset PIN then foward the new pin to the user.)
+                        </small>
+                    </label>
+                </div>
+
+                <div class="form-group my-5 d-flex justify-content-center">
+                    <button class="btn btn-primary"><i class="bi bi-send"></i> SEND</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</section>
+
+{% endblock %}

@@ -102,10 +102,6 @@ class User(AbstractBaseUser, PermissionsMixin):
             self.gender = self.gender.lower()
         if self.title:
             self.title = self.title.lower()
-
-        if not self.changed_password:
-            self.set_password(self.temporal_pin)
-
         return super().save(*args, **kwargs)
 
 

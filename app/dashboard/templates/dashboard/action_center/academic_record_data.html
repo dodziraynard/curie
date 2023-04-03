@@ -19,7 +19,7 @@
         <h4>Records - {{session.name}}, {{subject.name}}</h4>
     </div>
     <div class="card-body">
-        <form class="col-md-10 mx-auto overflow-auto needs-validation" method="POST" novalidate>
+        <form class="col-md-12 mx-auto overflow-auto needs-validation" method="POST" novalidate>
             <input type="hidden" name="session" value="{{session.id}}">
             <input type="hidden" name="subject" value="{{subject.id}}">
             <div class="mx-auto" style="max-height: 60vh; overflow-y: auto;">
@@ -47,6 +47,7 @@
                             <th>Total</th>
                             <th>Grade</th>
                             <th>Remark</th>
+                            <th>Rank</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -81,6 +82,7 @@
                             <td class="text-center">{{record.total}}</td>
                             <td class="text-center">{{record.grade}}</td>
                             <td class="text-center">{{record.remark}}</td>
+                            <td class="text-center">{{record.rank}}</td>
                         </tr>
                         {% endfor %}
                         {% else %}

@@ -1,0 +1,59 @@
+{% extends 'templates/dashboard/base_template.html' %}
+{% block page_title %}Notification/SMS{% endblock %}
+{% block active-sidebar-item-id %}notifications{%endblock%}
+
+{% load static %}
+
+{% block breadcrumb %}
+<section class="breadcrumb">
+    <a href="{% url 'dashboard:index' %}" class="">Home <i class="bi bi-chevron-right"></i></a>
+    <a href="" class="active">Notification/SMS</a>
+</section>
+{% endblock %}
+
+{% block content %}
+
+<h4 class="page-header"><i class='icon bx bx-group'></i> Notification/SMS</h4>
+<section class="card">
+    <div class="card-header d-flex justify-content-between">
+        <h4>Notification/SMS</h4>
+    </div>
+    <div class="card-body">
+        <form class="col-md-10 mx-auto overflow-auto needs-validation"  method="POST" novalidate enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-7">
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea name="message" id="message" rows="11" class="form-control" required></textarea>
+                        <div class="invalid-feedback">
+                            Please message is required.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label for="recipients">Recipients</label> <br>
+                        <small class="m-0 p-0 text-muted">List of 10-digit Ghanaian numbers separated by comma.</small>
+                        <textarea name="recipients" id="recipients" rows="6" class="form-control"></textarea>
+                    </div>
+
+                    <div class="form-group my-4">
+                        <label for="recipient_file">Upload <a download href="{% static 'sheets/sms_phone_numbers.xlsx' %}"
+                                class="btn btn-sm btn-light my-2">Download
+                                template</a></label> <br>
+                        <input type="file" class="form-control" name="recipient_file"
+                            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                    </div>
+                </div>
+
+                <div class="form-group my-5 d-flex justify-content-center">
+                    <button class="btn btn-primary"><i class="bi bi-send"></i> SEND</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</section>
+
+{% endblock %}

@@ -35,7 +35,9 @@ INSTALLED_APPS = [
     'dashboard.apps.DashboardConfig',
     'setup.apps.SetupConfig',
     'pdf_processor.apps.PdfProcessorConfig',
+    'graphql_api.apps.GraphqlApiConfig',
     "django_celery_beat",
+    "graphene_django",
 ]
 
 MIDDLEWARE = [
@@ -165,3 +167,7 @@ CSRF_TRUSTED_ORIGINS = [
 SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+GRAPHENE = {"SCHEMA": "graphql_api.schema.schema"}
+
+ARKESEL_API_KEY = os.environ.get("ARKESEL_API_KEY", None)

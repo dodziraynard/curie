@@ -17,3 +17,4 @@ django-ipware>=4.0.2
 django_debug_toolbar>=3.8.1
 django-celery-beat>=2.5.0
 redis>=3.5.3
+graphene_django>=3.0.0

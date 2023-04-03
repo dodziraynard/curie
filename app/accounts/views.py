@@ -64,8 +64,8 @@ class CreateUpdatUserView(PermissionRequiredMixin, View):
         password = request.POST.get("password")
         confirm_password = request.POST.get("confirm_password")
 
-        if password != confirm_password:
-            messages.danger(request, "Passwords do not match.")
+        if password and password != confirm_password:
+            messages.error(request, "Passwords do not match.")
             return render(request, self.template_name, context)
 
         obj = self.model_class.objects.filter(id=object_id).first()

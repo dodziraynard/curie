@@ -1,3 +1,4 @@
+import time
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -301,6 +302,7 @@ class AcademicRecordDataView(PermissionRequiredMixin, View):
             session=session, staff__user_id=request.user.id, subject=subject)
 
         # Updating records
+        group_tag = str(time.time_ns())
         for record_id, class_id, class_score, exam_score in zip(
                 record_ids, classes, class_scores, exam_scores):
             record = get_object_or_404(Record, id=record_id)
@@ -321,8 +323,13 @@ class AcademicRecordDataView(PermissionRequiredMixin, View):
             record.class_score = int(class_score)
             record.exam_score = int(exam_score)
             record.klass = klass
+            record.group_tag = group_tag
             record.updated_by = request.user
             record.save()
+
+        # Compute position
+        record = Record.objects.filter(group_tag=group_tag).first()
+        record.compute_position()
 
         messages.success(request, "Scores updated successfully")
         return redirect(request.META.get("HTTP_REFERER"))
