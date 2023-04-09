@@ -1,10 +1,10 @@
 import decimal
 from random import sample
 
+import geocoder
 from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager,
                                         PermissionsMixin)
 from django.db import models
-import geocoder
 
 
 class UserManger(BaseUserManager):

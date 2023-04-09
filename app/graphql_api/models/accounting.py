@@ -1,9 +1,10 @@
-from django.db import models
-from dashboard.models import Student
 from django.contrib.auth import get_user_model
+from django.db import models
 from django.utils import timezone
 
-from lms.utils.constants import InvoiceItemType, InvoiceStatus, TransactionDirection
+from dashboard.models import Student
+from lms.utils.constants import (InvoiceItemType, InvoiceStatus,
+                                 TransactionDirection)
 from setup.models import SchoolSession
 
 User = get_user_model()

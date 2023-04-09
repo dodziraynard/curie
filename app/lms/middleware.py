@@ -2,9 +2,9 @@ from importlib import import_module
 
 from django.conf import settings
 from django.core.cache import cache
+from ipware import get_client_ip
 
 from accounts.models import ActivityLog
-from ipware import get_client_ip
 
 
 class SingleUserSession(object):

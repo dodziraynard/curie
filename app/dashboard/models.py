@@ -1,13 +1,14 @@
 from datetime import datetime, timedelta
+
+import requests
+from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
-from lms.utils.functions import get_current_session
 
+from lms.utils.functions import get_current_session
 from setup.models import (Attitude, Conduct, GradingSystem, Interest,
                           ModelMixin, Remark, SchoolSession, Track)
-from django.contrib.auth import get_user_model
-from django.conf import settings
-import requests
 
 User = get_user_model()
 

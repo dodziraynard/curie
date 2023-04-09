@@ -1,18 +1,20 @@
+from io import BytesIO
 from random import sample
+
+import pandas as pd
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.shortcuts import get_object_or_404, render, redirect
+from django.db.models import Q
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views import View
-import pandas as pd
-from django.db.models import Q
-from io import BytesIO
-from django.utils import timezone
-from django.contrib import messages
-from accounts.models import User
 
-from dashboard.models import Klass, Notification, Record, SessionReport, Staff, Student
+from accounts.models import User
+from dashboard.models import (Klass, Notification, Record, SessionReport,
+                              Staff, Student)
 from dashboard.tasks import send_notification, send_notifications_with_id_tag
 from setup.models import School, SchoolSession
 

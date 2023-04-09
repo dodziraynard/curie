@@ -1,17 +1,17 @@
+from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
-from django.contrib import messages
 
 from dashboard.mixins import CreateUpdateMixin
-from dashboard.models import Course, House, Klass, Relative, Student, Subject, Track
-from django.core.exceptions import ValidationError
+from dashboard.models import (Course, House, Klass, Relative, Student, Subject,
+                              Track)
 from dashboard.utils.sheet_operations import insert_students
-
 from lms.utils.functions import make_model_key_value
-from django.contrib.auth import get_user_model
 
 User = get_user_model()
 

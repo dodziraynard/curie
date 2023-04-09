@@ -1,15 +1,15 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import get_object_or_404, redirect, render
-from django.views import View
-from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from accounts.forms import UserForm
-from lms.utils.functions import make_model_key_value
+from django.shortcuts import get_object_or_404, redirect, render
+from django.utils.decorators import method_decorator
 from django.utils.html import strip_tags
+from django.views import View
 
+from accounts.forms import UserForm
 from accounts.models import User
+from lms.utils.functions import make_model_key_value
 
 
 class ProfileView(View):

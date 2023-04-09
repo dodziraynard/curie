@@ -1,16 +1,17 @@
+import base64
+import time
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
+from django.core.files.base import ContentFile
+from django.db.models.deletion import ProtectedError
+from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
-from django.db.models.deletion import ProtectedError
-from django.core.files.base import ContentFile
-from django.http import JsonResponse
-import base64
-import time
 
 from lms.utils.functions import crop_image
 

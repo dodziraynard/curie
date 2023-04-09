@@ -4,8 +4,8 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
-from dashboard.models import House, SessionReport, StudentPromotionHistory
 
+from dashboard.models import House, SessionReport, StudentPromotionHistory
 from setup.models import Remark, SchoolSession
 
 

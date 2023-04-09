@@ -1,1 +1,1 @@
-from . accounting import *
+from .accounting import *

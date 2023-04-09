@@ -1,16 +1,18 @@
 from collections import namedtuple
+
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.db.models import Q
 from django.shortcuts import HttpResponse, get_object_or_404
 from django.utils import timezone
-from django.views import View
-from dashboard.models import SessionReport, Record
-from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
-from graphql_api.models.accounting import Invoice
+from django.views import View
 
+from dashboard.models import Record, SessionReport
+from graphql_api.models.accounting import Invoice
 from setup.models import School, SchoolSession
+
 from .utils import render_to_pdf
-from django.db.models import Q
 
 
 class SingleAcademicRecordReportView(PermissionRequiredMixin, View):

@@ -5,7 +5,8 @@ from celery import shared_task
 
 from dashboard.models import Notification, Student
 from graphql_api.models.accounting import Invoice, InvoiceItem, Transaction
-from lms.utils.constants import InvoiceItemType, InvoiceStatus, TransactionDirection
+from lms.utils.constants import (InvoiceItemType, InvoiceStatus,
+                                 TransactionDirection)
 
 
 @shared_task

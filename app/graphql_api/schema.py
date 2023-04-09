@@ -1,6 +1,7 @@
 import graphene
 from graphene_django import DjangoObjectType
 from graphql import GraphQLError
+
 from dashboard.models import Student
 
 from .models import Invoice, InvoiceItem

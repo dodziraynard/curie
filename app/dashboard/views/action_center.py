@@ -1,14 +1,16 @@
+import logging
 import time
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
-from dashboard.models import Klass, Record, Staff, Student, StudentPromotionHistory, Subject, SubjectMapping
-from lms.utils.functions import get_current_session
-import logging
 
+from dashboard.models import (Klass, Record, Staff, Student,
+                              StudentPromotionHistory, Subject, SubjectMapping)
+from lms.utils.functions import get_current_session
 from setup.models import School, SchoolSession
 
 logger = logging.getLogger("system")

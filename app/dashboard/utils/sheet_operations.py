@@ -1,6 +1,8 @@
 from collections import defaultdict
-import pandas as pd
 from pathlib import Path
+
+import pandas as pd
+
 from accounts.models import User
 from dashboard.models import Course, House, Klass, Student
 from setup.models import Track

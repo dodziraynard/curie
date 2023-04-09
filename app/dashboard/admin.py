@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Student, Notification
+from .models import Notification, Student
 
 # Register your models here.
 admin.site.register(Student)
