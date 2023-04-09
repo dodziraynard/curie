@@ -8,16 +8,21 @@ USED_PERMISSION_CODES = [
 
 
 class TransactionType(enum.Enum):
-    CREDIT = "CREDIT"
-    DEBIT = "DEBIT"
+    CREDIT = "CREDIT".lower()
+    DEBIT = "DEBIT".lower()
 
 
 class InvoiceStatus(enum.Enum):
-    DRAFT = "DRAFT"
-    PENDING = "PENDING"
-    PAID = "PAID"
+    DRAFT = "DRAFT".lower()
+    PENDING = "PENDING".lower()
+    APPLIED = "APPLIED".lower()
 
 
 class InvoiceItemType(enum.Enum):
-    CREDIT = "CREDIT"
-    DEBIT = "DEBIT"
+    CREDIT = "CREDIT".lower()
+    DEBIT = "DEBIT".lower()
+
+
+class TransactionDirection(enum.Enum):
+    IN = 'IN'.lower()
+    OUT = 'OUT'.lower()

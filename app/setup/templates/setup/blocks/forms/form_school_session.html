@@ -11,11 +11,12 @@
     </div>
 
     <div class="form-group">
-        <label for="semester">Semester</label>
+        <label for="semester">Semester/Term</label>
         <select class="form-control" name="semester" id="semester" required>
             <option value="">Choose</option>
             <option value="1" {% if semester == 1 %}selected{% endif %}>1</option>
             <option value="2" {% if semester == 2 %}selected{% endif %}>2</option>
+            <option value="3" {% if semester == 3 %}selected{% endif %}>3</option>
         </select>
         <div class="invalid-feedback">
             Please this field is required.

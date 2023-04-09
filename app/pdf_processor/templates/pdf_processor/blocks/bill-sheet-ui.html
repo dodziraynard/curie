@@ -1,0 +1,194 @@
+<div>
+    <div style="font-family: 'Roboto', sans-serif;;">
+        <h1 style="text-align: center;  margin: 0;">GHANA EDUCATION SERVICE</h1>
+        <h1
+            style="text-align: center; margin: 0; padding-top: 0.5em; font-size: 2.5em; background-color: rgb(240, 240, 240);">
+            {{school.name}}
+        </h1>
+        <table>
+            <tr>
+                <td>
+                    <h3 style="margin: 0;">
+                        {{school.address|safe}}
+                    </h3>
+                </td>
+                <td>
+                    <p style="text-align: center; padding: 0; margin: 0"><img src="{{school.logo_url}}" alt="crest"
+                            height="60"></p>
+                </td>
+                <td>
+                    <table>
+                        <tr>
+                            <td>
+                                <p style="text-align: right;">Contact: </p>
+                            </td>
+                            <td colspan="2">
+                                <h3 style="text-align: right;">{{school.phone}}</h3>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p style="text-align: right;">Email: </p>
+                            </td>
+                            <td colspan="2">
+                                <h3 style="text-align: right;">{{school.email_address}}</h3>
+                            </td>
+                        </tr>
+
+                    </table>
+                </td>
+            </tr>
+            </tr>
+        </table>
+
+        <table>
+            <tr>
+                <td>
+                    <table>
+                        <tr>
+                            <td>
+                                <p style="text-align: left;">Student ID: </p>
+                            </td>
+                            <td>
+                                <h6 style="text-align: left;">{{student.student_id}}</h6>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p style="text-align: left;">Surname: </p>
+                            </td>
+                            <td>
+                                <h6 style="text-align: left;">{{student.user.surname}}</h6>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p style="text-align: left;">Other Names: </p>
+                            </td>
+                            <td>
+                                <h6 style="text-align: left;">{{student.user.other_names}}</h6>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td>
+                    <p style="text-align: center; padding: 0; margin: 0">
+                        <img src="{{student.logo_url}}" height="60">
+                    </p>
+                </td>
+                <td>
+                    <table>
+                        <tr>
+                            <td>
+                                <p style="text-align: right;">Academic Year: </p>
+                            </td>
+                            <td colspan="2">
+                                <h6 style="text-align: right;">{{session.academic_year}}</h6>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p style="text-align: right;">Session</p>
+                            </td>
+                            <td colspan="2">
+                                <h6 style="text-align: right;">{{session}}</h6>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <h1 style="text-align: center;  margin: 0.4em 0 0 0; padding-top: 1em; background-color: #f0f0f0;">
+        STUDENT BILL SHEET</h1>
+    <br>
+    <table style="border: 1px solid gray;">
+        <thead>
+            <tr style="padding: 0.3em;">
+                <th>
+                    <h2>S/N</h2>
+                </th>
+                <th colspan="2">
+                    <h2>ITEM</h2>
+                </th>
+                <th>
+                    <h2>DEBIT (GHC)</h2>
+                </th>
+                <th>
+                    <h2>CREDIT (GHC)</h2>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in invoices %}
+                <tr style="padding: 0.5em;">
+                    <td style="vertical-align: middle;">
+                        <h3 style="text-align: center;">{{forloop.counter}}</h3>
+                    </td>
+                    <td colspan="2" style="vertical-align: middle;">
+                        <h3 style="text-align: left;">{{record.name}}</h3>
+                    </td>    
+                    {% if record.type == 'debit' %}
+                        <td style="vertical-align: middle;">
+                            <h3 style="text-align: center;">{{record.amount}}</h3>
+                        </td>
+                        <td style="vertical-align: middle;">
+                            <h3 style="text-align: center;">....</h3>
+                        </td>
+                    {% else %}
+                        <td style="vertical-align: middle;">
+                            <h3 style="text-align: center;">....</h3>
+                        </td>
+                        <td style="vertical-align: middle;">
+                            <h3 style="text-align: center;">{{record.amount}}</h3>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            <tr style="padding: 0.5em;">
+                <td colspan="3" style="vertical-align: middle;">
+                    <h1  style="text-align: right;"><strong>TOTAL</strong></h1>
+                </td>
+                <td colspan="2" style="vertical-align: middle; text-align: center;">
+                    <h1><strong>GHC {{total}}</strong></h1>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <table>
+        <tbody>
+            <tr>
+                <td colspan="2"></td>
+                <td>
+                    <br>
+                    <h1>AMOUNT PAYABLE: <strong>GHC {{student.user.account.amount_payable}}</strong></h1>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <p style="text-align: center; margin:0; padding:0;">
+                        <img src="{{session_report.signature_url}}" alt="" height="50">
+                    </p>
+                    <p style="font-size: 1.5em; text-align: center; margin:0; padding:0;">....................</p>
+                    <p style="font-size: 1.5em; text-align: center; margin:0; padding:0;">
+                        {{school.assistant_head_teacher.user.get_name}}</p>
+                    <p style="font-size: 1.5em; text-align: center; margin:0; padding:0;">ASSISTANT HEADMASTER</p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+
+    <br>
+
+    <div id="footer_content">
+        <p style="text-align: left;" style="margin:0">
+            <i>Printed @ {{current_time}}</i>
+        </p>
+    </div>
+</div>
+
+<pdf:nextpage></pdf:nextpage>

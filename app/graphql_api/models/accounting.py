@@ -1,8 +1,10 @@
 from django.db import models
 from dashboard.models import Student
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 
-from lms.utils.constants import InvoiceItemType, InvoiceStatus
+from lms.utils.constants import InvoiceItemType, InvoiceStatus, TransactionDirection
+from setup.models import SchoolSession
 
 User = get_user_model()
 
@@ -20,7 +22,7 @@ User = get_user_model()
 
 class Invoice(models.Model):
     INVOICE_STATUS = [
-        (InvoiceStatus.PAID.value,InvoiceStatus.PAID.value),
+        (InvoiceStatus.APPLIED.value,InvoiceStatus.APPLIED.value),
         (InvoiceStatus.DRAFT.value,InvoiceStatus.DRAFT.value),
         (InvoiceStatus.PENDING.value,InvoiceStatus.PENDING.value),
     ]
@@ -29,7 +31,7 @@ class Invoice(models.Model):
     due_date = models.DateTimeField(null=True, blank=True)
     note = models.TextField()
     status = models.CharField(max_length=100, choices=INVOICE_STATUS)
-
+    session = models.ForeignKey(SchoolSession, on_delete=models.SET_NULL, null=True, blank=True)
     created_by = models.ForeignKey(User, related_name="created_invoices", on_delete=models.PROTECT)
     updated_by = models.ForeignKey(User, related_name="updated_invoices", on_delete=models.PROTECT)
     deleted = models.BooleanField(default=False)
@@ -47,8 +49,8 @@ class Invoice(models.Model):
     def total_amount(self):
         amount = 0
         for item in self.invoice_items.all():
-            amount += item.amount
-        return round(amount, 2)
+            amount += item.amount if item.type == InvoiceItemType.DEBIT.value else -item.amount
+        return round(float(amount), 2)
 
 
 class InvoiceItem(models.Model):
@@ -67,3 +69,34 @@ class InvoiceItem(models.Model):
 
     def model_name(self):
         return self.__class__.__name__.lower()
+
+
+class Transaction(models.Model):
+    TRANSACTION_STATUS = [
+        ("new", "New"),
+        ("pending", "Pending"),
+        ("success", "Success"),
+        ("failed", "Failed"),
+    ]
+    TRANSACTION_DIRECTION = [
+        (TransactionDirection.IN.value,TransactionDirection.IN.value),
+        (TransactionDirection.OUT.value,TransactionDirection.OUT.value),
+    ]
+    def generate_id():
+        return timezone.now().strftime("%y%m%d%H%M%S%f")
+
+    transaction_id = models.CharField(max_length=20, unique=True, default=generate_id)
+    amount = models.DecimalField(max_digits=20, decimal_places=2, default=0)
+    account = models.ForeignKey("accounts.Account", on_delete=models.CASCADE)
+    phone_number = models.CharField(max_length=20, blank=True, null=True)
+    network = models.CharField(max_length=255, blank=True, null=True)
+    fullname = models.CharField(max_length=255, blank=True, null=True)
+    response_data = models.TextField(blank=True, null=True)
+    note = models.TextField(blank=True, null=True)
+    initiated_by = models.ForeignKey("accounts.User", on_delete=models.SET_NULL, null=True, blank=True)
+    direction = models.CharField(max_length=10, choices=TRANSACTION_DIRECTION)
+    status = models.CharField(max_length=255, blank=True, null=True, choices=TRANSACTION_STATUS, default="new")
+    status_message = models.CharField(max_length=255, blank=True, null=True)
+    wallet_balances_updated = models.BooleanField(default=False)
+    accepted_by_provider = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)

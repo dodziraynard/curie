@@ -6,9 +6,11 @@ from django.views import View
 from dashboard.models import Klass, Student
 from django.db.models import Q
 from django.contrib import messages
+from dashboard.tasks import update_students_account
 
 from graphql_api.models.accounting import Invoice, InvoiceItem
 from lms.utils.functions import make_model_key_value
+from setup.models import SchoolSession
 
 
 class AccountingIndexView(PermissionRequiredMixin, View):
@@ -33,9 +35,22 @@ class InvoicesView(PermissionRequiredMixin, View):
 
     @method_decorator(login_required(login_url="accounts:login"))
     def get(self, request):
+        query = request.GET.get("query")
+        from_date = request.GET.get("from_date")
+        to_date = request.GET.get("to_date")
         invoices = Invoice.objects.all()
+        if query:
+            invoices = invoices.filter(name__icontains=query)
+        if from_date:
+            invoices = invoices.filter(created_at__gte=from_date)
+        if to_date:
+            invoices = invoices.filter(created_at__lte=to_date)
+        invoices = invoices.order_by("-created_at")
         context = {
-            "invoices": invoices,
+            "invoices": invoices[:300],
+            "sessions": SchoolSession.objects.filter(deleted=False),
+            **{k: v
+               for k, v in request.GET.items()}
         }
         return render(request, self.template_name, context)
 
@@ -49,22 +64,29 @@ class CreateUpdateInvoiceView(PermissionRequiredMixin, View):
 
     @method_decorator(login_required(login_url="accounts:login"))
     def get(self, request):
-        return render(request, self.template_name)
+        context = {
+            "sessions": SchoolSession.objects.filter(deleted=False),
+        }
+        return render(request, self.template_name, context)
 
     @method_decorator(login_required(login_url="accounts:login"))
     def post(self, request):
         name = request.POST.get("name")
         note = request.POST.get("note")
+        session_id = request.POST.get("session")
         invoice_id = request.POST.get("invoice_id") or -1
+        session = get_object_or_404(SchoolSession, id=session_id)
         invoice = Invoice.objects.filter(id=invoice_id).first()
         if not invoice:
             invoice = Invoice.objects.create(name=name,
                                              note=note,
+                                             session=session,
                                              created_by=request.user,
                                              updated_by=request.user)
         else:
             invoice.name = name
             invoice.note = note
+            invoice.session = session
             invoice.updated_by = request.user
             invoice.save()
         return redirect("dashboard:invoice_details", invoice_id=invoice.id)
@@ -84,6 +106,7 @@ class InvoiceDetailsView(PermissionRequiredMixin, View):
         context = {
             "invoice": invoice,
             "classes": classes,
+            "sessions": SchoolSession.objects.filter(deleted=False),
         }
         context.update(make_model_key_value(invoice))
         return render(request, self.template_name, context)
@@ -111,12 +134,11 @@ class InvoiceDetailsView(PermissionRequiredMixin, View):
             for student in students.union(old_students).values("student_id")
         ]
         # Trigger balance update.
-        print("total_affected_student_ids", total_affected_student_ids)
-        messages.info(request, "Students updated. Triggered for balance upates.")
-    
-        return redirect("dashboard:invoice_details", invoice_id=invoice.id)
+        update_students_account.delay(total_affected_student_ids, invoice_id)
+        messages.info(request,
+                      "Students updated. Triggered for balance upates.")
 
-        
+        return redirect("dashboard:invoice_details", invoice_id=invoice.id)
 
 
 class CreateUpdateInvoiceItem(PermissionRequiredMixin, View):

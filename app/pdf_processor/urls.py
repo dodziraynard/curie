@@ -9,4 +9,5 @@ urlpatterns = [
     path('bulk-report/', views.BulkAcademicRecordReportView.as_view(), name="bulk_report"),
 
     path('student-full-report/<str:student_id>', views.StudentFullReportView.as_view(), name="student_full_report"),
+    path('student-bill-sheet/<str:invoice_id>', views.BulkStudentBillSheet.as_view(), name="student_bill_sheet"),
 ]

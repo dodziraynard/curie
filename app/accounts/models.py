@@ -1,3 +1,4 @@
+import decimal
 from random import sample
 
 from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager,
@@ -103,6 +104,28 @@ class User(AbstractBaseUser, PermissionsMixin):
         if self.title:
             self.title = self.title.lower()
         return super().save(*args, **kwargs)
+
+
+#yapf: disable
+class Account(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="account")
+    available_balance = models.DecimalField(max_digits=20, decimal_places=2, default=0)
+    main_balance = models.DecimalField(max_digits=20, decimal_places=2, default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    @property
+    def balance(self):
+        return self.main_balance
+    
+    @property
+    def amount_payable(self):
+        return self.main_balance * -1
+
+    def reset_balance(self, amount):
+        self.available_balance = decimal.Decimal(amount)
+        self.main_balance = decimal.Decimal(amount)
+        self.save()
 
 
 class ActivityLog(models.Model):

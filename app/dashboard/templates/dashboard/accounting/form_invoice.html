@@ -10,12 +10,32 @@
         </div>
     </div>
     
+    <div class="form-group my-2">
+        <label for="session"><strong>For School Session</strong></label>
+        <p class="m-0 p-0 text-muted"><small>For which sesion is this bill?</small></p>
+        <select class="form-select" name="session" id="session" required>
+            {% for session in sessions %}
+                <option value="{{session.id}}" {% if session == invoice.session %}selected{% endif %}>{{session.name}}</option>
+            {% endfor %}
+        </select>
+        <div class="invalid-feedback">
+            Please select a session.
+        </div>
+    </div>
+
     <div class="form-group my-3">
         <label for="note"><strong>Note</strong></label>
         <p class="m-0 p-0 text-muted">To be printed on the bill sheet.</p>
         <textarea class="form-control" placeholder="Any note to accompany this invoice?" type="text" name="note"
             id="note">{{note}}</textarea>
     </div>
+    
+    
+    
+    
+    
+    
+    
     
     <div class="mt-4 form-group d-flex justify-content-end">
         <button type="submit" class="btn btn-primary btn-sm">Submit</button>

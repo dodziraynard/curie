@@ -1,3 +1,4 @@
+from collections import namedtuple
 from django.shortcuts import HttpResponse, get_object_or_404
 from django.utils import timezone
 from django.views import View
@@ -5,6 +6,7 @@ from dashboard.models import SessionReport, Record
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from graphql_api.models.accounting import Invoice
 
 from setup.models import School, SchoolSession
 from .utils import render_to_pdf
@@ -110,6 +112,47 @@ class BulkAcademicRecordReportView(PermissionRequiredMixin, View):
             "session": session,
             "school": School.objects.first(),
             "data": data,
+            "current_time": timezone.now(),
+        }
+
+        pdf = render_to_pdf(self.template_name, context)
+        if pdf:
+            response = HttpResponse(pdf, content_type='application/pdf')
+            filename = "Bulk-Student-Report-Sheet.pdf"
+            content = "inline; filename=%s" % (filename)
+            download = request.GET.get("download")
+            if download:
+                content = "attachment; filename=%s" % (filename)
+            response['Content-Disposition'] = content
+            return response
+        return HttpResponse("Not found", status=404)
+
+
+class BulkStudentBillSheet(PermissionRequiredMixin, View):
+    template_name = "pdf_processor/bulk-student-bill-sheet.html"
+    permission_required = [
+        "dashboard.view_dashboard",
+    ]
+
+    @method_decorator(login_required(login_url="accounts:login"))
+    def get(self, request, invoice_id):
+        invoice = get_object_or_404(Invoice, id=invoice_id)
+
+        records = []
+        data = []
+        total = invoice.total_amount
+        Statement = namedtuple("Statement", "name type amount")
+        for item in invoice.invoice_items.all():
+            statement = Statement(item.name, item.type, item.amount)
+            data.append(statement)
+
+        for student in invoice.students.all():
+            records.append([student, total, data[::]])
+
+        context = {
+            "session": invoice.session,
+            "school": School.objects.first(),
+            "records": records,
             "current_time": timezone.now(),
         }
 

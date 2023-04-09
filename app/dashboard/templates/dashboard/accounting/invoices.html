@@ -40,17 +40,11 @@
     </div>
     <div class="card-body">
         <form class="d-flex align-items-center my-3">
-            <input type="search" class="form-control" value="{{query}}" name="query" placeholder="Search numbers">
+            <input type="search" class="form-control" value="{{query}}" name="query" placeholder="Search name">
             <span class="mx-1">From</span>
             <input type="date" class="form-control" name="from_date" value="{{from_date}}">
             <span class="mx-1">To</span>
             <input type="date" class="form-control" name="to_date" value="{{to_date}}">
-            <select name="status" id="status" class="form-select">
-                <option value="">All</option>
-                <option value="new" {% if status == 'new' %}selected{% endif %}>New</option>
-                <option value="failed" {% if status == 'failed' %}selected{% endif %}>Failed</option>
-                <option value="delivered" {% if status == 'delivered' %}selected{% endif %}>Delivered</option>
-            </select>
             <button class="btn btn-sm btn-primary mx-2">Load</button>
         </form>
         <div class="col-12 mx-auto" style="overflow-x: auto;">
