@@ -55,7 +55,7 @@ class CreateUpdateInvoiceView(PermissionRequiredMixin, View):
     def post(self, request):
         name = request.POST.get("name")
         note = request.POST.get("note")
-        invoice_id = request.POST.get("invoice_id")
+        invoice_id = request.POST.get("invoice_id") or -1
         invoice = Invoice.objects.filter(id=invoice_id).first()
         if not invoice:
             invoice = Invoice.objects.create(name=name,
