@@ -121,9 +121,11 @@
                 <i class="bi bi-wallet me-2"></i> Apply to students
             </button>
             
+            {% if invoice.status == 'applied' %}
             <a href="{% url 'pdf:student_bill_sheet' invoice.id %}" target="_blank" class="mx-2 d-flex btn btn-sm btn-outline-primary my-1">
                 <i class="bi bi-printer me-2"></i> Generate Bill Sheet
             </a>
+            {% endif %}
         </div>
    </div>
 </div>
@@ -204,15 +206,4 @@
         </div>
     </div>
 </section>
-
-
-
-
-
-
-
-
-
-
-
 {% endblock %}
