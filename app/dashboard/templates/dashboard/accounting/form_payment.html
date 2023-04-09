@@ -1,0 +1,36 @@
+<form action="{% url 'dashboard:create_update_payment' student.student_id %}" class="needs-validation my-4" method="POST" novalidate>
+    {% csrf_token %}
+    <div class="form-group my-2">
+        <label for="name"><strong>Student ID</strong></label>
+        <input class="form-control" type="text" value="{{student.student_id}}" readonly>
+    </div>
+    
+    <div class="form-group my-2">
+        <label for="name"><strong>Full Name</strong></label>
+        <input class="form-control" type="text" value="{{student.user.get_name}}" readonly>
+    </div>
+    
+    <div class="form-group my-2">
+        <label for="name"><strong>Class</strong></label>
+        <input class="form-control" type="text" value="{{student.klass.name}}" readonly>
+    </div>
+    
+    <div class="form-group my-4">
+        <label for="amount"><strong>Amount (GHC)</strong></label>
+        <input class="form-control" placeholder="10.22" value="{{amount}}" type="number" step="0.01" min="1" name="amount"
+            id="amount" required>
+        <div class="invalid-feedback">
+            Please this field is required.
+        </div>
+    </div>
+    
+    <div class="form-group my-3">
+        <label for="note"><strong>Note</strong></label>
+        <textarea class="form-control" placeholder="Any note to accompany this invoice?" type="text" name="note"
+            id="note">{{note}}</textarea>
+    </div>    
+    
+    <div class="mt-4 form-group d-flex justify-content-end">
+        <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+    </div>
+</form>

@@ -1,13 +1,18 @@
+import logging
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
 
 from dashboard.models import Student
 from lms.utils.constants import (InvoiceItemType, InvoiceStatus,
-                                 TransactionDirection)
+                                 TransactionDirection, TransactionStatus,
+                                 TransactionStatusMessages)
 from setup.models import SchoolSession
+from django.db import transaction as django_db_transaction
+from django.utils.decorators import method_decorator
 
 User = get_user_model()
+logger = logging.getLogger("app")
 
 #yapf: disable
 # class Transaction(models.Model):
@@ -98,6 +103,36 @@ class Transaction(models.Model):
     direction = models.CharField(max_length=10, choices=TRANSACTION_DIRECTION)
     status = models.CharField(max_length=255, blank=True, null=True, choices=TRANSACTION_STATUS, default="new")
     status_message = models.CharField(max_length=255, blank=True, null=True)
-    wallet_balances_updated = models.BooleanField(default=False)
+    account_balances_updated = models.BooleanField(default=False)
     accepted_by_provider = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def success(self):
+        return self.status == TransactionStatus.SUCCESS.value
+
+    @method_decorator(django_db_transaction.atomic())
+    def update_account_balances(self):
+        if not self.account:
+            logger.info(f"Transaction {self.transaction_id} does not have account.")
+            return
+
+        if not self.success():
+            logger.info(f"Transaction {self.transaction_id} is not successful")
+            return
+
+        if self.account_balances_updated:
+            logger.info(
+                f"Transaction {self.transaction_id} account balances are already updated"
+            )
+            return
+
+        if self.direction == TransactionDirection.IN.value:
+            self.account.credit_account(self.amount)
+
+        elif self.direction == TransactionDirection.OUT.value:
+            self.account.credit_account(-self.amount)
+
+        self.account_balances_updated = True
+        self.paid = True
+        self.save()
+        return True

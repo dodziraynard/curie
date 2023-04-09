@@ -1,0 +1,98 @@
+{% extends 'templates/dashboard/base_template.html' %}
+{% block page_title %}Payments{% endblock %}
+{% block active-sidebar-item-id %}accounting{%endblock%}
+
+{% block breadcrumb %}
+<section class="breadcrumb">
+    <a href="{% url 'dashboard:index' %}" class="">Home <i class="bi bi-chevron-right"></i></a>
+    <a href="{% url 'dashboard:accounting' %}" class="">Accounting <i class="bi bi-chevron-right"></i></a>
+    <a href="" class="active">Payments</a>
+</section>
+{% endblock %}
+
+{% block content %}
+<!-- Modal -->
+<div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-l">
+        <form class="modal-content px-4 needs-validation" method="POST" novalidate>
+            {% csrf_token %}
+            <div class="modal-header">
+                <h5 class="modal-title" id="paymentModalLabel">New Payment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="form-group my-2">
+                <label for="name"><strong>Student ID</strong></label>
+                <input class="form-control" placeholder="1009393" type="text" name="student_id"
+                    id="student_id" required>
+                <div class="invalid-feedback">
+                    Please this field is required.
+                </div>
+            </div>
+            <div class="form-group d-flex justify-content-end my-3">
+                <button type="submit" class="btn btn-primary btn-sm">Find Student</button>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- End of Modal -->
+
+<h4 class="page-header"><i class='icon bx bx-group'></i> Payments</h4>
+<section class="card">
+    <div class="card-header d-flex justify-content-end">
+        <div class="">
+            {% if perms.dashboard.add_transaction %}
+            <button class="d-flex btn btn-sm btn-primary my-1" data-bs-toggle="modal" data-bs-target="#paymentModal"><i
+                    class="bi bi-plus"></i> New Payment
+            </button>
+            {% endif %}
+        </div>
+    </div>
+    <div class="card-body">
+        <form class="d-flex align-items-center my-3">
+            <input type="search" class="form-control" value="{{query}}" name="query" placeholder="Search name">
+            <span class="mx-1">From</span>
+            <input type="date" class="form-control" name="from_date" value="{{from_date}}">
+            <span class="mx-1">To</span>
+            <input type="date" class="form-control" name="to_date" value="{{to_date}}">
+            <select name="status" id="status" class="form-select">
+                <option value="">All</option>
+                <option value="new" {% if status == 'new' %}selected{% endif %}>New</option>
+                <option value="failed" {% if status == 'failed' %}selected{% endif %}>Failed</option>
+                <option value="delivered" {% if status == 'delivered' %}selected{% endif %}>Delivered</option>
+            </select>
+            <button class="btn btn-sm btn-primary mx-2">Load</button>
+        </form>
+        <div class="col-12 mx-auto" style="overflow-x: auto;">
+            <table class="table data-table">
+                <thead class="bg-primary text-light">
+                    <tr>
+                        <th>S/N</th>
+                        <th>Transaction ID</th>
+                        <th>Full Name</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Created At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transaction in transactions %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{transaction.transaction_id}}</td>
+                        <td>{{transaction.fullname}}</td>
+                        <td>{{transaction.amount}}</td>
+                        <td>{{transaction.status}}</td>
+                        <td>{{transaction.created_at}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

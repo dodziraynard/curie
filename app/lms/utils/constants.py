@@ -7,6 +7,18 @@ USED_PERMISSION_CODES = [
 ]
 
 
+class TransactionStatusMessages(enum.Enum):
+    PENDING = 'Transaction is pending'
+    SUCCESS = 'Transaction successful'
+    FAILED = 'Transaction failed'
+
+
+class TransactionStatus(enum.Enum):
+    PENDING = "pending"
+    SUCCESS = "success"
+    FAILED = "failed"
+
+
 class TransactionType(enum.Enum):
     CREDIT = "CREDIT".lower()
     DEBIT = "DEBIT".lower()

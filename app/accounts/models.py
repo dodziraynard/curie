@@ -117,7 +117,7 @@ class Account(models.Model):
     @property
     def balance(self):
         return self.main_balance
-    
+
     @property
     def amount_payable(self):
         return self.main_balance * -1
@@ -127,6 +127,10 @@ class Account(models.Model):
         self.main_balance = decimal.Decimal(amount)
         self.save()
 
+    def credit_account(self, amount):
+        self.available_balance += decimal.Decimal(amount)
+        self.main_balance += decimal.Decimal(amount)
+        self.save()
 
 class ActivityLog(models.Model):
     username = models.CharField(max_length=100)

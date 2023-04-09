@@ -8,7 +8,8 @@ from django.views import View
 
 from dashboard.models import Klass, Student
 from dashboard.tasks import update_students_account
-from graphql_api.models.accounting import Invoice, InvoiceItem
+from graphql_api.models.accounting import Invoice, InvoiceItem, Transaction
+from lms.utils.constants import TransactionDirection, TransactionStatusMessages
 from lms.utils.functions import make_model_key_value
 from setup.models import SchoolSession
 
@@ -182,3 +183,82 @@ class CreateUpdateInvoiceItem(PermissionRequiredMixin, View):
             invoice_item.updated_by = request.user
             invoice_item.save()
         return redirect("dashboard:invoice_details", invoice_id=invoice.id)
+
+
+class PaymentsView(PermissionRequiredMixin, View):
+    template_name = "dashboard/accounting/payments.html"
+    permission_required = [
+        "dashboard.view_dashboard",
+        "setup.manage_accounting",
+        "setup.manage_accounting",
+    ]
+
+    @method_decorator(login_required(login_url="accounts:login"))
+    def get(self, request):
+        query = request.GET.get("query")
+        from_date = request.GET.get("from_date")
+        to_date = request.GET.get("to_date")
+        status = request.GET.get("status")
+        transactions = Transaction.objects.all()
+        if query:
+            transactions = transactions.filter(name__icontains=query)
+        if status:
+            transactions = transactions.filter(status__icontains=status)
+        if from_date:
+            transactions = transactions.filter(created_at__gte=from_date)
+        if to_date:
+            transactions = transactions.filter(created_at__lte=to_date)
+        transactions = transactions.order_by("-created_at")
+        
+        context = {
+            "transactions": transactions[:300],
+            "sessions": SchoolSession.objects.filter(deleted=False),
+            **{k: v
+               for k, v in request.GET.items()}
+        }
+        return render(request, self.template_name, context)
+
+    @method_decorator(login_required(login_url="accounts:login"))
+    def post(self, request):
+        student_id = request.POST.get("student_id")
+        student = Student.objects.filter(student_id=student_id).first()
+        if not student:
+            messages.error(request,
+                           f"Student with id: {student_id} not found.")
+            return redirect(request.META.get("HTTP_REFERER"))
+        return redirect("dashboard:create_update_payment",
+                        student_id=student_id)
+
+
+class CreateUpdatePayments(PermissionRequiredMixin, View):
+    template_name = "dashboard/accounting/payment_detail.html"
+    permission_required = [
+        "dashboard.view_dashboard",
+        "setup.manage_accounting",
+    ]
+
+    @method_decorator(login_required(login_url="accounts:login"))
+    def get(self, request, student_id):
+        student = get_object_or_404(Student, student_id=student_id)
+        context = {
+            "student": student,
+        }
+        return render(request, self.template_name, context)
+
+    @method_decorator(login_required(login_url="accounts:login"))
+    def post(self, request, student_id):
+        student = get_object_or_404(Student, student_id=student_id)
+        note = request.POST.get("note")
+        amount = request.POST.get("amount")
+
+        transaction = Transaction.objects.create(
+            account=student.user.account,
+            amount=amount,
+            note=note,
+            initiated_by=request.user,
+            status="success",
+            direction=TransactionDirection.IN.value,
+            fullname=student.user.get_name(),
+            status_message=TransactionStatusMessages.SUCCESS.value)
+        transaction.update_account_balances()
+        return redirect("dashboard:payments")
