@@ -1,0 +1,39 @@
+{% extends 'templates/dashboard/base_template.html' %}
+{% block page_title %}Accounting{% endblock %}
+{% block active-sidebar-item-id %}accounting{%endblock%}
+
+{% block breadcrumb %}
+<section class="breadcrumb">
+    <a href="{% url 'dashboard:index' %}" class="">Home <i class="bi bi-chevron-right"></i></a>
+    <a href="" class="active">Accounting</a>
+</section>
+{% endblock %}
+
+{% block content %}
+
+<h4 class="page-header"><i class='icon bx bx-group'></i> ACCOUNTING</h4>
+<section class="card">
+    <div class="card-header d-flex justify-content-between">
+        <h4>Actions</h4>
+    </div>
+    <div class="card-body">
+        <div class="col-md-10 mx-auto" style="overflow-x: auto;">
+            <div class="d-flex justify-content-center flex-wrap">
+                <div class="col-md-3 col-10 d-flex m-2 border flex-column">
+                    <h2 class="text-center p-1"><i class="bi bi-pen"></i></h2>
+                    <a href="{% url 'dashboard:invoices' %}" class="btn btn p-4 text-center btn-light">
+                        <h5 class="text-primary">Invoices</h5>
+                    </a>
+                </div>
+                <div class="col-md-3 col-10 d-flex m-2 border flex-column">
+                    <h2 class="text-center p-1"><i class="bi bi-wallet"></i></h2>
+                    <a href="{% url 'dashboard:invoices' %}" class="btn btn p-4 text-center btn-light">
+                        <h5 class="text-primary">Payments</h5>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

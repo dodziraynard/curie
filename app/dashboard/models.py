@@ -67,11 +67,11 @@ class Student(ModelMixin):
         if self.klass:
             if not self.start_date:
                 self.start_date = datetime.today() - timedelta(
-                    days=(self.klass.form - 1) * 365.25)
+                    days=(self.klass.stage - 1) * 365.25)
             if not self.end_date:
                 self.end_date = datetime.today() + timedelta(
                     days=COMPLETE_SCHOOL_DURATION -
-                    (self.klass.form - 1) * 365.25)
+                    (self.klass.stage - 1) * 365.25)
         super().save(*args, **kwargs)
 
     def my_class(self):
@@ -82,13 +82,13 @@ class Student(ModelMixin):
 
     def promote(self, step):
         if self.completed: return (True, False)
-        final_form = Klass.objects.order_by("-form").first().form
+        final_stage = Klass.objects.order_by("-stage").first().stage
         self.last_promotion_date = timezone.now()
-        if self.klass.form + step > final_form:
+        if self.klass.stage + step > final_stage:
             self.completed = True
         else:
-            new_form = self.klass.form + step
-            new_class = Klass.objects.filter(form=new_form,
+            new_stage = self.klass.stage + step
+            new_class = Klass.objects.filter(stage=new_stage,
                                              stream=self.klass.stream,
                                              course=self.klass.course).first()
             if not new_class:

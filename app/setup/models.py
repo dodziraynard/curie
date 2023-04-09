@@ -32,6 +32,7 @@ class SetupPerms(models.Model):
             ('manage_setup', 'Can manage system setup'),
             ('view_dashboard', 'Can view application dashboard'),
             ('manage_notifications', 'Can view and send notifications.'),
+            ('manage_accounting', 'Can access accounting menu'),
         ]
 
 

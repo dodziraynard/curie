@@ -1,0 +1,24 @@
+<form action="{% url 'dashboard:create_update_invoice' %}" class="needs-validation my-4" method="POST" novalidate>
+    {% csrf_token %}
+    <input type="hidden" name="invoice_id" value="{{invoice.id}}">
+    <div class="form-group">
+        <label for="name"><strong>Name</strong></label>
+        <input class="form-control" placeholder="What's the name of the invoice?" value="{{name}}" type="text" name="name"
+            id="name" required>
+        <div class="invalid-feedback">
+            Please this field is required.
+        </div>
+    </div>
+    
+    <div class="form-group my-3">
+        <label for="note"><strong>Note</strong></label>
+        <p class="m-0 p-0 text-muted">To be printed on the bill sheet.</p>
+        <textarea class="form-control" placeholder="Any note to accompany this invoice?" type="text" name="note"
+            id="note">{{note}}</textarea>
+    </div>
+    
+    <div class="mt-4 form-group d-flex justify-content-end">
+        <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+    </div>
+
+</form>

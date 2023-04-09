@@ -1,0 +1,90 @@
+{% extends 'templates/dashboard/base_template.html' %}
+{% block page_title %}Invoices{% endblock %}
+{% block active-sidebar-item-id %}accounting{%endblock%}
+
+{% block breadcrumb %}
+<section class="breadcrumb">
+    <a href="{% url 'dashboard:index' %}" class="">Home <i class="bi bi-chevron-right"></i></a>
+    <a href="" class="active">Invoices</a>
+</section>
+{% endblock %}
+
+{% block content %}
+<!-- Modal -->
+<div class="modal fade" id="invoiceModal" tabindex="-1" aria-labelledby="invoiceModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-l">
+        <div class="modal-content px-4">
+            <div class="modal-header">
+                <h5 class="modal-title" id="invoiceModalLabel">Add Invoice</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            {% include 'dashboard/accounting/form_invoice.html' %}
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End of Modal -->
+
+<h4 class="page-header"><i class='icon bx bx-group'></i> Invoices</h4>
+<section class="card">
+    <div class="card-header d-flex justify-content-end">
+        <div class="">
+            {% if perms.dashboard.add_invoice %}
+            <button class="d-flex btn btn-sm btn-primary my-1" data-bs-toggle="modal" data-bs-target="#invoiceModal"><i
+                    class="bi bi-plus"></i> New Invoice
+            </button>
+            {% endif %}
+        </div>
+    </div>
+    <div class="card-body">
+        <form class="d-flex align-items-center my-3">
+            <input type="search" class="form-control" value="{{query}}" name="query" placeholder="Search numbers">
+            <span class="mx-1">From</span>
+            <input type="date" class="form-control" name="from_date" value="{{from_date}}">
+            <span class="mx-1">To</span>
+            <input type="date" class="form-control" name="to_date" value="{{to_date}}">
+            <select name="status" id="status" class="form-select">
+                <option value="">All</option>
+                <option value="new" {% if status == 'new' %}selected{% endif %}>New</option>
+                <option value="failed" {% if status == 'failed' %}selected{% endif %}>Failed</option>
+                <option value="delivered" {% if status == 'delivered' %}selected{% endif %}>Delivered</option>
+            </select>
+            <button class="btn btn-sm btn-primary mx-2">Load</button>
+        </form>
+        <div class="col-12 mx-auto" style="overflow-x: auto;">
+            <table class="table data-table">
+                <thead class="bg-primary text-light">
+                    <tr>
+                        <th>S/N</th>
+                        <th>Name</th>
+                        <th>Number of Students</th>
+                        <th>Amount</th>
+                        <th>Created At</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for invoice in invoices %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{invoice.name}}</td>
+                        <td>{{invoice.student_count}}</td>
+                        <td>{{invoice.total_amount}}</td>
+                        <td>{{invoice.created_at}}</td>
+                        <td class="d-flex">
+                            <a href="{% url 'dashboard:invoice_details' invoice.id %}" class="me-3 d-flex btn btn-sm btn-outline-primary">
+                                <i class="bi bi-list me-1"></i>
+                                Details
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

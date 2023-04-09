@@ -40,7 +40,7 @@
             </div>
         </div>
 
-        <div class="form-group col-md-6 mt-4">
+        <div class="form-group col-md-4 mt-4">
             <label for="name">Other names</label>
             <input class="form-control" placeholder="John" value="{{other_names}}" type="text" name="other_names"
                 id="name" required>
@@ -138,7 +138,7 @@
     <h6>FATHER</h6>
     <div class="form-group col-md-6 mb-4">
         <small>Just enter the id ID of this individual already exists int the system.</small>
-        <input type="text" class="form-control" value="{{father_id}}" placeholder="ID (if Exists)" name="mother_relative_id" {% if father_id %}readonly{% endif %}>
+        <input type="text" class="form-control" value="{{father_id}}" placeholder="ID (if Exists)" name="father_relative_id" {% if father_id %}readonly{% endif %}>
         <div class="invalid-feedback">
             Please this field is required.
         </div>
@@ -154,7 +154,7 @@
         <div class="form-group col-md-6">
             <label for="father_phone">Phone</label>
             <input class="form-control" placeholder="0240000001" value="{{father_phone}}" type="text" name="father_phone"
-                maxlength="10" minlength="10" pattern="0[0-9]{9}" id="father_phone" required>
+                maxlength="10" minlength="10" pattern="0[0-9]{9}" id="father_phone">
             <div class="invalid-feedback">
                 Please this field is required.
             </div>
@@ -196,7 +196,7 @@
         <div class="form-group col-md-6">
             <label for="mother_phone">Phone</label>
             <input class="form-control" placeholder="0240000001" value="{{mother_phone}}" type="text" name="mother_phone"
-            maxlength="10" minlength="10" pattern="0[0-9]{9}" id="mother_phone" required>
+            maxlength="10" minlength="10" pattern="0[0-9]{9}" id="mother_phone">
             <div class="invalid-feedback">
                 Please this field is required.
             </div>
@@ -238,7 +238,7 @@
         <div class="form-group col-md-6">
             <label for="guardian_phone">Phone</label>
             <input class="form-control" placeholder="0240000001" value="{{guardian_phone}}" type="text" name="guardian_phone"
-            maxlength="10" minlength="10" pattern="0[0-9]{9}" id="guardian_phone" required>
+            maxlength="10" minlength="10" pattern="0[0-9]{9}" id="guardian_phone">
             <div class="invalid-feedback">
                 Please this field is required.
             </div>
@@ -266,7 +266,6 @@
     <div class="form-group">
         <label for="house">House</label>
         <select class="form-select" name="house_id" id="house" required>
-            <option value="">--- Click to select --- </option>
             {% for house in houses %}
             <option value="{{house.id}}" {% if house.id == student.house.id %}selected{% endif %}>
                 {{house.name}}
@@ -296,7 +295,6 @@
     <div class="mt-2 form-group">
         <label for="track">Track</label>
         <select class="form-select" name="track_id" id="track" required>
-            <option value="">--- Click to select --- </option>
             {% for track in tracks %}
             <option value="{{track.id}}" {% if track.id == student.track.id %}selected{% endif %}>
                 {{track.name}}
@@ -310,7 +308,6 @@
     <div class="mt-2 form-group">
         <label for="course">Course</label>
         <select class="form-select" name="course_id" id="course" required>
-            <option value="">--- Click to select --- </option>
             {% for course in courses %}
             <option value="{{course.id}}" {% if course.id == student.course.id %}selected{% endif %}>
                 {{course.name}}

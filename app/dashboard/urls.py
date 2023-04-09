@@ -72,7 +72,16 @@ urlpatterns = [
     path('notifications/preview-sms/', views.PreviewSMS.as_view(), name='preview_sms'),
     path('notifications/send-pin-sms/', views.SendPINNotification.as_view(), name='send_pin_sms'),
     path('notifications/confirm-pin-notification/', views.ConfirmPINNotification.as_view(), name='confirm_pin_notification'),
-    
+
     path('notifications/report-notifications/', views.SendReportNotification.as_view(), name='report_notifications'),
     path('notifications/report-notification-confirmation/', views.ConfirmReportNotification.as_view(), name='report_notification_confirmation'),
+]
+
+
+urlpatterns += [
+    path('accounting/', views.AccountingIndexView.as_view(), name='accounting'),
+    path('accounting/invoices', views.InvoicesView.as_view(), name='invoices'),
+    path('accounting/create-update-invoice', views.CreateUpdateInvoiceView.as_view(), name='create_update_invoice'),
+    path('accounting/invoice/<str:invoice_id>/create_update_invoice_item', views.CreateUpdateInvoiceItem.as_view(), name='create_update_invoice_item'),
+    path('accounting/invoice/<str:invoice_id>/details', views.InvoiceDetailsView.as_view(), name='invoice_details'),
 ]

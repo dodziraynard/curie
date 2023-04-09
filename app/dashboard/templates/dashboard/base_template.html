@@ -109,10 +109,16 @@
         </a>
 
         <h6 class="header text-muted mt-4">APPLICATIONS</h6>
+        <a href="{% url 'dashboard:accounting' %}">
+            <div class="menu-item" id="accounting">
+                <i class='icon bx bx-spreadsheet'></i>
+                <span class="label">Accounting</span>
+            </div>
+        </a>
         <a href="{% url 'dashboard:notifications' %}">
             <div class="menu-item" id="notifications">
                 <i class='icon bx bx-envelope'></i>
-                <span class="label">Notification/SMS</span>
+                <span class="label">Alerts</span>
             </div>
         </a>
         <a href="{% url 'dashboard:reporting_index' %}">

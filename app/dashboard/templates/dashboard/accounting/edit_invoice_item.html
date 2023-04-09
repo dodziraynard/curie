@@ -1,0 +1,25 @@
+{% extends 'templates/dashboard/base_template.html' %}
+{% block page_title %}Invoice Item{% endblock %}
+{% block active-sidebar-item-id %}accounting{%endblock%}
+
+{% block breadcrumb %}
+<section class="breadcrumb">
+    <a href="{% url 'dashboard:index' %}" class="">Home <i class="bi bi-chevron-right"></i></a>
+    <a href="{% url 'dashboard:accounting' %}">Invoice Item <i class="bi bi-chevron-right"></i></a>
+    <a class="active">{{department.name|title}}</a>
+</section>
+{% endblock %}
+
+{% block content %}
+
+<div class="row col-md-11 mx-auto">
+    <section class="col-md-6 mx-auto">
+        <div class="card p-4">
+            <div class="d-flex justify-content-between">
+                <h6>Edit Inoice Item</h6>
+            </div>
+            {% include 'dashboard/accounting/form_invoice_item.html' %}
+        </div>
+    </section>
+</div>
+{% endblock %}

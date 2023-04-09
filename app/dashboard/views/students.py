@@ -142,20 +142,24 @@ class CreateUpdateStudentView(PermissionRequiredMixin, CreateUpdateMixin):
             occupation = request.POST.get(relationship + "_occupation")
             address = request.POST.get(relationship + "_address")
 
+            relative = Relative.objects.filter(id=relative_id).first()
+
+            if not relative:
+                relative = Relative.objects.create(relationship=relationship)
             if fullname:
-                relative = Relative.objects.filter(id=relative_id).first()
-                if not relative:
-                    relative = Relative.objects.create(
-                        relationship=relationship)
-                student.relatives.add(relative)
-                student.save()
-                
                 relative.fullname = fullname
+            if phone:
                 relative.phone = phone
+            if occupation:
                 relative.occupation = occupation
+            if relationship:
                 relative.relationship = relationship
+            if address:
                 relative.address = address
-                relative.save()
+            relative.save()
+
+            student.relatives.add(relative)
+            student.save()
         student.save()
         return redirect(request.META.get("HTTP_REFERER") or "dashboard:index")
 
