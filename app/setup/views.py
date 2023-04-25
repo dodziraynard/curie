@@ -5,6 +5,7 @@ from django.contrib.auth.models import Group, Permission
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
+from lms.utils.functions import relevant_permission_objects
 
 from dashboard.mixins import CreateUpdateMixin
 from dashboard.models import Staff
@@ -55,7 +56,7 @@ class RoleManagementView(PermissionRequiredMixin, View):
     @method_decorator(login_required(login_url="accounts:login"))
     def get(self, request, role_id):
         role = get_object_or_404(Group, id=role_id)
-        permissions = Permission.objects.all()
+        permissions = relevant_permission_objects()
         permissions = permissions.exclude(codename__contains='_session')
         permissions = permissions.exclude(codename__contains='_log')
         permissions = permissions.exclude(codename__contains='_permission')

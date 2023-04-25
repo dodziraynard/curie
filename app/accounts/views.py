@@ -6,6 +6,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.decorators import method_decorator
 from django.utils.html import strip_tags
 from django.views import View
+from django.contrib.auth.models import Group
+from django.urls import reverse
 
 from accounts.forms import UserForm
 from accounts.models import User
@@ -52,6 +54,7 @@ class CreateUpdatUserView(PermissionRequiredMixin, View):
         obj = get_object_or_404(self.model_class, id=object_id)
         context = {
             self.object_name: obj,
+            "groups": Group.objects.filter(),
         }
         if hasattr(self, "get_context_data"):
             context.update(self.get_context_data())
@@ -62,16 +65,19 @@ class CreateUpdatUserView(PermissionRequiredMixin, View):
     def post(self, request):
         object_id = request.POST.get(self.object_id_field) or -1
         password = request.POST.get("password")
+        group_ids = request.POST.getlist("group_ids")
         confirm_password = request.POST.get("confirm_password")
+        groups = Group.objects.filter(id__in=group_ids)
 
         if password and password != confirm_password:
             messages.error(request, "Passwords do not match.")
-            return render(request, self.template_name, context)
+            return redirect(reverse("accounts:create_update_user")+"?id="+object_id)
 
         obj = self.model_class.objects.filter(id=object_id).first()
         form = self.form_class(request.POST, instance=obj)
         if form.is_valid():
             user = form.save()
+            user.groups.set(groups)
             user.changed_password = True
             user.set_password(password)
             user.save()

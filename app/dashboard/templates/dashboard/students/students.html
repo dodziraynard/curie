@@ -71,6 +71,13 @@
                         <td>{{student.user.gender|title }}</td>
                         <td>{{student.sms_number }}</td>
                         <td class="d-flex">
+                            {% if perms.dashboard.manage_accounting %}
+                            <a href="{% url 'dashboard:create_update_payment' student.student_id %}"
+                                class="me-3 d-flex btn btn-sm btn-light">
+                                <i class="bi bi-wallet me-1"></i>
+                                Payment
+                            </a>
+                            {% endif %}
                             {% if perms.dashboard.change_student %}
                             <a href="{% url 'dashboard:create_update_student' %}?id={{student.id}}"
                                 class="me-3 d-flex btn btn-sm btn-light">

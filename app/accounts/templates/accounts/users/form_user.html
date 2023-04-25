@@ -33,8 +33,8 @@
             <label for="name">Gender</label>
             <select name="gender" id="gender" class="form-select" required>
                 <option value="">Choose gender</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
+                <option value="male" {% if gender == 'male' %}selected{% endif %}>Male</option>
+                <option value="female" {% if gender == 'female' %}selected{% endif %}>Female</option>
             </select>
             <div class="invalid-feedback">
                 Please this field is required.
@@ -65,6 +65,15 @@
             <div class="invalid-feedback">
                 Please this field is required.
             </div>
+        </div>
+
+        <div class="form-group mt-5 mb-3">
+            <label for="group_ids">Groups</label>
+            <select class="form-control" name="group_ids" id="group_ids" multiple>
+                {% for group in groups %}
+                    <option value="{{group.id}}" {% if group in user.groups.all %}selected{% endif %}>{{group.name}}</option>
+                {% endfor %}
+            </select>
         </div>
     </div>
 

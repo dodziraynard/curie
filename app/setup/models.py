@@ -31,9 +31,59 @@ class SetupPerms(models.Model):
         # and "view" default permissions
         permissions = [
             ('manage_setup', 'Can manage system setup'),
-            ('view_dashboard', 'Can view application dashboard'),
-            ('manage_notifications', 'Can view and send notifications.'),
-            ('manage_accounting', 'Can access accounting menu'),
+            ('view_dashboard', 'Can view dashboard'),
+            ('manage_action_center', 'Can view dashboard'),
+
+            ("view_student", "Can view student"),
+            ("add_student", "Can add student"),
+            ("change_student", "Can change student"),
+            ("delete_student", "Can delete student"),
+            ("view_staff", "Can view staff"),
+            ("add_staff", "Can add staff"),
+            ("change_staff", "Can change staff"),
+            ("delete_staff", "Can delete staff"),
+            ("view_class", "Can view class"),
+            ("add_class", "Can add class"),
+            ("change_class", "Can change class"),
+            ("delete_class", "Can delete class"),
+            ("view_subject", "Can view subject"),
+            ("add_subject", "Can add subject"),
+            ("change_subject", "Can change subject"),
+            ("delete_subject", "Can delete subject"),
+            ("view_department", "Can view department"),
+            ("add_department", "Can add department"),
+            ("change_department", "Can change department"),
+            ("delete_department", "Can delete department"),
+            ("view_house", "Can view house"),
+            ("add_house", "Can add house"),
+            ("change_house", "Can change house"),
+            ("delete_house", "Can delete house"),
+
+            # Accounting
+            ('view_accounting', 'Can access accounting menu'),
+            # Invoices
+            ("view_invoice", "Can view invoice"),
+            ("add_invoice", "Can add invoice"),
+            ("change_invoice", "Can change invoice"),
+            ("apply_invoice", "Can apply invoice"),
+            ("delete_invoice", "Can delete invoice"),
+
+            # Invoice items
+            ("view_invoiceitem", "Can view invoice item"),
+            ("add_invoiceitem", "Can add invoice item"),
+            ("change_invoiceitem", "Can change invoice item"),
+            ("delete_invoiceitem", "Can delete invoice item"),
+
+            # Alert
+            ('view_alert', 'Can access alert menu'),
+            ('compose_sms', 'Can compose sms'),
+            ('send_pin_notification', 'Can send pin notification'),
+            ('send_report_notification', 'Can send report notification'),
+            ('view_notification_history', 'Can view notification history'),
+
+            # Reporting
+            ('view_reporting', 'Can access reporting menu'),
+            ('generate_limited_report', 'Can access reporting menu'),
         ]
 
 

@@ -48,11 +48,10 @@
                     <tr>
                         <th>S/N</th>
                         <th>Username</th>
-                        <th>Title</th>
                         <th>Surname</th>
                         <th>Other Names</th>
                         <th>Phone</th>
-                        <th>Gender</th>
+                        <th>Groups</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -61,11 +60,14 @@
                     <tr>
                         <td>{{forloop.counter}}</td>
                         <td>{{user.username}}</td>
-                        <td>{{user.title}}</td>
                         <td>{{user.surname}}</td>
                         <td>{{user.other_names}}</td>
                         <td>{{user.phone}}</td>
-                        <td>{{user.gender}}</td>
+                        <td>
+                            {% for group in user.groups.all %}
+                            <span class="badge bg-primary">{{group.name}}</span>
+                            {% endfor %}
+                        </td>
                         <td class="d-flex">
                             {% if perms.accounts.change_user %}
                             <a href="{% url 'accounts:create_update_user' %}?id={{user.id}}"

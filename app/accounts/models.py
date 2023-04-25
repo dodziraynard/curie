@@ -94,7 +94,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return "/static/images/default_profile.jpg"
 
     def get_name(self):
-        if self.surname and self.other_names and self.title:
+        if self.surname and self.other_names:
             return f"{self.surname.title()} {self.other_names.title()}"
         return self.username.split('@')[0].title()
 

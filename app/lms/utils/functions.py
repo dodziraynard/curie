@@ -5,6 +5,9 @@ from io import BytesIO
 from django.core.files import File
 from django.utils.html import strip_tags
 from PIL import Image
+from django.apps import apps
+from django.conf import settings
+from django.contrib.auth.models import Permission
 
 from setup.models import School, SchoolSession
 
@@ -75,3 +78,11 @@ def crop_image(image, filename=None, crop_data=None, quality=50):
     except Exception as e:
         logger.error("Compressing Image: " + str(e))
     return image
+
+
+def relevant_permission_objects():
+    models = ["setupperms"]
+    permissions = Permission.objects.filter(
+        content_type__model__in=models).exclude(codename="manage_payment")\
+    .order_by("name")
+    return permissions
