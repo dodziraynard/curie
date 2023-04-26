@@ -12,6 +12,11 @@ from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
+from accounts.models import Account
+from accounts.models import User
+from dashboard.models import Klass, Staff
+from setup.models import School
+from dashboard.models import Student
 
 from lms.utils.functions import crop_image
 
@@ -24,7 +29,26 @@ class IndexView(PermissionRequiredMixin, View):
 
     @method_decorator(login_required(login_url="accounts:login"))
     def get(self, request):
-        return render(request, self.template_name)
+        user_ids = Account.objects.filter(
+            main_balance__lt=0).order_by("main_balance").values_list(
+                "user", flat=True)[:100]
+        users = User.objects.filter(id__in=user_ids)
+        students = Student.objects.filter(user__in=users)
+
+        school = School.objects.first()
+        class_count = Klass.objects.filter(deleted=False).count()
+        student_count = Student.objects.filter(deleted=False).count()
+        staff_count = Staff.objects.filter(deleted=False).count()
+        user_count = User.objects.filter(deleted=False).count()
+        context = {
+            "students": students,
+            "school": school,
+            "class_count": class_count,
+            "student_count": student_count,
+            "staff_count": staff_count,
+            "user_count": user_count,
+        }
+        return render(request, self.template_name, context)
 
 
 class DeleteModelView(PermissionRequiredMixin, View):
@@ -67,6 +91,7 @@ class DeleteModelView(PermissionRequiredMixin, View):
 
 
 class ModelAgnosticImageUploadView(View):
+
     @method_decorator(login_required(login_url="accounts:login"))
     def post(self, request, model_name, model_id, field_name):
         image_data = request.POST.get('image')

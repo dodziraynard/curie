@@ -260,6 +260,7 @@ class School(ModelMixin):
     email_address = models.EmailField(max_length=255, blank=True, null=True)
     phone = models.CharField(max_length=255, blank=True, null=True)
     logo = models.ImageField(upload_to="school_logos", blank=True, null=True)
+    sms_balance = models.IntegerField(default=0)
     head_teacher = models.OneToOneField("dashboard.Staff",
                                         null=True,
                                         blank=True,

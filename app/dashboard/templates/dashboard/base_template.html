@@ -42,7 +42,11 @@
         <span class="close-sidebar" data-target=".sidebar"><i class="bi bi-x-lg"></i></span>
         <section class="d-flex justify-content-center align-items-center sidebar-header">
             <div class="logo">
+                {% if request.school.logo %}
+                <img src="{{request.school.logo.url}}" alt="UG Logo" height="50">
+                {% else %}
                 <img src="{% static 'images/logo.png' %}" alt="UG Logo" height="50">
+                {% endif %}
             </div>
             <p class="ms-2">GEBLMS</p>
         </section>
@@ -96,7 +100,6 @@
                 <span class="label">Subjects</span>
             </div>
         </a>
-
         {% endif %}
         {% if perms.setup.view_department %}
         <a href="{% url 'dashboard:departments' %}">
@@ -114,7 +117,6 @@
             </div>
         </a>
         {% endif %}
-
         {% if perms.setup.view_house %}
         <a href="{% url 'dashboard:houses' %}">
             <div class="menu-item" id="houses">

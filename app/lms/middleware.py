@@ -5,9 +5,11 @@ from django.core.cache import cache
 from ipware import get_client_ip
 
 from accounts.models import ActivityLog
+from setup.models import School
 
 
 class SingleUserSession(object):
+
     def __init__(self, get_response):
         self.get_response = get_response
 
@@ -15,6 +17,7 @@ class SingleUserSession(object):
         """
         Checks if different session exists for user and deletes it.
         """
+        request.school = School.objects.first()
         if request.user.is_authenticated:
             cache_timeout = 86400
             cache_key = "user_pk_%s_restrict" % request.user.pk
@@ -34,6 +37,7 @@ class SingleUserSession(object):
 
 
 class LogUserVisits(object):
+
     def __init__(self, get_response):
         self.get_response = get_response
 

@@ -8,4 +8,169 @@
 <h4 class="page-header">Dashboard</h4>
 <p class="">Welcome to your analytics dashboard.</p>
 
+<div class="row">
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="text-center">STUDENTS</h4>
+            </div>
+            <div class="card-body">
+                <h2 class="text-center">
+                    {{student_count}}
+                </h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="text-center">STAFF</h4>
+            </div>
+            <div class="card-body">
+                <h2 class="text-center">
+                    {{staff_count}}
+                </h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="text-center">USERS</h4>
+            </div>
+            <div class="card-body">
+                <h2 class="text-center">
+                    {{user_count}}
+                </h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="text-center">CLASSES</h4>
+            </div>
+            <div class="card-body">
+                <h2 class="text-center">
+                    {{class_count}}
+                </h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br>
+<br>
+<br>
+<hr>
+<h4 class="page-header">Current Configuration</h4>
+<div class="row">
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="text-center">CURRENT SESSION</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-center">
+                    {{school.current_session.name}}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="text-center">SMS ID</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-center">
+                    {{school.sms_sender_id}}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="text-center">SMS BALANCE</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-center">
+                    {{school.sms_balance}}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="text-center">SCHOOL NAME</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-center">
+                    {{school.name}}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br>
+<br>
+<hr>
+<h4 class="page-header">Substantial Debt Holders</h4>
+<div class="col-12">
+    <div class="card">
+        <div class="card-body">
+            <table class="table data-table">
+                <thead class="bg-primary text-light">
+                    <tr>
+                        <th>S/N</th>
+                        <th>Student ID</th>
+                        <th>Surname</th>
+                        <th>Other Names</th>
+                        <th>Class</th>
+                        <th>Gender</th>
+                        <th>Phone Number</th>
+                        <th>Balance</th>
+                        {% if perms.dashboard.add_payment %}
+                        <th>Action</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{student.student_id}}</td>
+                        <td>{{student.user.surname|title}}</td>
+                        <td>{{student.user.other_names|title}}</td>
+                        <td>{{student.klass.name }}</td>
+                        <td>{{student.user.gender|title }}</td>
+                        <td>{{student.sms_number }}</td>
+                        <td>{{student.get_balance }}</td>
+
+                        {% if perms.dashboard.add_payment %}
+                        <td class="d-flex">
+                            <a href="{% url 'dashboard:create_update_payment' student.student_id %}"
+                                class="me-3 d-flex btn btn-sm btn-light">
+                                <i class="bi bi-wallet me-1"></i>
+                                Payment
+                            </a>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
 {% endblock %}

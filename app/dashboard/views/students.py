@@ -131,12 +131,17 @@ class CreateUpdateStudentView(PermissionRequiredMixin, CreateUpdateMixin):
                 return render(request, self.template_name, context)
         else:
             user = student.user
-        for key, value in [*request.POST.items(), *request.FILES.items()]:
+
+        for key, value in [*request.POST.items()]:
             if key in ["id"]: continue
             if hasattr(student, key):
                 setattr(student, key, value)
             elif hasattr(user, key):
                 setattr(user, key, value)
+
+        photo = request.FILES.get("photo")
+        if photo:
+            user.photo = photo
 
         user.save()
         student.electives.set(electives)

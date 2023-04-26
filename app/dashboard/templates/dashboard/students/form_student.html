@@ -1,4 +1,4 @@
-<form action="{% url 'dashboard:create_update_student' %}" class="needs-validation my-4" method="POST" novalidate>
+<form action="{% url 'dashboard:create_update_student' %}" class="needs-validation my-4" method="POST" novalidate enctype="multipart/form-data">
     {% csrf_token %}
     <input type="hidden" name="id" value="{{student.id}}">
     <h5>BIOGRAPHY</h5>
@@ -64,6 +64,11 @@
         </div>
         <div class="form-group col-md-6 mt-4">
             <label for="photo">Photo</label>
+            <p class="m-0 p-0">
+                {% if student.user.photo %}
+                Currently: <a href="{{student.user.photo.url}}" class="text-primary" target="_blank">{{student.user.photo.url}}</a>
+                {% endif %}
+            </p>
             <input class="form-control" type="file" name="photo" id="photo">
             <div class="invalid-feedback">
                 Please this field is required.

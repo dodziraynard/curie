@@ -82,6 +82,7 @@ class CreateUpdateStaffView(PermissionRequiredMixin, CreateUpdateMixin):
         else:
             user = staff.user
 
+        photo = request.FILES.get("photo")
         for key, value in [*request.POST.items(), *request.FILES.items()]:
             if key in ["staff_id"]: continue
             if hasattr(staff, key):
@@ -90,4 +91,7 @@ class CreateUpdateStaffView(PermissionRequiredMixin, CreateUpdateMixin):
             elif hasattr(user, key):
                 setattr(user, key, value)
                 user.save()
+        if photo:
+            user.photo = photo
+            user.save()
         return redirect(self.redirect_url or "dashboard:index")
