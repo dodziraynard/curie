@@ -1,0 +1,15 @@
+/*!
+  * Bootstrap v5.1.3 (https://getbootstrap.com/)
+  * Copyright 2011-2021 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
+  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
+  */
+
+/*!
+ * Cropper.js v1.5.12
+ * https://fengyuanchen.github.io/cropperjs
+ *
+ * Copyright 2015-present Chen Fengyuan
+ * Released under the MIT license
+ *
+ * Date: 2021-06-12T08:00:17.411Z
+ */
