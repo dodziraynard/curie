@@ -25,41 +25,132 @@ class ModelMixin(models.Model):
 class SetupPerms(models.Model):
 
     class Meta:
-        managed = False  # No database table creation or deletion  \
-        # operations will be performed for this model.
-        default_permissions = ()  # disable "add", "change", "delete"
-        # and "view" default permissions
+        managed = False
+        default_permissions = ()
         permissions = [
             ('manage_setup', 'Can manage system setup'),
+            ('manage_users', 'Can manage system users'),
             ('view_dashboard', 'Can view dashboard'),
-            ('manage_action_center', 'Can view dashboard'),
+            ("manage_other_report", "Can manage reports others"),
+            ("manage_roles", "Can manage roles"),
 
+            # Action center
+            ('view_action_center', 'Can view action center'),
+            ('manage_action_center', 'Can manage action center'),
+
+            # Subject mapping
+            ('add_subject_mapping', 'Can add subject mapping'),
+            ('view_subject_mapping', 'Can view subject mapping'),
+
+            # Promotion
+            ('view_promotion', 'Can view promotion'),
+            ('add_promotion', 'Can add promotion'),
+            ('revert_promotion', 'Can revert promotion'),
+
+            # Class teacher
+            ('change_class_teacher_remark', 'Can change class teacher remark'),
+
+            # House master
+            ('change_house_master_remark', 'Can change house master remark'),
+
+            # Assisant head
+            ('append_signature', 'Can append signature to reports'),
+
+            # Academic records
+            ('change_academic_record', 'Can change academic records'),
+
+            ###### ENTITIES ######
+            # User
+            ("view_user", "Can view user"),
+            ("add_user", "Can add user"),
+            ("change_user", "Can change user"),
+            ("delete_user", "Can delete user"),
+
+            # Student
             ("view_student", "Can view student"),
             ("add_student", "Can add student"),
             ("change_student", "Can change student"),
             ("delete_student", "Can delete student"),
+
+            # Staff
             ("view_staff", "Can view staff"),
             ("add_staff", "Can add staff"),
             ("change_staff", "Can change staff"),
             ("delete_staff", "Can delete staff"),
+
+            # Class
             ("view_class", "Can view class"),
             ("add_class", "Can add class"),
             ("change_class", "Can change class"),
             ("delete_class", "Can delete class"),
+
+            # Subject
             ("view_subject", "Can view subject"),
             ("add_subject", "Can add subject"),
             ("change_subject", "Can change subject"),
             ("delete_subject", "Can delete subject"),
+
+            # Course
+            ("view_course", "Can view course"),
+            ("add_course", "Can add course"),
+            ("change_course", "Can change course"),
+            ("delete_course", "Can delete course"),
+
+            # Department
             ("view_department", "Can view department"),
             ("add_department", "Can add department"),
             ("change_department", "Can change department"),
             ("delete_department", "Can delete department"),
+
+            # House
             ("view_house", "Can view house"),
             ("add_house", "Can add house"),
             ("change_house", "Can change house"),
             ("delete_house", "Can delete house"),
 
-            # Accounting
+            # Attitude
+            ("view_attitude", "Can view attitude"),
+            ("add_attitude", "Can add attitude"),
+            ("change_attitude", "Can change attitude"),
+            ("delete_attitude", "Can delete attitude"),
+
+            # Conduct
+            ("view_conduct", "Can view conduct"),
+            ("add_conduct", "Can add conduct"),
+            ("change_conduct", "Can change conduct"),
+            ("delete_conduct", "Can delete conduct"),
+
+            # Interest
+            ("view_interest", "Can view interest"),
+            ("add_interest", "Can add interest"),
+            ("change_interest", "Can change interest"),
+            ("delete_interest", "Can delete interest"),
+
+            # Track
+            ("view_track", "Can view track"),
+            ("add_track", "Can add track"),
+            ("change_track", "Can change track"),
+            ("delete_track", "Can delete track"),
+
+            # Remark
+            ("view_remark", "Can view remark"),
+            ("add_remark", "Can add remark"),
+            ("change_remark", "Can change remark"),
+            ("delete_remark", "Can delete remark"),
+
+            # School session
+            ("view_schooolsession", "Can view schooolsession"),
+            ("add_schooolsession", "Can add schooolsession"),
+            ("change_schooolsession", "Can change schooolsession"),
+            ("delete_schooolsession", "Can delete schooolsession"),
+
+            # Grading system
+            ("view_gradingsystem", "Can view gradingsystem"),
+            ("add_gradingsystem", "Can add gradingsystem"),
+            ("change_gradingsystem", "Can change gradingsystem"),
+            ("delete_gradingsystem", "Can delete schooolsession"),
+
+            # ACCOUNTING
             ('view_accounting', 'Can access accounting menu'),
             # Invoices
             ("view_invoice", "Can view invoice"),
@@ -68,17 +159,24 @@ class SetupPerms(models.Model):
             ("apply_invoice", "Can apply invoice"),
             ("delete_invoice", "Can delete invoice"),
 
-            # Invoice items
+            # Invoices
             ("view_invoiceitem", "Can view invoice item"),
             ("add_invoiceitem", "Can add invoice item"),
             ("change_invoiceitem", "Can change invoice item"),
             ("delete_invoiceitem", "Can delete invoice item"),
+
+            # Paymnet
+            ("view_payment", "Can view payment item"),
+            ("add_payment", "Can add payment item"),
+            ("change_payment", "Can change payment item"),
+            ("delete_payment", "Can delete payment item"),
 
             # Alert
             ('view_alert', 'Can access alert menu'),
             ('compose_sms', 'Can compose sms'),
             ('send_pin_notification', 'Can send pin notification'),
             ('send_report_notification', 'Can send report notification'),
+            ('resend_notification', 'Can resend notifications'),
             ('view_notification_history', 'Can view notification history'),
 
             # Reporting

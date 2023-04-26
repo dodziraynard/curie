@@ -46,6 +46,17 @@
         </div>
     </div>
     <div class="card-body">
+        <form class="d-flex align-items-center my-3">
+            <input type="search" class="form-control" value="{{query}}" name="query" placeholder="Search name and id">
+            <label for="class" class="mx-2">Class</label>
+            <select class="form-select" name="class_id" id="class_id">
+                <option value="">---All---</option>
+                {% for klass in classes %}
+                <option value="{{klass.id}}" {% if class_id|add:"0" == klass.id %}selected{% endif %}>{{klass.name}}</option>
+                {% endfor %}
+            </select>
+            <button class="btn btn-sm btn-primary mx-2">Load</button>
+        </form>
         <div class="col-12 mx-auto" style="overflow-x: auto;">
             <table class="table data-table">
                 <thead class="bg-primary text-light">
@@ -57,6 +68,7 @@
                         <th>Class</th>
                         <th>Gender</th>
                         <th>Phone Number</th>
+                        <th>Balance</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -70,8 +82,9 @@
                         <td>{{student.klass.name }}</td>
                         <td>{{student.user.gender|title }}</td>
                         <td>{{student.sms_number }}</td>
+                        <td>{{student.get_balance }}</td>
                         <td class="d-flex">
-                            {% if perms.dashboard.manage_accounting %}
+                            {% if perms.dashboard.add_payment %}
                             <a href="{% url 'dashboard:create_update_payment' student.student_id %}"
                                 class="me-3 d-flex btn btn-sm btn-light">
                                 <i class="bi bi-wallet me-1"></i>

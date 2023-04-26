@@ -11,6 +11,7 @@ from django.views import View
 from dashboard.models import Record, SessionReport
 from graphql_api.models.accounting import Invoice
 from setup.models import School, SchoolSession
+from num2words import num2words
 
 from .utils import render_to_pdf
 
@@ -18,7 +19,7 @@ from .utils import render_to_pdf
 class SingleAcademicRecordReportView(PermissionRequiredMixin, View):
     template_name = "pdf_processor/single-student-report.html"
     permission_required = [
-        "dashboard.view_dashboard",
+        "setup.view_dashboard",
     ]
 
     @method_decorator(login_required(login_url="accounts:login"))
@@ -54,7 +55,7 @@ class SingleAcademicRecordReportView(PermissionRequiredMixin, View):
 class StudentFullReportView(PermissionRequiredMixin, View):
     template_name = "pdf_processor/report_per_session.html"
     permission_required = [
-        "dashboard.view_dashboard",
+        "setup.view_dashboard",
     ]
 
     @method_decorator(login_required(login_url="accounts:login"))
@@ -85,7 +86,7 @@ class StudentFullReportView(PermissionRequiredMixin, View):
 class BulkAcademicRecordReportView(PermissionRequiredMixin, View):
     template_name = "pdf_processor/bulk-student-report.html"
     permission_required = [
-        "dashboard.view_dashboard",
+        "setup.view_dashboard",
     ]
 
     @method_decorator(login_required(login_url="accounts:login"))
@@ -104,11 +105,18 @@ class BulkAcademicRecordReportView(PermissionRequiredMixin, View):
 
         session_reports = SessionReport.objects.filter(session=session)
 
-        data = [
-            (records.filter(student__student_id=student_id),
-             session_reports.filter(student__student_id=student_id).first())
-            for student_id in student_ids
-        ]
+        data = []
+
+        for student_id in student_ids:
+            st_records = records.filter(student__student_id=student_id)
+            positions = st_records.values_list("position", flat=True)
+            st_reports = session_reports.filter(
+                student__student_id=student_id).first()
+            average_pos = "N/A"
+            if all(positions):
+                average_pos = num2words(sum(positions) // st_records.count(),
+                                        to="ordinal_num")
+            data.append((st_records, st_reports, average_pos))
 
         context = {
             "session": session,
@@ -133,7 +141,7 @@ class BulkAcademicRecordReportView(PermissionRequiredMixin, View):
 class BulkStudentBillSheet(PermissionRequiredMixin, View):
     template_name = "pdf_processor/bulk-student-bill-sheet.html"
     permission_required = [
-        "dashboard.view_dashboard",
+        "setup.view_dashboard",
     ]
 
     @method_decorator(login_required(login_url="accounts:login"))
@@ -149,7 +157,8 @@ class BulkStudentBillSheet(PermissionRequiredMixin, View):
             data.append(statement)
 
         for student in invoice.students.all():
-            arears = round(total - float(student.user.account.amount_payable), 2) * -1
+            arears = round(total - float(student.user.account.amount_payable),
+                           2) * -1
             records.append([student, total, arears, data[::]])
 
         context = {

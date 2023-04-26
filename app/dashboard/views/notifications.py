@@ -11,6 +11,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views import View
+from django.core.exceptions import PermissionDenied
 
 from accounts.models import User
 from dashboard.models import (Klass, Notification, Record, SessionReport,
@@ -22,8 +23,8 @@ from setup.models import School, SchoolSession
 class NotificationIndexView(PermissionRequiredMixin, View):
     template_name = "dashboard/notifications/index.html"
     permission_required = [
-        "dashboard.view_dashboard",
-        "setup.manage_notifications",
+        "setup.view_dashboard",
+        "setup.view_alert",
     ]
 
     @method_decorator(login_required(login_url="accounts:login"))
@@ -34,8 +35,8 @@ class NotificationIndexView(PermissionRequiredMixin, View):
 class NotificationHistoryView(PermissionRequiredMixin, View):
     template_name = "dashboard/notifications/notifications.html"
     permission_required = [
-        "dashboard.view_dashboard",
-        "setup.manage_notifications",
+        "setup.view_dashboard",
+        "setup.view_notification_history",
     ]
 
     @method_decorator(login_required(login_url="accounts:login"))
@@ -63,6 +64,9 @@ class NotificationHistoryView(PermissionRequiredMixin, View):
         return render(request, self.template_name, context)
 
     def post(self, request):
+        if not request.user.has_perm("setup.resend_notification"):
+            raise PermissionDenied()
+
         notificaiont_id = request.POST.get("notification_id")
         notificaion = get_object_or_404(Notification, id=notificaiont_id)
         send_notification.delay(notificaion.id)
@@ -73,8 +77,8 @@ class NotificationHistoryView(PermissionRequiredMixin, View):
 class ComposeSMS(PermissionRequiredMixin, View):
     template_name = "dashboard/notifications/compose_sms.html"
     permission_required = [
-        "dashboard.view_dashboard",
-        "setup.manage_notifications",
+        "setup.view_dashboard",
+        "setup.compose_sms",
     ]
 
     @method_decorator(login_required(login_url="accounts:login"))
@@ -107,8 +111,8 @@ class ComposeSMS(PermissionRequiredMixin, View):
 class SendPINNotification(PermissionRequiredMixin, View):
     template_name = "dashboard/notifications/pin_notification.html"
     permission_required = [
-        "dashboard.view_dashboard",
-        "setup.manage_notifications",
+        "setup.view_dashboard",
+        "setup.send_pin_notification",
     ]
 
     @method_decorator(login_required(login_url="accounts:login"))
@@ -150,8 +154,8 @@ class SendPINNotification(PermissionRequiredMixin, View):
 class ConfirmPINNotification(PermissionRequiredMixin, View):
     template_name = "dashboard/notifications/confirm_pin_notification.html"
     permission_required = [
-        "dashboard.view_dashboard",
-        "setup.manage_notifications",
+        "setup.view_dashboard",
+        "setup.send_pin_notification",
     ]
 
     @method_decorator(login_required(login_url="accounts:login"))
@@ -205,8 +209,8 @@ class ConfirmPINNotification(PermissionRequiredMixin, View):
 class PreviewSMS(PermissionRequiredMixin, View):
     template_name = "dashboard/notifications/preview_sms.html"
     permission_required = [
-        "dashboard.view_dashboard",
-        "setup.manage_notifications",
+        "setup.view_dashboard",
+        "setup.compose_sms",
     ]
 
     @method_decorator(login_required(login_url="accounts:login"))
@@ -252,8 +256,8 @@ class PreviewSMS(PermissionRequiredMixin, View):
 class SendReportNotification(PermissionRequiredMixin, View):
     template_name = "dashboard/notifications/report_notifications.html"
     permission_required = [
-        "dashboard.view_dashboard",
-        "setup.manage_notifications",
+        "setup.view_dashboard",
+        "setup.send_report_notification",
     ]
 
     @method_decorator(login_required(login_url="accounts:login"))
@@ -301,8 +305,8 @@ class SendReportNotification(PermissionRequiredMixin, View):
 class ConfirmReportNotification(PermissionRequiredMixin, View):
     template_name = "dashboard/notifications/report_notification_confirmation.html"
     permission_required = [
-        "dashboard.view_dashboard",
-        "setup.manage_notifications",
+        "setup.view_dashboard",
+        "setup.send_report_notification",
     ]
 
     @method_decorator(login_required(login_url="accounts:login"))
@@ -338,7 +342,7 @@ class ConfirmReportNotification(PermissionRequiredMixin, View):
         for student_id in student_ids:
             student = Student.objects.filter(student_id=student_id)
             student_records = records.filter(student=student)
-            
+
             message = f"STUDENT REPORT\nName: {student.user.get_name()}\nClass: {student_records.first().klass.name}"
             for record in student_records:
                 message += f"\n{record.subject.name.title()} - {record.grade}"
@@ -348,13 +352,12 @@ class ConfirmReportNotification(PermissionRequiredMixin, View):
                     "pdf:bulk_report"
                 ) + f"?session={session_id}&student_ids={student_id}"
             if student.sms_number:
-                Notification.objects.create(
-                    text=message,
-                    id_tag=id_tag,
-                    status="new",
-                    purpose="REPORT",
-                    destination=student.sms_number,
-                    initiated_by=request.user)
+                Notification.objects.create(text=message,
+                                            id_tag=id_tag,
+                                            status="new",
+                                            purpose="REPORT",
+                                            destination=student.sms_number,
+                                            initiated_by=request.user)
 
         send_notifications_with_id_tag.delay(id_tag)
         messages.info(request, "Messages queued for delivery successfully.")

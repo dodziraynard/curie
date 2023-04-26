@@ -5,6 +5,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
+from django.db.models import Q
 
 from dashboard.mixins import CreateUpdateMixin
 from dashboard.models import Staff
@@ -16,14 +17,24 @@ User = get_user_model()
 class StaffView(PermissionRequiredMixin, View):
     template_name = "dashboard/staff/staff.html"
     permission_required = [
-        "dashboard.view_staff",
+        "setup.view_staff",
     ]
 
     @method_decorator(login_required(login_url="accounts:login"))
     def get(self, request):
-        staff = Staff.objects.all()
+        staff = Staff.objects.filter(deleted=False)
+        query = request.GET.get("query")
+
+        if query:
+            staff = staff.filter(
+                Q(staff_id__icontains=query)
+                | Q(user__surname__icontains=query)
+                | Q(user__other_names__icontains=query))
+
         context = {
             "staff": staff,
+            **{k: v
+               for k, v in request.GET.items()},
         }
         return render(request, self.template_name, context)
 
@@ -35,8 +46,8 @@ class CreateUpdateStaffView(PermissionRequiredMixin, CreateUpdateMixin):
     object_name = "staff"
     redirect_url = "dashboard:staff"
     permission_required = (
-        "dashboard.add_staff",
-        "dashboard.change_staff",
+        "setup.add_staff",
+        "setup.change_staff",
     )
 
     @method_decorator(login_required(login_url="accounts:login"))

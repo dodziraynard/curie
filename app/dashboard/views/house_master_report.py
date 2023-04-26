@@ -12,7 +12,7 @@ from setup.models import Remark, SchoolSession
 class HouseMasterSessionReportFilterView(PermissionRequiredMixin, View):
     template_name = "dashboard/house_master_report/report_filter.html"
     permission_required = [
-        "dashboard.view_dashboard",
+        "setup.change_house_master_remark",
     ]
 
     @method_decorator(login_required(login_url="accounts:login"))
@@ -30,7 +30,7 @@ class HouseMasterSessionReportFilterView(PermissionRequiredMixin, View):
 class HouseMasterSessionReportDataView(PermissionRequiredMixin, View):
     template_name = "dashboard/house_master_report/house_master_report_data.html"
     permission_required = [
-        "dashboard.view_dashboard",
+        "setup.change_house_master_remark",
     ]
 
     @method_decorator(login_required(login_url="accounts:login"))

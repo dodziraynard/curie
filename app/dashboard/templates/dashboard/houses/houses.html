@@ -33,7 +33,7 @@
     <div class="card-header d-flex justify-content-between">
         <h4>Houses</h4>
         <div class="">
-            {% if perms.dashboard.add_house %}
+            {% if perms.setup.add_house %}
             <button class="d-flex btn btn-sm btn-primary my-1" data-bs-toggle="modal" data-bs-target="#houseModal"><i
                     class="bi bi-plus"></i> Add
             </button>
@@ -41,7 +41,7 @@
         </div>
     </div>
     <div class="card-body">
-        <div class="col-md-10 mx-auto" style="overflow-x: auto;">
+        <div class="" style="overflow-x: auto;">
             <table class="table data-table">
                 <thead class="bg-primary text-light">
                     <tr>
@@ -60,14 +60,14 @@
                         <td>{{house.name}}</td>
                         <td>{{house.house_master.user.get_name}}</td>
                         <td class="d-flex">
-                            {% if perms.dashboard.change_house %}
+                            {% if perms.setup.change_house %}
                             <a href="{% url 'dashboard:create_update_house' %}?house_id={{house.id}}"
                                 class="me-3 d-flex btn btn-light btn-sm">
                                 <i class="bi bi-pencil me-1"></i>
                                 Edit
                             </a>
                             {% endif %}
-                            {% if perms.dashboard.delete_house %}
+                            {% if perms.setup.delete_house %}
                             <form action="{% url 'dashboard:delete_model' house.model_name house.id %}" method="POST"
                                 class="requires-confirmation"
                                 data-message="Click on okay to permanently delete {{house.name}}">

@@ -25,7 +25,7 @@ class ProfileView(View):
 class UsersView(PermissionRequiredMixin, View):
     template_name = 'accounts/users/users.html'
     permission_required = [
-        "accounts.view_user",
+        "setup.view_user",
     ]
 
     def get(self, request):
@@ -44,8 +44,8 @@ class CreateUpdatUserView(PermissionRequiredMixin, View):
     object_name = "user"
     redirect_url = "accounts:users"
     permission_required = (
-        "accounts.add_user",
-        "accounts.change_user",
+        "setup.add_user",
+        "setup.change_user",
     )
 
     @method_decorator(login_required(login_url="accounts:login"))
@@ -71,7 +71,8 @@ class CreateUpdatUserView(PermissionRequiredMixin, View):
 
         if password and password != confirm_password:
             messages.error(request, "Passwords do not match.")
-            return redirect(reverse("accounts:create_update_user")+"?id="+object_id)
+            return redirect(
+                reverse("accounts:create_update_user") + "?id=" + object_id)
 
         obj = self.model_class.objects.filter(id=object_id).first()
         form = self.form_class(request.POST, instance=obj)
@@ -79,7 +80,8 @@ class CreateUpdatUserView(PermissionRequiredMixin, View):
             user = form.save()
             user.groups.set(groups)
             user.changed_password = True
-            user.set_password(password)
+            if password:
+                user.set_password(password)
             user.save()
             return redirect(self.redirect_url or "dashboard:index")
         else:

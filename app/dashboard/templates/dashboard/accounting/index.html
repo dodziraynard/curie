@@ -19,18 +19,22 @@
     <div class="card-body">
         <div class="col-md-10 mx-auto" style="overflow-x: auto;">
             <div class="d-flex justify-content-center flex-wrap">
+                {% if perms.setup.view_invoice %}
                 <div class="col-md-3 col-10 d-flex m-2 border flex-column">
                     <h2 class="text-center p-1"><i class="bi bi-receipt"></i></h2>
                     <a href="{% url 'dashboard:invoices' %}" class="btn btn p-4 text-center btn-light">
                         <h5 class="text-primary">Invoices</h5>
                     </a>
                 </div>
+                {% endif %}
+                {% if perms.setup.view_payment %}
                 <div class="col-md-3 col-10 d-flex m-2 border flex-column">
                     <h2 class="text-center p-1"><i class="bi bi-wallet"></i></h2>
                     <a href="{% url 'dashboard:payments' %}" class="btn btn p-4 text-center btn-light">
                         <h5 class="text-primary">Payments</h5>
                     </a>
                 </div>
+                {% endif %}
             </div>
         </div>
     </div>

@@ -12,13 +12,20 @@ from setup.models import Attitude, Conduct, Interest, Remark, SchoolSession
 class ClassTeacherSessionReportFilterView(PermissionRequiredMixin, View):
     template_name = "dashboard/class_teacher_report/report_filter.html"
     permission_required = [
-        "dashboard.view_dashboard",
+        "setup.change_class_teacher_remark",
     ]
 
     @method_decorator(login_required(login_url="accounts:login"))
     def get(self, request):
         sessions = SchoolSession.objects.all().order_by("-start_date")
-        classes = Klass.objects.all()
+
+        if not request.user.has_perm("setup.manage_other_report"):
+            if hasattr(request.user, "staff"):
+                classes = request.user.staff.classes.all()
+            else:
+                classes = Klass.objects.none()
+        else:
+            classes = Klass.objects.all()
 
         context = {
             "sessions": sessions,
@@ -30,7 +37,7 @@ class ClassTeacherSessionReportFilterView(PermissionRequiredMixin, View):
 class ClassTeacherSessionReportDataView(PermissionRequiredMixin, View):
     template_name = "dashboard/class_teacher_report/class_teacher_report_data.html"
     permission_required = [
-        "dashboard.view_dashboard",
+        "setup.change_class_teacher_remark",
     ]
 
     @method_decorator(login_required(login_url="accounts:login"))
@@ -109,7 +116,7 @@ class ClassTeacherSessionReportDataView(PermissionRequiredMixin, View):
             klass = get_object_or_404(Klass, id=class_id)
 
             # Check whether user has the permission to modify this record.
-            if not (request.user.has_perm("dashboard.manage_other_report")
+            if not (request.user.has_perm("setup.manage_other_report")
                     or has_class_teacher_permission
                     ):  # Administrative permission.
                 messages.error(

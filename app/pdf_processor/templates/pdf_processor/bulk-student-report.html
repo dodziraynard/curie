@@ -20,7 +20,7 @@
     <h3 style="color: red">No result found.</h3>
     {% else %}
 
-    {% for records, session_report in data %}
+    {% for records, session_report, average_position in data %}
 
     {% include 'pdf_processor/blocks/report-ui.html' %}
 

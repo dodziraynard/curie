@@ -18,7 +18,9 @@ from setup.models import (Attitude, Conduct, GradingSystem, Interest, Remark,
 
 class IndexView(View):
     template_name = 'setup/index.html'
-    permission_required = ('setup.can_setup_system')
+    permission_required = [
+        'setup.manage_setup',
+    ]
 
     @method_decorator(login_required(login_url="accounts:login"))
     def get(self, request):
@@ -51,7 +53,9 @@ class IndexView(View):
 
 class RoleManagementView(PermissionRequiredMixin, View):
     template_name = 'setup/roles_management.html'
-    permission_required = ('setup.can_setup_system', 'setup.can_manage_roles')
+    permission_required = [
+        'setup.manage_roles',
+    ]
 
     @method_decorator(login_required(login_url="accounts:login"))
     def get(self, request, role_id):
@@ -84,11 +88,9 @@ class CreateUpdateGroup(PermissionRequiredMixin, CreateUpdateMixin):
     model_class = Group
     redirect_url = "setup:index"
     object_name = "role"
-    permission_required = (
-        "setup.manage_setup",
-        "auth.add_group",
-        "auth.change_group",
-    )
+    permission_required = [
+        "setup.manage_roles",
+    ]
 
 
 class CreateUpdateAttitudeView(PermissionRequiredMixin, CreateUpdateMixin):

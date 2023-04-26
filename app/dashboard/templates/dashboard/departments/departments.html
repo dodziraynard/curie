@@ -33,7 +33,7 @@
     <div class="card-header d-flex justify-content-between">
         <h4>Departments</h4>
         <div class="">
-            {% if perms.dashboard.add_department %}
+            {% if perms.setup.add_department %}
             <button class="d-flex btn btn-sm btn-primary my-1" data-bs-toggle="modal"
                 data-bs-target="#departmentModal"><i class="bi bi-plus"></i> Add
             </button>
@@ -41,7 +41,7 @@
         </div>
     </div>
     <div class="card-body">
-        <div class="col-md-10 mx-auto" style="overflow-x: auto;">
+        <div class="" style="overflow-x: auto;">
             <table class="table data-table">
                 <thead class="bg-primary text-light">
                     <tr>
@@ -58,14 +58,14 @@
                         <td>{{department.name}}</td>
                         <td>{{department.hod.user.get_name}}</td>
                         <td class="d-flex">
-                            {% if perms.dashboard.change_department %}
+                            {% if perms.setup.change_department %}
                             <a href="{% url 'dashboard:create_update_department' %}?department_id={{department.id}}"
                                 class="me-3 d-flex btn btn-sm btn-light">
                                 <i class="bi bi-pencil me-1"></i>
                                 Edit
                             </a>
                             {% endif %}
-                            {% if perms.dashboard.delete_department %}
+                            {% if perms.setup.delete_department %}
                             <form action="{% url 'dashboard:delete_model' department.model_name department.id %}"
                                 method="POST" class="requires-confirmation"
                                 data-message="Click on okay to permanently delete '{{department.name}}'">

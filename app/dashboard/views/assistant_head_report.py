@@ -12,7 +12,7 @@ from setup.models import Attitude, Conduct, Interest, Remark, SchoolSession
 class AssistantHeadSessionReportFilterView(PermissionRequiredMixin, View):
     template_name = "dashboard/assistant_head_report/report_filter.html"
     permission_required = [
-        "dashboard.view_dashboard",
+        "setup.append_signature",
     ]
 
     @method_decorator(login_required(login_url="accounts:login"))
@@ -28,7 +28,7 @@ class AssistantHeadSessionReportFilterView(PermissionRequiredMixin, View):
 class AssistantHeadSessionReportDataView(PermissionRequiredMixin, View):
     template_name = "dashboard/assistant_head_report/assistant_head_report_data.html"
     permission_required = [
-        "dashboard.view_dashboard",
+        "setup.append_signature",
     ]
 
     @method_decorator(login_required(login_url="accounts:login"))

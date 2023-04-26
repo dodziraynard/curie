@@ -32,7 +32,7 @@
 <section class="card">
     <div class="card-header d-flex justify-content-end">
         <div class="">
-            {% if perms.dashboard.add_invoice %}
+            {% if perms.setup.add_invoice %}
             <button class="d-flex btn btn-sm btn-primary my-1" data-bs-toggle="modal" data-bs-target="#invoiceModal"><i
                     class="bi bi-plus"></i> New Invoice
             </button>
@@ -73,7 +73,7 @@
                                 <i class="bi bi-list me-1"></i>
                                 Details
                             </a>
-                            {% if perms.dashboard.delete_invoice %}
+                            {% if perms.setup.delete_invoice %}
                             <form action="{% url 'dashboard:delete_model' invoice.model_name invoice.id %}" method="POST"
                                 class="requires-confirmation"
                                 data-message="Click on okay to permanently delete {{invoice.name}}">

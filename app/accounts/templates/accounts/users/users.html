@@ -34,7 +34,7 @@
     <div class="card-header d-flex justify-content-between">
         <h4>Users</h4>
         <div class="">
-            {% if perms.accounts.add_user %}
+            {% if perms.setup.add_user %}
             <button class="d-flex btn btn-sm btn-primary my-1" data-bs-toggle="modal" data-bs-target="#userModal"><i
                     class="bi bi-plus"></i> Add
             </button>
@@ -69,14 +69,14 @@
                             {% endfor %}
                         </td>
                         <td class="d-flex">
-                            {% if perms.accounts.change_user %}
+                            {% if perms.setup.change_user %}
                             <a href="{% url 'accounts:create_update_user' %}?id={{user.id}}"
                                 class="me-3 d-flex btn btn-sm btn-light">
                                 <i class="bi bi-pencil me-1"></i>
                                 Edit
                             </a>
                             {% endif %}
-                            {% if perms.accounts.delete_user %}
+                            {% if perms.setup.delete_user %}
                             <form action="{% url 'dashboard:delete_model' user.model_name user.id %}" method="POST"
                                 class="requires-confirmation"
                                 data-message="Click on okay to permanently delete '{{user.get_name}}'.">

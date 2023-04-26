@@ -33,7 +33,7 @@
     <div class="card-header d-flex justify-content-between">
         <h4>Classes</h4>
         <div class="">
-            {% if perms.dashboard.add_class %}
+            {% if perms.setup.add_class %}
             <button class="d-flex btn btn-sm btn-primary my-1" data-bs-toggle="modal" data-bs-target="#classModal"><i
                     class="bi bi-plus"></i> Add
             </button>
@@ -41,7 +41,7 @@
         </div>
     </div>
     <div class="card-body">
-        <div class="col-md-10 mx-auto" style="overflow-x: auto;">
+        <div class="" style="overflow-x: auto;">
             <table class="table data-table">
                 <thead class="bg-primary text-light">
                     <tr>
@@ -59,19 +59,21 @@
                     <tr>
                         <td>{{forloop.counter}}</td>
                         <td>{{class.class_id}}</td>
-                        <td>{{class.name}}</td>
+                        <td>
+                            <a href="{% url 'dashboard:students' %}?class_id={{class.id}}">{{class.name}}</a>
+                        </td>
                         <td>{{class.class_teacher.user.get_name}}</td>
                         <td>{{class.stream}}</td>
                         <td>{{class.stage}}</td>
                         <td class="d-flex">
-                            {% if perms.dashboard.change_class %}
+                            {% if perms.setup.change_class %}
                             <a href="{% url 'dashboard:create_update_class' %}?id={{class.id}}"
                                 class="me-3 d-flex btn btn-sm btn-light">
                                 <i class="bi bi-pencil me-1"></i>
                                 Edit
                             </a>
                             {% endif %}
-                            {% if perms.dashboard.delete_class %}
+                            {% if perms.setup.delete_class %}
                             <form action="{% url 'dashboard:delete_model' class.model_name class.id %}" method="POST"
                                 class="requires-confirmation"
                                 data-message="Click on okay to permanently delete '{{class.name}};.">

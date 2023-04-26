@@ -63,6 +63,9 @@ class Student(ModelMixin):
             ('promote_student', 'Can promote students'),
         ]
 
+    def get_balance(self):
+        return self.user.account.balance
+
     def save(self, *args, **kwargs):
         COMPLETE_SCHOOL_DURATION = 3
         if self.klass:
@@ -201,6 +204,7 @@ class Subject(ModelMixin):
                                    null=True,
                                    blank=True,
                                    on_delete=models.CASCADE)
+    is_elective = models.BooleanField()
 
     class Meta:
         db_table = "subjects"
@@ -214,7 +218,6 @@ class Subject(ModelMixin):
             num += klass.get_student_count()
         return num
 
-    is_elective = models.BooleanField()
 
     class Meta:
         db_table = "subjects"

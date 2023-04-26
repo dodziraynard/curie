@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
+from lms.utils.constants import InvoiceStatus
 
 from dashboard.models import Klass, Student
 from dashboard.tasks import update_students_account
@@ -17,7 +18,7 @@ from setup.models import SchoolSession
 class AccountingIndexView(PermissionRequiredMixin, View):
     template_name = "dashboard/accounting/index.html"
     permission_required = [
-        "dashboard.view_dashboard",
+        "setup.view_dashboard",
         "setup.manage_accounting",
     ]
 
@@ -29,7 +30,7 @@ class AccountingIndexView(PermissionRequiredMixin, View):
 class InvoicesView(PermissionRequiredMixin, View):
     template_name = "dashboard/accounting/invoices.html"
     permission_required = [
-        "dashboard.view_dashboard",
+        "setup.view_dashboard",
         "setup.manage_accounting",
         "setup.manage_accounting",
     ]
@@ -59,8 +60,9 @@ class InvoicesView(PermissionRequiredMixin, View):
 class CreateUpdateInvoiceView(PermissionRequiredMixin, View):
     template_name = "dashboard/accounting/invoices.html"
     permission_required = [
-        "dashboard.view_dashboard",
+        "setup.view_dashboard",
         "setup.manage_accounting",
+        "setup.add_invoice",
     ]
 
     @method_decorator(login_required(login_url="accounts:login"))
@@ -96,8 +98,9 @@ class CreateUpdateInvoiceView(PermissionRequiredMixin, View):
 class InvoiceDetailsView(PermissionRequiredMixin, View):
     template_name = "dashboard/accounting/invoice_details.html"
     permission_required = [
-        "dashboard.view_dashboard",
+        "setup.view_dashboard",
         "setup.manage_accounting",
+        "setup.add_invoice",
     ]
 
     @method_decorator(login_required(login_url="accounts:login"))
@@ -145,8 +148,9 @@ class InvoiceDetailsView(PermissionRequiredMixin, View):
 class CreateUpdateInvoiceItem(PermissionRequiredMixin, View):
     template_name = "dashboard/accounting/edit_invoice_item.html"
     permission_required = [
-        "dashboard.view_dashboard",
+        "setup.view_dashboard",
         "setup.manage_accounting",
+        "setup.add_invoiceitem",
     ]
 
     @method_decorator(login_required(login_url="accounts:login"))
@@ -169,6 +173,9 @@ class CreateUpdateInvoiceItem(PermissionRequiredMixin, View):
         amount = request.POST.get("amount")
         type = request.POST.get("type")
 
+        invoice.status = InvoiceStatus.PENDING.value
+        invoice.save()
+
         if not invoice_item:
             invoice_item = InvoiceItem.objects.create(invoice=invoice,
                                                       name=name,
@@ -188,9 +195,9 @@ class CreateUpdateInvoiceItem(PermissionRequiredMixin, View):
 class PaymentsView(PermissionRequiredMixin, View):
     template_name = "dashboard/accounting/payments.html"
     permission_required = [
-        "dashboard.view_dashboard",
+        "setup.view_dashboard",
         "setup.manage_accounting",
-        "setup.manage_accounting",
+        "setup.add_payment",
     ]
 
     @method_decorator(login_required(login_url="accounts:login"))
@@ -209,7 +216,7 @@ class PaymentsView(PermissionRequiredMixin, View):
         if to_date:
             transactions = transactions.filter(created_at__lte=to_date)
         transactions = transactions.order_by("-created_at")
-        
+
         context = {
             "transactions": transactions[:300],
             "sessions": SchoolSession.objects.filter(deleted=False),
@@ -233,8 +240,10 @@ class PaymentsView(PermissionRequiredMixin, View):
 class CreateUpdatePayments(PermissionRequiredMixin, View):
     template_name = "dashboard/accounting/payment_detail.html"
     permission_required = [
-        "dashboard.view_dashboard",
+        "setup.view_dashboard",
         "setup.manage_accounting",
+        "setup.add_payment",
+        "setup.change_payment",
     ]
 
     @method_decorator(login_required(login_url="accounts:login"))

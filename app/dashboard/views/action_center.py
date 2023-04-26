@@ -7,6 +7,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
+from django.core.exceptions import PermissionDenied
 
 from dashboard.models import (Klass, Record, Staff, Student,
                               StudentPromotionHistory, Subject, SubjectMapping)
@@ -19,7 +20,7 @@ logger = logging.getLogger("system")
 class ActionCenterView(PermissionRequiredMixin, View):
     template_name = "dashboard/action_center/index.html"
     permission_required = [
-        "dashboard.view_dashboard",
+        "setup.view_action_center",
     ]
 
     @method_decorator(login_required(login_url="accounts:login"))
@@ -31,7 +32,7 @@ class ActionCenterView(PermissionRequiredMixin, View):
 class SubjectMappingView(PermissionRequiredMixin, View):
     template_name = "dashboard/action_center/subject_mapping.html"
     permission_required = [
-        "dashboard.view_dashboard",
+        "setup.view_subject_mapping",
     ]
 
     @method_decorator(login_required(login_url="accounts:login"))
@@ -102,8 +103,8 @@ class SubjectMappingView(PermissionRequiredMixin, View):
 class StudentPromotionView(PermissionRequiredMixin, View):
     template_name = "dashboard/action_center/student_promotion.html"
     permission_required = [
-        "dashboard.view_dashboard",
-        "dashboard.promote_student",
+        "setup.view_dashboard",
+        "setup.view_promotion",
     ]
 
     @method_decorator(login_required(login_url="accounts:login"))
@@ -136,6 +137,8 @@ class StudentPromotionView(PermissionRequiredMixin, View):
 
     @method_decorator(login_required(login_url="accounts:login"))
     def post(self, request):
+        if not request.user.has_perm("setup.add_promotion"):
+            raise PermissionDenied()
         exceptions = request.POST.get("exceptions", "")
         step = request.POST.get("step")
         if not (step and step.lstrip("-").isdigit()):
@@ -166,8 +169,8 @@ class StudentPromotionView(PermissionRequiredMixin, View):
 
 class RevertPromotionView(PermissionRequiredMixin, View):
     permission_required = [
-        "dashboard.view_dashboard",
-        "dashboard.promote_student",
+        "setup.view_dashboard",
+        "setup.revert_promotion",
     ]
 
     @method_decorator(login_required(login_url="accounts:login"))
@@ -197,13 +200,27 @@ class RevertPromotionView(PermissionRequiredMixin, View):
 class AcademicRecordSelectionView(PermissionRequiredMixin, View):
     template_name = "dashboard/action_center/academic_record_selection.html"
 
-    permission_required = []
+    permission_required = [
+        "setup.change_academic_record",
+    ]
 
     @method_decorator(login_required(login_url="accounts:login"))
     def get(self, request):
         sessions = SchoolSession.objects.all().order_by("-start_date")
         classes = Klass.objects.all()
         subjects = Subject.objects.all()
+        if not request.user.has_perm("setup.manage_other_report"):
+            staff = request.user.staff if hasattr(request.user,
+                                                  "staff") else None
+            mappings = SubjectMapping.objects.filter(staff=staff)
+            session_ids = mappings.values_list("session", flat=True)
+            class_ids = mappings.values_list("klass", flat=True)
+            subject_ids = mappings.values_list("subject", flat=True)
+
+            sessions = sessions.filter(id__in=session_ids).distinct()
+            classes = classes.filter(id__in=class_ids).distinct()
+            subjects = subjects.filter(id__in=subject_ids).distinct()
+
         context = {
             "sessions": sessions,
             "classes": classes,
@@ -215,7 +232,9 @@ class AcademicRecordSelectionView(PermissionRequiredMixin, View):
 class AcademicRecordDataView(PermissionRequiredMixin, View):
     template_name = "dashboard/action_center/academic_record_data.html"
 
-    permission_required = []
+    permission_required = [
+        "setup.change_academic_record",
+    ]
 
     @method_decorator(login_required(login_url="accounts:login"))
     def get(self, request):
@@ -239,7 +258,7 @@ class AcademicRecordDataView(PermissionRequiredMixin, View):
             students = students.filter(electives=subject)
 
         # Validate user
-        if not request.user.has_perm("dashboard.manage_other_record"):
+        if not request.user.has_perm("setup.manage_other_report"):
             mappings = SubjectMapping.objects.filter(
                 session=session,
                 staff__user_id=request.user.id,

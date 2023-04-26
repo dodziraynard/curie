@@ -22,7 +22,7 @@
     <div class="card-header d-flex justify-content-between">
         <h4>Report - {{session.name}}</h4>
         <div class="">
-            {% if perms.dashboard.append_assistance_head_signature %}
+            {% if perms.setup.append_signature %}
             <button class="d-flex btn btn-sm btn-primary my-1" data-bs-toggle="modal"
                 data-bs-target="#signatureModal"><i class="bi bi-plus"></i> Signature
             </button>
@@ -85,7 +85,7 @@
                 </table>
             </div>
 
-            {% if reports %}
+            {% if reports and perms.setup.append_signature %}
             <div class="form-group">
                 <button class="btn btn-primary" type="submit"
                     {% if not request.user.signature %}disabled{% endif %}>Append Signature to all</button>

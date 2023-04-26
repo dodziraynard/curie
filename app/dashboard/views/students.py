@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
-
+from django.db.models import Q
 from dashboard.mixins import CreateUpdateMixin
 from dashboard.models import (Course, House, Klass, Relative, Student, Subject,
                               Track)
@@ -24,12 +24,22 @@ class StudentsView(PermissionRequiredMixin, View):
 
     @method_decorator(login_required(login_url="accounts:login"))
     def get(self, request):
+        query = request.GET.get("query")
+        class_id = request.GET.get("class_id")
         students = Student.objects.all()
         courses = Course.objects.all()
         houses = House.objects.all()
         tracks = Track.objects.all()
         classes = Klass.objects.all()
         subjects = Subject.objects.filter(is_elective=True)
+
+        if query:
+            students = students.filter(
+                Q(student_id__icontains=query)
+                | Q(user__surname__icontains=query)
+                | Q(user__other_names__icontains=query))
+        if class_id:
+            students = students.filter(klass__id=class_id)
 
         context = {
             "students": students,
@@ -38,6 +48,8 @@ class StudentsView(PermissionRequiredMixin, View):
             "courses": courses,
             "classes": classes,
             "subjects": subjects,
+            **{k: v
+               for k, v in request.GET.items()},
         }
         return render(request, self.template_name, context)
 

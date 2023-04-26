@@ -19,20 +19,24 @@
     <div class="card-body">
         <div class="col-md-10 mx-auto" style="overflow-x: auto;">
             <div class="d-flex justify-content-center flex-wrap">
+                {% if perms.setup.view_subject_mapping %}
                 <div class="col-md-3 col-10 d-flex m-2 border flex-column">
                     <h2 class="text-center p-1"><i class="bi bi-list"></i></h2>
                     <a href="{% url 'dashboard:subject_mapping' %}" class="btn btn p-4 text-center btn-light">
                         <h5 class="text-primary">Subject Mapping</h5>
                     </a>
                 </div>
-
+                {% endif %}
+                {% if perms.setup.view_promotion %}
                 <div class="col-md-3 col-10 d-flex m-2 border flex-column">
                     <h2 class="text-center p-1"><i class="bi bi-graph-up"></i></h2>
                     <a href="{% url 'dashboard:student_promotion' %}" class="btn btn p-4 text-center btn-light">
                         <h5 class="text-primary">Student Promotion</h5>
                     </a>
                 </div>
+                {% endif %}
 
+                {% if perms.setup.change_class_teacher_remark %}
                 <div class="col-md-3 col-10 d-flex m-2 border flex-column">
                     <h2 class="text-center p-1"><i class="bi bi-bar-chart"></i></h2>
                     <a href="{% url 'dashboard:class_teacher_report_filter' %}"
@@ -40,7 +44,9 @@
                         <h5 class="text-primary">Class Teacher Report</h5>
                     </a>
                 </div>
+                {% endif %}
 
+                {% if perms.setup.change_house_master_remark %}
                 <div class="col-md-3 col-10 d-flex m-2 border flex-column">
                     <h2 class="text-center p-1"><i class="bi bi-pen"></i></h2>
                     <a href="{% url 'dashboard:house_master_report_filter' %}"
@@ -48,7 +54,9 @@
                         <h5 class="text-primary">House Master Remark</h5>
                     </a>
                 </div>
+                {% endif %}
 
+                {% if perms.setup.append_signature %}
                 <div class="col-md-3 col-10 d-flex m-2 border flex-column">
                     <h2 class="text-center p-1"><i class="bi bi-pen"></i></h2>
                     <a href="{% url 'dashboard:assistant_head_report_filter' %}"
@@ -56,14 +64,17 @@
                         <h5 class="text-primary">Assistant Head Signature</h5>
                     </a>
                 </div>
+                {% endif %}
 
-
+                {% if perms.setup.change_academic_record %}
                 <div class="col-md-3 col-10 d-flex m-2 border flex-column">
                     <h2 class="text-center p-1"><i class="bi bi-database"></i></h2>
                     <a href="{% url 'dashboard:academic_record_selection' %}" class="btn btn p-4 text-center btn-light">
                         <h5 class="text-primary">Academic Record</h5>
                     </a>
                 </div>
+                {% endif %}
+
             </div>
         </div>
     </div>

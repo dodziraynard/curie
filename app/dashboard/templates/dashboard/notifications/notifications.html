@@ -45,16 +45,16 @@
                 <tbody>
                     {% for notification in notifications %}
                     <tr>
-                        <td>{{forloop.counter}}</td>
-                        <td>
+                        <td  style="vertical-align: middle;">{{forloop.counter}}</td>
+                        <td  style="vertical-align: middle;">
                             <pre>{{notification.text}}</pre>
                         </td>
-                        <td>{{notification.destination}}</td>
-                        <td>{{notification.created_at}}</td>
-                        <td><span class="badge bg-primary">{{notification.status}}</span></td>
-                        <td><span class="badge bg-primary">{{notification.initiated_by.get_name}}</span></td>
-                        <td class="d-flex">
-                            {% if perms.dashboard.change_notification %}
+                        <td  style="vertical-align: middle;">{{notification.destination}}</td>
+                        <td  style="vertical-align: middle;">{{notification.created_at}}</td>
+                        <td  style="vertical-align: middle;"><span class="badge bg-primary">{{notification.status}}</span></td>
+                        <td  style="vertical-align: middle;"><span class="badge bg-primary">{{notification.initiated_by.get_name}}</span></td>
+                        <td style="vertical-align: middle;">
+                            {% if perms.setup.resend_notification %}
                             <form action="" method="POST">
                                 {% csrf_token %}
                                 <input type="hidden" name="notification_id" value="{{notification.id}}">

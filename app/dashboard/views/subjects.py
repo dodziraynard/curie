@@ -12,7 +12,7 @@ from dashboard.models import Department, Subject
 class SubjectsView(PermissionRequiredMixin, View):
     template_name = "dashboard/subjects/subjects.html"
     permission_required = [
-        "dashboard.view_subject",
+        "setup.view_subject",
     ]
 
     @method_decorator(login_required(login_url="accounts:login"))
@@ -34,8 +34,8 @@ class CreateUpdateSubjectView(PermissionRequiredMixin, CreateUpdateMixin):
     object_name = "subject"
     redirect_url = "dashboard:subjects"
     permission_required = (
-        "dashboard.add_subject",
-        "dashboard.change_subject",
+        "setup.add_subject",
+        "setup.change_subject",
     )
 
     def get_context_data(self):

@@ -69,7 +69,7 @@
     <div class="card-header d-flex justify-content-between">
         <h4>Promotion</h4>
         <div class="d-flex">
-            {% if perms.dashboard.promote_student %}
+            {% if perms.setup.add_promotion %}
             <button class="d-flex btn btn-sm btn-primary my-1" data-bs-toggle="modal" data-bs-target="#promotionModal">
                 <i class="bi bi-plus"></i> New Promotion
             </button>
@@ -96,7 +96,7 @@
                     <td>{{promotion.students_count}}</td>
                     <td>{{promotion.classes_count}}</td>
                     <td class="d-flex">
-                        {% if perms.dashboard.promote_student %}
+                        {% if perms.setup.revert_promotion %}
                         <form action="{% url 'dashboard:student_promotion_revert' %}" method="POST"
                             class="requires-confirmation" data-message="This action will revert this promotion 
                             action and classes of all students will be set 

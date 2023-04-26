@@ -22,7 +22,7 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <h6>ROLES</h6>
-                    {% if perms.auth.add_group %}
+                    {% if perms.setup.manage_roles %}
                     <button class="d-flex btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#roleModal"><i
                             class="bi bi-plus"></i></button>
                     {% endif %}

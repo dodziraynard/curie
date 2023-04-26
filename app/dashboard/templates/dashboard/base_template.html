@@ -48,12 +48,15 @@
         </section>
 
         <h6 class="header text-muted mt-4">HOME</h6>
+        {% if perms.setup.view_dashboard %}
         <a href="{% url 'dashboard:index' %}">
             <div class="menu-item" id="dashboard">
                 <i class='icon bx bxs-dashboard'></i>
                 <span class="label">Dashboard</span>
             </div>
         </a>
+        {% endif %}
+        {% if perms.setup.view_action_center %}
         <a href="{% url 'dashboard:action_center' %}">
             <div class="menu-item" id="action_center">
                 <i class='icon bx bxs-hand-up'></i>
@@ -61,25 +64,32 @@
             </div>
         </a>
         <h6 class="header text-muted mt-4">ENTITIES</h6>
+        {% endif %}
+        {% if perms.setup.view_student %}
         <a href="{% url 'dashboard:students' %}">
             <div class="menu-item" id="students">
                 <i class='icon bx bx-group'></i>
                 <span class="label">Students</span>
             </div>
         </a>
+        {% endif %}
+        {% if perms.setup.view_staff %}
         <a href="{% url 'dashboard:staff' %}">
             <div class="menu-item" id="staff">
                 <i class='icon bx bx-group'></i>
                 <span class="label">Staff</span>
             </div>
         </a>
+        {% endif %}
+        {% if perms.setup.view_class %}
         <a href="{% url 'dashboard:classes' %}">
             <div class="menu-item" id="classes">
                 <i class='icon bx bx-file'></i>
                 <span class="label">Classes</span>
             </div>
         </a>
-
+        {% endif %}
+        {% if perms.setup.view_subject %}
         <a href="{% url 'dashboard:subjects' %}">
             <div class="menu-item" id="subjects">
                 <i class='icon bx bx-file'></i>
@@ -87,68 +97,80 @@
             </div>
         </a>
 
+        {% endif %}
+        {% if perms.setup.view_department %}
         <a href="{% url 'dashboard:departments' %}">
             <div class="menu-item" id="departments">
                 <i class='icon bi bi-bank'></i>
                 <span class="label">Departments</span>
             </div>
         </a>
-
+        {% endif %}
+        {% if perms.setup.view_course %}
         <a href="{% url 'dashboard:courses' %}">
             <div class="menu-item" id="courses">
                 <i class='icon bx bx-group'></i>
                 <span class="label">Courses</span>
             </div>
         </a>
+        {% endif %}
 
+        {% if perms.setup.view_house %}
         <a href="{% url 'dashboard:houses' %}">
             <div class="menu-item" id="houses">
                 <i class='icon bx bx-group'></i>
                 <span class="label">Houses</span>
             </div>
         </a>
-
+        {% endif %}
         <h6 class="header text-muted mt-4">APPLICATIONS</h6>
+        {% if perms.setup.view_accounting %}
         <a href="{% url 'dashboard:accounting' %}">
             <div class="menu-item" id="accounting">
                 <i class='icon bx bx-spreadsheet'></i>
                 <span class="label">Accounting</span>
             </div>
         </a>
+        {% endif %}
+        {% if perms.setup.view_alert %}
         <a href="{% url 'dashboard:notifications' %}">
             <div class="menu-item" id="notifications">
                 <i class='icon bx bx-envelope'></i>
                 <span class="label">Alerts</span>
             </div>
         </a>
+        {% endif %}
+        {% if perms.setup.view_reporting %}
         <a href="{% url 'dashboard:reporting_index' %}">
             <div class="menu-item" id="reporting">
                 <i class='icon bx bx-user'></i>
                 <span class="label">Reporting</span>
             </div>
         </a>
-
+        {% endif %}
         <h6 class="header text-muted mt-4">SYSTEM</h6>
+        {% if perms.setup.manage_users %}
         <a href="{% url 'accounts:users' %}">
             <div class="menu-item" id="users">
                 <i class='icon bx bx-user'></i>
                 <span class="label">Users</span>
             </div>
         </a>
+        {% endif %}
+        {% if perms.setup.manage_setup %}
         <a href="{% url 'setup:index' %}">
             <div class="menu-item" id="setup">
                 <i class='icon bx bx-cog'></i>
                 <span class="label">Setup</span>
             </div>
         </a>
-
+        {% endif %}
         <a href="{% url 'accounts:logout' %}">
             <div class="menu-item">
                 <i class='icon bx bx-lock'></i>
                 <span class="label">Log out</span>
             </div>
         </a>
-
     </section>
     <section class="main-content">
         <nav class="nav">
@@ -180,8 +202,10 @@
             {%endblock%}
             <footer>
                 <p class="text-center text-muted">
-                    Copyright © 
-                    <span class="mx-1"><script>document.write(new Date().getFullYear()) </script></span>
+                    Copyright ©
+                    <span class="mx-1">
+                        <script>document.write(new Date().getFullYear()) </script>
+                    </span>
                     LMS. All rights reserved.
                 </p>
             </footer>

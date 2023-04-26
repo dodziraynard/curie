@@ -12,7 +12,7 @@ from dashboard.models import Course, Klass, Staff
 class ClassesView(PermissionRequiredMixin, View):
     template_name = "dashboard/classes/classes.html"
     permission_required = [
-        "dashboard.view_klass",
+        "setup.view_class",
     ]
 
     @method_decorator(login_required(login_url="accounts:login"))
@@ -36,8 +36,8 @@ class CreateUpdateClassView(PermissionRequiredMixin, CreateUpdateMixin):
     object_name = "class"
     redirect_url = "dashboard:classes"
     permission_required = (
-        "dashboard.add_klass",
-        "dashboard.change_klass",
+        "setup.add_class",
+        "setup.change_class",
     )
 
     def get_context_data(self):
