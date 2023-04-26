@@ -33,7 +33,7 @@
     <div class="card-header d-flex justify-content-between">
         <h4>Students</h4>
         <div class="d-flex">
-            {% if perms.dashboard.add_student %}
+            {% if perms.setup.add_student %}
             <a href="{% url 'dashboard:create_update_student_bulk' %}" class="my-1 mx-2">
                 <button class="btn btn-sm btn-primary d-flex">
                     <i class="bi bi-plus"></i> Add Bulk
@@ -84,21 +84,21 @@
                         <td>{{student.sms_number }}</td>
                         <td>{{student.get_balance }}</td>
                         <td class="d-flex">
-                            {% if perms.dashboard.add_payment %}
+                            {% if perms.setup.add_payment %}
                             <a href="{% url 'dashboard:create_update_payment' student.student_id %}"
                                 class="me-3 d-flex btn btn-sm btn-light">
                                 <i class="bi bi-wallet me-1"></i>
                                 Payment
                             </a>
                             {% endif %}
-                            {% if perms.dashboard.change_student %}
+                            {% if perms.setup.change_student %}
                             <a href="{% url 'dashboard:create_update_student' %}?id={{student.id}}"
                                 class="me-3 d-flex btn btn-sm btn-light">
                                 <i class="bi bi-pencil me-1"></i>
                                 Edit
                             </a>
                             {% endif %}
-                            {% if perms.dashboard.delete_student %}
+                            {% if perms.setup.delete_student %}
                             <form action="{% url 'dashboard:delete_model' student.model_name student.id %}"
                                 method="POST" class="requires-confirmation"
                                 data-message="Click on okay to permanently delete '{{student.user.get_name}}'.">
