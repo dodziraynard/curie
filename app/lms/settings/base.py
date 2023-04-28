@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'graphql_api.apps.GraphqlApiConfig',
     "django_celery_beat",
     "graphene_django",
+    'website.apps.WebsiteConfig',
 ]
 
 MIDDLEWARE = [

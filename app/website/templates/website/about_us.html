@@ -1,0 +1,59 @@
+{% extends 'templates/website/base_template.html' %}
+{% block page_title %}Home{% endblock %}
+{% load static %}
+
+{% block content %}
+<div class="page-banner d-flex align-items-center justify-content-center"
+style="background-image: url({% static 'images/sports.jpeg' %})">
+    <div>
+        <h1 class="text-center text-light">About Us</h1>
+    </div>
+</div>
+
+<div class="my-5 p-3">
+    <h1 class="text-center text-primary" style="font-weight: 900;">Mission</h1>
+    <p class="col-md-6 text-muted my-4 mx-auto" style="text-align: justify;">
+        At Global Evangelical Basic School, we are committed to empowering our students to become their best selves. Our mission is to provide them with the essential resources and skills they need to reach their full academic potential and become active, engaged members of their communities. We believe that by fostering a love of learning and a sense of social responsibility, we can help shape the leaders of tomorrow and create a brighter future for all.
+    </p>
+</div>
+
+<div class="my-5 p-3">
+    <h1 class="text-center text-primary" style="font-weight: 900;">Vision</h1>
+    <p class="col-md-6 text-muted my-4 mx-auto" style="text-align: justify;">
+        Global Evangelical Basic School envisions a world where every child has access to excellent education, and we strive to inspire our students to become lifelong learners and agents of positive change in their communities and beyond.
+    </p>
+</div>
+
+
+<div class="my-5 p-3">
+    <h1 class="text-center text-primary" style="font-weight: 900;">Core Values</h1>
+    <div class="row col-md-6 mx-auto">
+        <div class="col-md-6 my-3">
+            <h6 class="text-primary"><strong>Empowerment</strong></h6>
+            <p style="text-align: justify;">We empower our students to reach their full potential and become active, engaged members of their communities.</p>
+        </div>
+        
+        <div class="col-md-6 my-3">
+            <h6 class="text-primary"><strong>Excellence</strong></h6>
+            <p style="text-align: justify;">We are committed to excellence in all aspects of education, from innovative teaching methods to student achievement.</p>
+        </div>
+            
+        <div class="col-md-6 my-3">
+            <h6 class="text-primary"><strong>Social responsibility</strong></h6>
+            <p style="text-align: justify;">We instill in our students a sense of social responsibility and encourage them to become agents of positive change in their communities and beyond.</p>
+        </div>
+            
+        <div class="col-md-6 my-3">
+            <h6 class="text-primary"><strong>Lifelong learning</strong></h6>
+            <p style="text-align: justify;">We value lifelong learning and strive to inspire our students to become lifelong learners themselves.</p>
+        </div>
+            
+        <div class="col-md-6 my-3">
+            <h6 class="text-primary"><strong>Equity</strong></h6>
+            <p style="text-align: justify;">We believe that every child has the right to excellent education and equal opportunities to succeed, and we work to create an equitable and inclusive learning environment for all.</p>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

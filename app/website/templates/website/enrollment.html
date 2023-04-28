@@ -1,0 +1,19 @@
+{% extends 'templates/website/base_template.html' %}
+{% block page_title %}Home{% endblock %}
+{% load static %}
+
+{% block content %}
+<div class="page-banner d-flex align-items-center justify-content-center"
+style="background-image: url({% static 'images/sports.jpeg' %})">
+    <div>
+        <h1 class="text-center text-light">Enrollment</h1>
+    </div>
+</div>
+
+<div class="my-5 p-3">
+    <h1 class="text-center text-primary" style="font-weight: 900;">Enrollment</h1>
+    <div class="row col-md-6 mx-auto">
+       <p class="text-center">Please visit our campus at Global Evangelical School - Tettekope, Keta</p>
+    </div>
+</div>
+{% endblock %}

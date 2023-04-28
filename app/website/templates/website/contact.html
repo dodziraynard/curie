@@ -1,0 +1,23 @@
+{% extends 'templates/website/base_template.html' %}
+{% block page_title %}Home{% endblock %}
+{% load static %}
+
+{% block content %}
+<div class="page-banner d-flex align-items-center justify-content-center"
+style="background-image: url({% static 'images/sports.jpeg' %})">
+    <div>
+        <h1 class="text-center text-light">Contact</h1>
+    </div>
+</div>
+
+<div class="my-5 p-3">
+    <h1 class="text-center text-primary" style="font-weight: 900;">Contact</h1>
+    <div class="row col-md-6 mx-auto">
+        <p class="m-0 text-center">Global Evangelical School</p>
+        <p class="m-0 text-center">Tettekope</p>
+        <p class="m-0 text-center">P.O Box 182, Keta</p>
+    </div>
+</div>
+
+
+{% endblock %}

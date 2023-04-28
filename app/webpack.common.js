@@ -26,6 +26,13 @@ module.exports = {
             publicPath: "/static/",
             inject: "body"
         }),
+        new HtmlWebpackPlugin({
+            template:
+                "./website/templates/website/base_template.html",
+            filename: "templates/website/base_template.html",
+            publicPath: "/static/",
+            inject: "body"
+        }),
         new CleanWebpackPlugin(),
     ],
 }

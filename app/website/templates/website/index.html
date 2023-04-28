@@ -1,0 +1,27 @@
+{% extends 'templates/website/base_template.html' %}
+{% block page_title %}Home{% endblock %}
+{% load static %}
+
+{% block content %}
+<div class="page-banner d-flex align-items-center justify-content-center"
+style="background-image: url({% static 'images/home-page-banner.jpeg' %})">
+<div>
+    <h1 class="text-center text-light">Quality Education</h1>
+    <h5 class="text-center text-light">FROM US TO YOU</h5>
+    <p class="text-center mt-5 bubble"><a href="/" class="btn btn-primary p-3"><strong>Enroll now</strong></a></p>
+</div>
+</div>
+
+<div class="my-5">
+<h2 class="text-center">Welcome to</h2>
+<h1 class="text-center text-primary" style="font-weight: 900;"><strong>Global Evangelical Basic School</strong></h1>
+<h1 class="text-center text-primary">Tettekope, Keta</h1>
+<div class="d-flex justify-content-center">
+    <span style="height: 0.2em; width: 8em;" class="bg-primary"></span>
+</div>
+<p class="col-md-6 text-muted my-4 mx-auto text-center">
+    The objective of the Global Evangelical Basic School is to equip our children with the necessary tools to reach their full potential, both academically and as active participants in their communities.
+</p>
+</div>
+
+{% endblock %}
