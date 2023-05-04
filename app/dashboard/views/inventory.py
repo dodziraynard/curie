@@ -128,8 +128,8 @@ class CreateUpdateIssuanceView(PermissionRequiredMixin, View):
 
     @method_decorator(login_required(login_url="accounts:login"))
     def get(self, request):
-        object_id = request.GET.get(self.object_id_field)
-        inventory_id = request.GET.get("inventory_id")
+        object_id = request.GET.get(self.object_id_field) or -1
+        inventory_id = request.GET.get("inventory_id") or -1
         issuance = Issuance.objects.filter(id=object_id).first()
         inventory = Inventory.objects.filter(id=inventory_id).first() or (
             issuance.item if issuance else None)
