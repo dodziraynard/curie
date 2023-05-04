@@ -1,10 +1,10 @@
 <form action="{% url 'dashboard:create_update_staff' %}" class="needs-validation my-4" method="POST" novalidate enctype="multipart/form-data">
     {% csrf_token %}
-    <input type="hidden" name="staff_id" value="{{staff.id}}">
+    <input type="hidden" name="id" value="{{staff.id}}">
     <div class="form-group">
         <label for="name">Staff ID</label>
-        <input class="form-control" placeholder="E.g., 1092" value="{{username}}" type="text" name="username"
-            id="username" required>
+        <input class="form-control" placeholder="(Auto generated)" value="{{staff_id}}" type="text" name="staff_id"
+            id="staff_id">
         <div class="invalid-feedback">
             Please this field is required.
         </div>

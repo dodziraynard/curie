@@ -65,8 +65,8 @@ class CreateUpdateStaffView(PermissionRequiredMixin, CreateUpdateMixin):
 
     @method_decorator(login_required(login_url="accounts:login"))
     def post(self, request):
-        staff_id = request.POST.get("staff_id") or -1
-        username = request.POST.get("username")
+        staff_id = request.POST.get("id") or -1
+        username = request.POST.get("staff_id") or Staff.generate_staff_id()
         if not username:
             messages.error(request, "Username is required.")
             return redirect(self.redirect_url or "dashboard:index")
@@ -84,7 +84,7 @@ class CreateUpdateStaffView(PermissionRequiredMixin, CreateUpdateMixin):
 
         photo = request.FILES.get("photo")
         for key, value in [*request.POST.items(), *request.FILES.items()]:
-            if key in ["staff_id"]: continue
+            if key in ["id", "staff_id"]: continue
             if hasattr(staff, key):
                 setattr(staff, key, value)
                 staff.save()

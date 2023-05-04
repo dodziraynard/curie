@@ -45,7 +45,7 @@ class Student(ModelMixin):
     mother = models.CharField(max_length=200, null=True, blank=True)
     sms_number = models.CharField(max_length=10, null=True, blank=True)
     completed = models.BooleanField(default=False, db_index=True)
-    user = models.OneToOneField(User,related_name="student",on_delete=models.CASCADE)
+    user = models.OneToOneField(User,related_name="student",on_delete=models.PROTECT)
     last_promotion_date = models.DateField(default=timezone.now)
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
@@ -62,6 +62,14 @@ class Student(ModelMixin):
         permissions = [
             ('promote_student', 'Can promote students'),
         ]
+
+    @classmethod
+    def generate_student_id(cls):
+        prefix = "GE" + str(datetime.today().year)[-2:]
+        next_id = cls.objects.filter(
+            student_id__startswith=prefix).count() + 1
+        return prefix + str(next_id).zfill(6)
+
 
     def get_balance(self):
         return self.user.account.balance
@@ -137,7 +145,7 @@ class Klass(ModelMixin):
     stream = models.CharField(max_length=5)
     course = models.ForeignKey("Course",
                                related_name="classes",
-                               on_delete=models.CASCADE)
+                               on_delete=models.PROTECT)
 
     def course_name(self):
         return self.course.name
@@ -203,7 +211,7 @@ class Subject(ModelMixin):
                                    related_name="subjects",
                                    null=True,
                                    blank=True,
-                                   on_delete=models.CASCADE)
+                                   on_delete=models.PROTECT)
     is_elective = models.BooleanField()
 
     class Meta:
@@ -241,7 +249,7 @@ class Staff(ModelMixin):
     teaching = models.BooleanField(default=True)
     user = models.OneToOneField(User,
                                 related_name="staff",
-                                on_delete=models.CASCADE)
+                                on_delete=models.PROTECT)
 
     class Meta:
         db_table = "staff"
@@ -259,6 +267,13 @@ class Staff(ModelMixin):
             for item in self.teaches.all():
                 number += item.subject.students.all().count()
         return number
+
+    @classmethod
+    def generate_staff_id(cls):
+        prefix = "GEST" + str(datetime.today().year)[-2:]
+        next_id = cls.objects.filter(
+            staff_id__startswith=prefix).count() + 1
+        return prefix + str(next_id).zfill(3)
 
 
 class Record(ModelMixin):
@@ -281,7 +296,7 @@ class Record(ModelMixin):
     grade = models.CharField(max_length=5, blank=True, null=True)
     remark = models.CharField(max_length=20, blank=True, null=True)
     session = models.ForeignKey(SchoolSession,
-                                on_delete=models.SET_NULL,
+                                on_delete=models.PROTECT,
                                 null=True)
     group_tag = models.CharField(max_length=100, null=True, blank=True, db_index=True)
     roll_no = models.IntegerField(blank=True, null=True)
@@ -368,14 +383,14 @@ class SubjectMapping(ModelMixin):
 
 
 class SessionReport(ModelMixin):
-    student = models.ForeignKey("Student", on_delete=models.CASCADE)
+    student = models.ForeignKey("Student", on_delete=models.PROTECT)
     session = models.ForeignKey(SchoolSession,
                                 on_delete=models.SET_NULL,
                                 null=True)
     klass = models.ForeignKey("Klass",
                               null=True,
                               blank=True,
-                              on_delete=models.CASCADE)
+                              on_delete=models.PROTECT)
     attendance = models.IntegerField(default=0, null=True, blank=True)
     total_attendance = models.IntegerField(default=0, null=True, blank=True)
     attitude = models.ForeignKey(Attitude,

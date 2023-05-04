@@ -92,7 +92,7 @@ class CreateUpdateStudentView(PermissionRequiredMixin, CreateUpdateMixin):
     @method_decorator(login_required(login_url="accounts:login"))
     def post(self, request):
         student_id = request.POST.get("id") or -1
-        username = request.POST.get("student_id")
+        username = request.POST.get("student_id") or Student.generate_student_id()
         completed = bool(request.POST.get("completed", 0))
         electives = request.POST.getlist("elective_ids")
         electives = Subject.objects.filter(id__in=electives, is_elective=True)
@@ -133,7 +133,7 @@ class CreateUpdateStudentView(PermissionRequiredMixin, CreateUpdateMixin):
             user = student.user
 
         for key, value in [*request.POST.items()]:
-            if key in ["id"]: continue
+            if key in ["id", "student_id"]: continue
             if hasattr(student, key):
                 setattr(student, key, value)
             elif hasattr(user, key):
