@@ -521,3 +521,46 @@ class Notification(models.Model):
             self.status = "failed"
 
         self.save()
+
+class Inventory(ModelMixin):
+    INVENTORY_STATUS_CHOICES = [
+        ("available","available"),
+        ("unavailable","unavailable"),
+    ]
+    name = models.CharField(max_length=200)
+    quantity = models.IntegerField(default=0)
+    note = models.TextField()
+    status = models.CharField(max_length=50, default="available", choices=INVENTORY_STATUS_CHOICES)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    created_by = models.ForeignKey(User, on_delete=models.PROTECT)
+    deleted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def remain_quantity(self):
+        leased = sum(Issuance.objects.filter(item=self,status="pending").values_list("quantity", flat=True))
+        return self.quantity - leased
+
+class Issuance(ModelMixin):
+    ISSUANCE_STATUS_CHOICES = [
+        ("returned","returned"),
+        ("pending","pending"),
+        ("overdue","overdue"),
+    ]
+    recipient = models.ForeignKey(User, related_name="issued_items", on_delete=models.PROTECT)
+    item = models.ForeignKey(Inventory, on_delete=models.PROTECT)
+    quantity = models.IntegerField(default=0)
+    status = models.CharField(max_length=50, default="pending", choices=ISSUANCE_STATUS_CHOICES)
+    note = models.TextField(default="")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    issued_by = models.ForeignKey(User, related_name="items_issued", on_delete=models.PROTECT)
+    updated_by = models.ForeignKey(User, on_delete=models.PROTECT)
+    expiry_date = models.DateTimeField(auto_now_add=True)
+    deleted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.recipient

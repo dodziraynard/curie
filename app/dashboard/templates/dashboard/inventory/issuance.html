@@ -1,0 +1,92 @@
+{% extends 'templates/dashboard/base_template.html' %}
+{% block page_title %}Issuance{% endblock %}
+{% block active-sidebar-item-id %}inventory{%endblock%}
+
+{% block breadcrumb %}
+<section class="breadcrumb">
+    <a href="{% url 'dashboard:index' %}" class="">Home <i class="bi bi-chevron-right"></i></a>
+    <a href="{% url 'dashboard:inventory_index' %}" class="">Inventory <i class="bi bi-chevron-right"></i></a>
+    <a href="" class="active">Issuance</a>
+</section>
+{% endblock %}
+
+{% block content %}
+
+<!-- Modal -->
+<div class="modal fade" id="issuanceModal" tabindex="-1" aria-labelledby="issuanceModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content px-4">
+            <div class="modal-header">
+                <h5 class="modal-title" id="issuanceModalLabel">Add Issuance</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            {% include 'dashboard/inventory/form_issuance.html' %}
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End of Modal -->
+
+<h4 class="page-header"><i class='icon bx bx-group'></i> ISSUANCE</h4>
+<section class="card">
+    <div class="card-header d-flex justify-content-between">
+        <h4>Items</h4>
+    </div>
+    <div class="card-body">
+        <form class="d-flex align-items-center my-3">
+            <input type="search" class="form-control" value="{{query}}" name="query" placeholder="Search name and id">
+            <button class="btn btn-sm btn-primary mx-2">Load</button>
+        </form>
+        <div class="" style="overflow-x: auto;">
+            <table class="table data-table">
+                <thead class="bg-primary text-light">
+                    <tr>
+                        <th>S/N</th>
+                        <th>Name</th>
+                        <th>Quantity</th>
+                        <th>Note</th>
+                        <th>Recipient</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in issuance %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{item.item.name}}</td>
+                        <td>{{item.quantity}}</td>
+                        <td>{{item.note}}</td>
+                        <td>{{item.recipient.get_name}}</td>
+                        <td><span class="badge bg-primary">{{item.status}}</span></td>
+                        <td class="d-flex">
+                            {% if perms.setup.change_issuance %}
+                            <a href="{% url 'dashboard:create_update_issuance' %}?issuance_id={{item.id}}"
+                                class="me-3 d-flex btn btn-sm btn-light">
+                                <i class="bi bi-pencil me-1"></i>
+                                Edit
+                            </a>
+                            {% endif %}
+                            {% if perms.setup.delete_issuance %}
+                            <form action="{% url 'dashboard:delete_model' item.model_name item.id %}" method="POST"
+                                class="requires-confirmation"
+                                data-message="Click on okay to permanently delete {{issuance.name}}">
+                                {% csrf_token %}
+                                <input type="hidden" name="issuance_id" value="{{issuance.id}}">
+                                <button type="submit" class="btn btn-sm btn-light"><span class="d-flex">
+                                        <i class="bi bi-trash"></i> Delete</span>
+                                </button>
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

@@ -87,3 +87,12 @@ urlpatterns += [
     path('accounting/invoice/<str:invoice_id>/create_update_invoice_item', views.CreateUpdateInvoiceItem.as_view(), name='create_update_invoice_item'),
     path('accounting/invoice/<str:invoice_id>/details', views.InvoiceDetailsView.as_view(), name='invoice_details'),
 ]
+
+urlpatterns += [
+    path('inventory/', views.InventoryIndexView.as_view(), name='inventory_index'),
+    path('inventory/inventories', views.InventoriesView.as_view(), name='inventories'),
+    path('inventory/inventories/create-update', views.CreateUpdateInventoryView.as_view(), name="create_update_inventory"),
+
+    path('inventory/issuance', views.IssuanceView.as_view(), name='issuance'),
+    path('inventory/issuance/create-update', views.CreateUpdateIssuanceView.as_view(), name="create_update_issuance"),
+]

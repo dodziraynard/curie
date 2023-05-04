@@ -75,7 +75,10 @@ class DeleteModelView(PermissionRequiredMixin, View):
 
         # Get the model instance
         try:
-            res = model_class.objects.filter(id=instance_id).delete()
+            if hasattr(model_class, "deleted"):
+                model_class.objects.filter(id=instance_id).update(deleted=True)
+            else:
+                res = model_class.objects.filter(id=instance_id).delete()
         except ProtectedError as _:
             messages.error(
                 request,

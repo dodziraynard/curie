@@ -1,0 +1,63 @@
+<form action="{% url 'dashboard:create_update_issuance' %}" class="needs-validation my-4" method="POST" novalidate enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="hidden" name="issuance_id" value="{{issuance.id}}">
+    <input type="hidden" name="item" value="{{inventory.id}}">
+    <div class="form-group mt-4">
+        <p for="name">Item</p>
+        <span class="p-2 badge bg-secondary">{{inventory.name}}</span>
+    </div>
+    
+    <div class="form-group mt-4">
+        <label for="name">Recipient's username/ID</label>
+        <input class="form-control" value="{{username}}" type="text" name="username"
+            id="username" required>
+        <div class="invalid-feedback">
+            Please this field is required.
+        </div>
+    </div>
+
+    <div class="form-group mt-4">
+        <label for="quantity">Quantity</label>
+        <input class="form-control" value="{{quantity}}" type="number" min="1" max="{{max_quanity}}" name="quantity"
+            id="quantity" required>
+        <div class="invalid-feedback">
+            Available quantity is {{max_quanity}}; enter a number between 1 and {{max_quanity}}.
+        </div>
+    </div>
+
+    <div class="form-group mt-4">
+        <label for="name">Status</label>
+        <select class="form-select" name="status" id="status" required>
+            <option value="">--Click to select--</option>
+            <option value="pending" {% if status == 'pending' %}selected{% endif %}>Pending</option>
+            <option value="returned" {% if status == 'returned' %}selected{% endif %}>Returned</option>
+            <option value="overdue" {% if status == 'overdue' %}selected{% endif %}>Overdued</option>
+        </select>
+        <div class="invalid-feedback">
+            Please this field is required.
+        </div>
+    </div>
+    
+    <div class="form-group mt-4">
+        <label for="expiry_date">To be returned by</label>
+        <input class="form-control" value="{{expiry_date}}" type="date" name="expiry_date"
+            id="expiry_date" required>
+        <div class="invalid-feedback">
+            Available quantity is {{max_quanity}}; enter a number between 1 and {{max_quanity}}.
+        </div>
+    </div>
+
+    
+    <div class="form-group mt-4">
+        <label for="note">Note</label>
+        <textarea class="form-control" name="note" id="note" cols="30" rows="3">{{note}}</textarea>
+        <div class="invalid-feedback">
+            Please this field is required.
+        </div>
+    </div>
+
+    <div class="mt-4 form-group">
+        <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+    </div>
+
+</form>

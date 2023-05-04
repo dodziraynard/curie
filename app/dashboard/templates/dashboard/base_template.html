@@ -126,6 +126,14 @@
         </a>
         {% endif %}
         <h6 class="header text-muted mt-4">APPLICATIONS</h6>
+        {% if perms.setup.view_inventory %}
+        <a href="{% url 'dashboard:inventory_index' %}">
+            <div class="menu-item" id="inventory">
+                <i class='icon bx bx-file'></i>
+                <span class="label">Inventory</span>
+            </div>
+        </a>
+        {% endif %}
         {% if perms.setup.view_accounting %}
         <a href="{% url 'dashboard:accounting' %}">
             <div class="menu-item" id="accounting">

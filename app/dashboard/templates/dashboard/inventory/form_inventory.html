@@ -1,0 +1,46 @@
+<form action="{% url 'dashboard:create_update_inventory' %}" class="needs-validation my-4" method="POST" novalidate enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="hidden" name="inventory_id" value="{{inventory.id}}">
+    <div class="form-group mt-4">
+        <label for="name">Name</label>
+        <input class="form-control" placeholder="E.g, Lab manual" value="{{name}}" type="text" name="name"
+            id="name" required>
+        <div class="invalid-feedback">
+            Please this field is required.
+        </div>
+    </div>
+
+    <div class="form-group mt-4">
+        <label for="name">Quantity</label>
+        <input class="form-control" value="{{quantity}}" type="number" min="0" name="quantity"
+            id="name" required>
+        <div class="invalid-feedback">
+            Please this field is required.
+        </div>
+    </div>
+
+    <div class="form-group mt-4">
+        <label for="name">Status</label>
+        <select class="form-select" name="status" id="status" required>
+            <option value="">--Click to select--</option>
+            <option value="available" {% if status == 'available' %}selected{% endif %}>Available</option>
+            <option value="unavailable" {% if status == 'unavailable' %}selected{% endif %}>Unavailable</option>
+        </select>
+        <div class="invalid-feedback">
+            Please this field is required.
+        </div>
+    </div>
+    
+    <div class="form-group mt-4">
+        <label for="note">Note</label>
+        <textarea class="form-control" name="note" id="note" cols="30" rows="3">{{note}}</textarea>
+        <div class="invalid-feedback">
+            Please this field is required.
+        </div>
+    </div>
+
+    <div class="mt-4 form-group">
+        <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+    </div>
+
+</form>

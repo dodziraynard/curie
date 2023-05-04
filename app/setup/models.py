@@ -182,6 +182,18 @@ class SetupPerms(models.Model):
             # Reporting
             ('view_reporting', 'Can access reporting menu'),
             ('generate_limited_report', 'Can access reporting menu'),
+
+            # Inventory
+            ("view_inventory", "Can view inventory"),
+            ("add_inventory", "Can add inventory"),
+            ("change_inventory", "Can change inventory"),
+            ("delete_inventory", "Can delete inventory"),
+            
+             # Inventory
+            ("view_issuance", "Can view issuance"),
+            ("add_issuance", "Can add issuance"),
+            ("change_issuance", "Can change issuance"),
+            ("delete_issuance", "Can delete issuance"),
         ]
 
 

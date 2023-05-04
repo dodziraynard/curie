@@ -13,3 +13,4 @@ from .reporting import *
 from .staff import *
 from .students import *
 from .subjects import *
+from .inventory import *
