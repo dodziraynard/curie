@@ -78,7 +78,9 @@ class SubjectMappingView(PermissionRequiredMixin, View):
 
         _, _, session, _ = mappings[0].split("|")
         session = SchoolSession.objects.get(id=session)
-
+        
+        no_teacher_mapping = None
+        
         if not (session and session.active()):
             messages.error(request, "Session is not active")
             return redirect(request.META.get("HTTP_REFERER"))
@@ -88,15 +90,20 @@ class SubjectMappingView(PermissionRequiredMixin, View):
             if len(split) != 4:
                 messages.error(request, "Invalid mapping")
                 return redirect(request.META.get("HTTP_REFERER"))
-            klass, subject, session, staff = split
+            klass, subject, session, staff_id = split
             subject_mapping = SubjectMapping.objects.filter(
                 klass_id=klass, subject_id=subject,
                 session_id=session).first()
             if subject_mapping:
-                subject_mapping.staff_id = staff
+                staff = Staff.objects.filter(id=staff_id).first()
+                subject_mapping.staff = staff
                 subject_mapping.save()
+                if not staff:
+                    no_teacher_mapping = subject_mapping
             else:
                 messages.error(request, "Invalid mapping")
+        if no_teacher_mapping:
+            messages.warning(request, f"No teacher for some mappings e.g., {no_teacher_mapping.subject.name} in {no_teacher_mapping.klass.name}")
         return redirect(request.META.get("HTTP_REFERER"))
 
 
