@@ -40,9 +40,9 @@ class SubjectMappingView(PermissionRequiredMixin, View):
         session_id = request.GET.get("session_id") or -1
 
         sessions = SchoolSession.objects.all().order_by("-start_date")
-        classes = Klass.objects.all()
+        classes = Klass.objects.filter(deleted=False)
         subjects = Subject.objects.filter(is_elective=False)
-        teachers = Staff.objects.all()
+        teachers = Staff.objects.filter(deleted=False)
 
         current_session = SchoolSession.objects.filter(id=session_id).first(
         ) or School.objects.first().get_current_session()

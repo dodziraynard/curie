@@ -44,7 +44,7 @@
                             <td>{{mapping.klass.name}}</td>
                             <td>
                                 <select class="form-select" {% if not mapping.session.active %} disabled {% endif %}
-                                    name="mappings" required>
+                                    name="mappings">
                                 <option value="">Select Teacher</option>
                                 {% for teacher in teachers %}
                                 <option value="{{mapping.klass.id}}|{{mapping.subject.id}}|{{mapping.session.id}}|{{teacher.id}}" {% if teacher.id == mapping.staff.id %}selected{% endif %}>{{teacher.user.get_name}}</option>
