@@ -78,9 +78,9 @@ class SubjectMappingView(PermissionRequiredMixin, View):
 
         _, _, session, _ = mappings[0].split("|")
         session = SchoolSession.objects.get(id=session)
-        
+
         no_teacher_mapping = None
-        
+
         if not (session and session.active()):
             messages.error(request, "Session is not active")
             return redirect(request.META.get("HTTP_REFERER"))
@@ -103,7 +103,10 @@ class SubjectMappingView(PermissionRequiredMixin, View):
             else:
                 messages.error(request, "Invalid mapping")
         if no_teacher_mapping:
-            messages.warning(request, f"No teacher for some mappings e.g., {no_teacher_mapping.subject.name} in {no_teacher_mapping.klass.name}")
+            messages.warning(
+                request,
+                f"No teacher for some mappings e.g., {no_teacher_mapping.subject.name} in {no_teacher_mapping.klass.name}"
+            )
         return redirect(request.META.get("HTTP_REFERER"))
 
 
@@ -126,16 +129,17 @@ class StudentPromotionView(PermissionRequiredMixin, View):
 
         promotion_histories = []
         for session_id in promotion_sessions:
-            session = SchoolSession.objects.get(id=session_id)
+            session = SchoolSession.objects.filter(id=session_id).first()
             history = StudentPromotionHistory.objects.filter(session=session)
-            promotion_histories.append({
-                "session":
-                session,
-                "students_count":
-                history.values("student").distinct().count(),
-                "classes_count":
-                history.values("new_class").distinct().count(),
-            })
+            if session and history:
+                promotion_histories.append({
+                    "session":
+                    session,
+                    "students_count":
+                    history.values("student").distinct().count(),
+                    "classes_count":
+                    history.values("new_class").distinct().count(),
+                })
         context = {
             "promotion_exists": promotion_exists,
             "promotion_histories": promotion_histories,
