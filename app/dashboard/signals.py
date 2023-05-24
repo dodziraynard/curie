@@ -1,7 +1,7 @@
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
-from .models import Student
+from .models import Student, User
 
 
 @receiver(post_save, sender=Student)
@@ -11,5 +11,7 @@ def create_student(sender, instance, created, **kwargs):
 
 
 @receiver(post_delete, sender=Student)
-def delete_promotion_history(sender, instance, created, **kwargs):
+def delete_promotion_history(sender, instance, **kwargs):
     instance.promotion_histories.delete()
+    if instance.user:
+        User.objects.filter(username=instance.student_id).delete()
