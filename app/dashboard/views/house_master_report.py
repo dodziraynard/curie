@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
 
-from dashboard.models import House, SessionReport, StudentPromotionHistory
+from dashboard.models import House, SessionReport, Student, StudentPromotionHistory
 from setup.models import Remark, SchoolSession
 
 
@@ -47,11 +47,20 @@ class HouseMasterSessionReportDataView(PermissionRequiredMixin, View):
         promotion_history = StudentPromotionHistory.objects.filter(
             student__house=house, session=session)
         students = promotion_history.values_list("student", flat=True)
-
+        
         for student_id in students:
-            SessionReport.objects.get_or_create(student_id=student_id,
+            report, created = SessionReport.objects.get_or_create(student_id=student_id,
                                                 session=session)
-
+            if created:
+                history = StudentPromotionHistory.objects.filter(student_id=student_id, session=session).order_by("-created_at").first()
+                if not history:
+                    student = Student.objects.filter(id=student_id).first()
+                    student.promote(0)
+                    new_class = student.klass
+                else:
+                    new_class = history.new_class
+                report.klass = new_class
+                report.save()
         reports = SessionReport.objects.filter(student__in=students,
                                                student__house=house,
                                                session=session)

@@ -472,7 +472,7 @@ class StudentPromotionHistory(ModelMixin):
                                   related_name="old_classes",
                                   on_delete=models.CASCADE)
     session = models.ForeignKey(SchoolSession,
-                                on_delete=models.SET_NULL,
+                                on_delete=models.CASCADE,
                                 null=True)
     class Meta:
         db_table = "student_promotion_history"
