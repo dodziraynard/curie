@@ -12,6 +12,6 @@ def create_student(sender, instance, created, **kwargs):
 
 @receiver(post_delete, sender=Student)
 def delete_promotion_history(sender, instance, **kwargs):
-    instance.promotion_histories.delete()
+    instance.promotion_histories.all().delete()
     if instance.user:
         User.objects.filter(username=instance.student_id).delete()
