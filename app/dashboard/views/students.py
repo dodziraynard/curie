@@ -98,6 +98,8 @@ class CreateUpdateStudentView(PermissionRequiredMixin, CreateUpdateMixin):
         electives = Subject.objects.filter(id__in=electives, is_elective=True)
 
         student = Student.objects.filter(id=student_id)
+        
+        print("request.data", request.POST)
 
         if not username:
             messages.error(request, "Student ID is required.")
