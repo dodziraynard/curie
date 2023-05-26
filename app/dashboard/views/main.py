@@ -74,6 +74,7 @@ class DeleteModelView(PermissionRequiredMixin, View):
             raise PermissionDenied()
 
         # Get the model instance
+        res = None
         try:
             if hasattr(model_class, "deleted"):
                 model_class.objects.filter(id=instance_id).update(deleted=True)
@@ -84,6 +85,9 @@ class DeleteModelView(PermissionRequiredMixin, View):
                 request,
                 "This item is protected and cannot be deleted until all references are removed."
             )
+            return redirect(request.META.get("HTTP_REFERER"))
+        except Exception as e:
+            messages.error(request, str(e))
             return redirect(request.META.get("HTTP_REFERER"))
         if res and res[0]:
             messages.success(request, "Successfully deleted.")
