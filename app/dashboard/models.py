@@ -276,9 +276,14 @@ class Staff(ModelMixin):
     @classmethod
     def generate_staff_id(cls):
         prefix = "GEST" + str(datetime.today().year)[-2:]
-        next_id = cls.objects.filter(
-            staff_id__startswith=prefix).count() + 1
-        return prefix + str(next_id).zfill(3)
+        last_id = 0
+        last_staff = cls.objects.filter(
+            staff_id__startswith=prefix).order_by("-created_at").first()
+        if last_staff:
+            last_id = int(last_staff.staff_id[2:])
+        
+        next_id = last_id + 1
+        return prefix + str(next_id).zfill(6)
 
 
 class Record(ModelMixin):
