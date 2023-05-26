@@ -88,6 +88,9 @@ class ComposeSMS(PermissionRequiredMixin, View):
     @method_decorator(login_required(login_url="accounts:login"))
     def post(self, request):
         message = request.POST.get("message")
+        all_students = "on" in request.POST.get("all_students", "")
+        all_staff = "on" in request.POST.get("all_staff", "")
+
         recipients = request.POST.get("recipients", "").replace(
             "\r", "").replace("\n", "").replace(" ", "").split(",")
         recipient_file = request.FILES.get("recipient_file")
@@ -101,6 +104,16 @@ class ComposeSMS(PermissionRequiredMixin, View):
                 phone = row['PHONE']
                 if phone and len(phone) == 10 and phone[0] == "0":
                     phone_numbers.append(phone)
+
+        if all_students:
+            students = Student.objects.filter(completed=False, deleted=False)
+            student_phones  = [student.sms_number for student in students if student.sms_number and student.sms_number[0] == "0"] #yapf: disable
+            phone_numbers.extend(student_phones)
+            
+        if all_staff:
+            teachers = Staff.objects.filter(has_left=False, deleted=False)
+            teacher_phones  = [teacher.user.phone for teacher in teachers if teacher.user.phone and teacher.user.phone[0] == "0"] #yapf: disable
+            phone_numbers.extend(teacher_phones)
 
         request.session['message'] = message
         request.session['phone_numbers'] = phone_numbers

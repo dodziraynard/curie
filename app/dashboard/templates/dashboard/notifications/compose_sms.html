@@ -37,6 +37,17 @@
                         <small class="m-0 p-0 text-muted">List of 10-digit Ghanaian numbers separated by comma.</small>
                         <textarea name="recipients" id="recipients" rows="6" class="form-control"></textarea>
                     </div>
+                    
+                    <p class="m-0 mt-2"><b>Also</b></p>
+                    <div class="ms-2 form-group">
+                        <input type="checkbox" name="all_staff" id="all_staff" class="form-check-input">
+                        <label for="all_staff">Include all staff</label>
+                    </div>
+    
+                    <div class="ms-2 form-group">
+                        <input type="checkbox" name="all_students" id="all_students" class="form-check-input">
+                        <label for="all_students">Include all students</label>
+                    </div>    
 
                     <div class="form-group my-4">
                         <label for="recipient_file">Upload <a download href="{% static 'sheets/sms_phone_numbers.xlsx' %}"
