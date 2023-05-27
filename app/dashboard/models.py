@@ -73,7 +73,7 @@ class Student(ModelMixin):
             last_id = int(last_student.student_id[2:])
         
         next_id = last_id + 1
-        return prefix + str(next_id).zfill(6)
+        return "GE" + str(next_id).zfill(6)
 
 
     def get_balance(self):
@@ -283,7 +283,7 @@ class Staff(ModelMixin):
             last_id = int(last_staff.staff_id[2:])
         
         next_id = last_id + 1
-        return prefix + str(next_id).zfill(6)
+        return "GEST" + str(next_id).zfill(6)
 
 
 class Record(ModelMixin):
