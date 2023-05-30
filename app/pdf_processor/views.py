@@ -214,7 +214,7 @@ class PersonalTranscriptionView(PermissionRequiredMixin, View):
         try:
             student_id = request.user.student.student_id
         except User.student.RelatedObjectDoesNotExist:
-            raise Http404
+            return HttpResponse("No records found.")
 
         records = Record.objects.filter(student__student_id=student_id)
 
