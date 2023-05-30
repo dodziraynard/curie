@@ -46,7 +46,7 @@
                     {% for notification in notifications %}
                     <tr>
                         <td  style="vertical-align: middle;">{{forloop.counter}}</td>
-                        <td  style="vertical-align: middle;">
+                        <td  style="vertical-align: middle; max-width: 30vw; padding:0.5em">
                             <pre>{{notification.text}}</pre>
                         </td>
                         <td  style="vertical-align: middle;">{{notification.destination}}</td>
