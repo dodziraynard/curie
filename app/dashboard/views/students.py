@@ -99,8 +99,6 @@ class CreateUpdateStudentView(PermissionRequiredMixin, CreateUpdateMixin):
 
         student = Student.objects.filter(id=student_id)
         
-        print("request.data", request.POST)
-
         if not username:
             messages.error(request, "Student ID is required.")
             return redirect(

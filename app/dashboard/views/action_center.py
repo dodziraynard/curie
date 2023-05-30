@@ -262,6 +262,7 @@ class AcademicRecordDataView(PermissionRequiredMixin, View):
         classes = Klass.objects.filter(id__in=classes)
 
         students = Student.objects.filter(start_date__lte=session.start_date,
+                                          deleted=False,
                                           end_date__gte=session.end_date)
         if classes:
             students = students.filter(klass__in=classes)
