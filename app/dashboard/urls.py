@@ -96,3 +96,12 @@ urlpatterns += [
     path('inventory/issuance', views.IssuanceView.as_view(), name='issuance'),
     path('inventory/issuance/create-update', views.CreateUpdateIssuanceView.as_view(), name="create_update_issuance"),
 ]
+
+#Personal
+urlpatterns += [
+    path('personal/academic-record', views.PesonalAcademicRecord.as_view(), name='personal_academic_record'),
+    path('personal/my-invoices', views.MyInvoicesView.as_view(), name='my_invoices'),
+    path('personal/my-invoices/<str:invoice_id>/detail', views.MyInvoiceDetailView.as_view(), name='my_invoice_detail'),
+    path('personal/payment-history', views.PersonalPaymentHistory.as_view(), name='payment_history'),
+    
+]

@@ -194,6 +194,11 @@ class SetupPerms(models.Model):
             ("add_issuance", "Can add issuance"),
             ("change_issuance", "Can change issuance"),
             ("delete_issuance", "Can delete issuance"),
+            
+            # Personal permissions
+            ("view_personal_academic_record", "Can view personal academic record"),
+            ("view_personal_invoice", "Can view personal invoice"),
+            ("view_personal_payment_history", "Can view personal payment history"),
         ]
 
 

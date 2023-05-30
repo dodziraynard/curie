@@ -1,5 +1,5 @@
 {% extends 'templates/website/base_template.html' %}
-{% block page_title %}Home{% endblock %}
+{% block page_title %}GLOBAL EVANGELICAL BASIC SCHOOL{% endblock %}
 {% load static %}
 
 {% block content %}
@@ -8,7 +8,7 @@ style="background-image: url({% static 'images/home-page-banner.jpeg' %})">
 <div>
     <h1 class="text-center text-light">Quality Education</h1>
     <h5 class="text-center text-light">FROM US TO YOU</h5>
-    <p class="text-center mt-5 bubble"><a href="/" class="btn btn-primary p-3"><strong>Enroll now</strong></a></p>
+    <p class="text-center mt-5 bubble"><a href="{% url 'website:enrollment' %}" class="btn btn-primary p-3"><strong>Enroll now</strong></a></p>
 </div>
 </div>
 

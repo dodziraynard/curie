@@ -32,7 +32,7 @@ class Invoice(models.Model):
         (InvoiceStatus.DRAFT.value,InvoiceStatus.DRAFT.value),
         (InvoiceStatus.PENDING.value,InvoiceStatus.PENDING.value),
     ]
-    students = models.ManyToManyField(Student)
+    students = models.ManyToManyField(Student, related_name="invoices")
     name = models.TextField()
     due_date = models.DateTimeField(null=True, blank=True)
     note = models.TextField()

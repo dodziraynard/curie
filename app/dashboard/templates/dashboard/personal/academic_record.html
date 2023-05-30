@@ -1,0 +1,114 @@
+{% extends 'templates/dashboard/base_template.html' %}
+{% block page_title %}Personal Academic Record{% endblock %}
+{% block active-sidebar-item-id %}personal_academic_record{%endblock%}
+
+{% block breadcrumb %}
+<section class="breadcrumb">
+    <a href="{% url 'dashboard:index' %}" class="">Home <i class="bi bi-chevron-right"></i></a>
+    <a href="" class="active">Personal Academic Record</a>
+</section>
+{% endblock %}
+
+{% block content %}
+<!-- Modal -->
+<div class="modal fade" id="academicRecordModal" tabindex="-1" aria-labelledby="academicRecordModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-l">
+        <div class="modal-content px-4">
+            <div class="modal-header">
+                <h5 class="modal-title" id="academicRecordModalLabel">Choose session</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            {% if sessions %}
+            <form action="{% url 'pdf:personal_academic_report' %}" class="col-md-5 mx-auto overflow-auto needs-validation" novalidate>
+                <div class="form-group my-2">
+                    <label class="label" for="session">School Session</label>
+                    <select class="form-select" name="session" id="session" required>
+                        {% for session in sessions %}
+                            <option value="{{session.id}}">{{session.name}}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="invalid-feedback">
+                        Please select an academic year.
+                    </div>
+                </div>
+
+                <div class="form-group my-4 d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary">View Record</button>
+                </div>
+            </form>
+            {% else %}
+            
+            <p class="text-warning text-center h6 my-5">No records found.</p>
+            
+            {% endif %}
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End of Modal -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content px-4">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reportModalLabel">Unofficial Transcript</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="height:80vh">
+                <div class="embed-responsive embed-responsive-4by3">
+                    <iframe id="report-iframe" frameborder="0" frameborder="0"
+                    src="{% url 'pdf:pesonal_transcript' %}"
+                        style="
+                                overflow: hidden;
+                                overflow-x: hidden;
+                                overflow-y: hidden;
+                                height: 100%;
+                                width: 100%;
+                                position: absolute;
+                                top: 0px;
+                                left: 0px;
+                                right: 0px;
+                                bottom: 0px;" height="100%" width="100"></iframe>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a id="report-preview-button" href="{% url 'pdf:pesonal_transcript' %}" class="btn btn-primary" target="_blank">Open in new table</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- End of Modal -->
+
+<h4 class="page-header"><i class='icon bx bx-group'></i> PERSONAL ACADEMIC RECORD</h4>
+<section class="card">
+    <div class="card-header d-flex justify-content-between">
+        <h4>Type of Record</h4>
+    </div>
+    <div class="card-body">
+        <div class="col-md-10 mx-auto" style="overflow-x: auto;">
+            <div class="d-flex justify-content-center flex-wrap">
+                <div class="col-md-3 col-10 d-flex m-2 border flex-column"  data-bs-toggle="modal" data-bs-target="#reportModal">
+                    <h2 class="text-center p-1"><i class="bi bi-receipt"></i></h2>
+                    <span  class="btn btn p-4 text-center btn-light">
+                        <h5 class="text-primary">Transcript</h5>
+                    </span>
+                </div>
+                <div class="col-md-3 col-10 d-flex m-2 border flex-column" data-bs-toggle="modal" data-bs-target="#academicRecordModal">
+                    <h2 class="text-center p-1"><i class="bi bi-person-vcard"></i></h2>
+                    <span  class="btn btn p-4 text-center btn-light">
+                        <h5 class="text-primary">Terminal Report</h5>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

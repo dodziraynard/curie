@@ -21,7 +21,6 @@
     <title>{% block page_title %}Home{% endblock %} | LMS</title>
 </head>
 
-
 <body>
     {% include 'dashboard/modals/general_deletion_modal.html' %}
 
@@ -51,6 +50,7 @@
             <p class="ms-2">GEBLMS</p>
         </section>
 
+        {% if perms.setup.view_dashboard or perms.setup.view_action_center %}
         <h6 class="header text-muted mt-4">HOME</h6>
         {% if perms.setup.view_dashboard %}
         <a href="{% url 'dashboard:index' %}">
@@ -67,8 +67,12 @@
                 <span class="label">Action Center</span>
             </div>
         </a>
-        <h6 class="header text-muted mt-4">ENTITIES</h6>
         {% endif %}
+        <hr>
+        {% endif %}
+
+        {% if perms.setup.view_student or perms.setup.view_staff or perms.setup.view_class or perms.setup.view_subject or perms.setup.view_department or perms.setup.view_course or perms.setup.view_house %}
+        <h6 class="header text-muted mt-4">ENTITIES</h6>
         {% if perms.setup.view_student %}
         <a href="{% url 'dashboard:students' %}">
             <div class="menu-item" id="students">
@@ -125,6 +129,10 @@
             </div>
         </a>
         {% endif %}
+        <hr>
+        {% endif %}
+        
+        {% if perms.setup.view_inventory or perms.setup.view_accounting or perms.setup.view_alert or perms.setup.view_reporting %}
         <h6 class="header text-muted mt-4">APPLICATIONS</h6>
         {% if perms.setup.view_inventory %}
         <a href="{% url 'dashboard:inventory_index' %}">
@@ -158,6 +166,41 @@
             </div>
         </a>
         {% endif %}
+        <hr>
+        {% endif %}
+        
+        {% if perms.setup.view_personal_academic_record or perms.setup.view_personal_invoice or perms.setup.view_personal_payment_history %}
+        <h6 class="header text-muted mt-4">PERSONAL</h6>
+        {% if perms.setup.view_personal_academic_record %}
+        <a href="{% url 'dashboard:personal_academic_record' %}">
+            <div class="menu-item" id="personal_academic_record">
+                <i class='icon bi bi-database'></i>
+                <span class="label">Academic Record</span>
+            </div>
+        </a>
+        {% endif %}
+        
+        {% if perms.setup.view_personal_invoice %}
+        <a href="{% url 'dashboard:my_invoices' %}">
+            <div class="menu-item" id="personal_invoice">
+                <i class='icon bi bi-receipt'></i>
+                <span class="label">My Invoices</span>
+            </div>
+        </a>
+        {% endif %}
+        
+        {% if perms.setup.view_personal_payment_history %}
+        <a href="{% url 'dashboard:payment_history' %}">
+            <div class="menu-item" id="payment_history">
+                <i class='icon bi bi-wallet'></i>
+                <span class="label">Payment History</span>
+            </div>
+        </a>
+        {% endif %}
+        <hr>
+        {% endif %}
+        
+        {% if perms.setup.manage_users or perms.setup.manage_setup %}
         <h6 class="header text-muted mt-4">SYSTEM</h6>
         {% if perms.setup.manage_users %}
         <a href="{% url 'accounts:users' %}">
@@ -175,6 +218,9 @@
             </div>
         </a>
         {% endif %}
+        <hr>
+        {% endif %}
+        
         <a href="{% url 'accounts:logout' %}">
             <div class="menu-item">
                 <i class='icon bx bx-lock'></i>

@@ -1,0 +1,111 @@
+<div>
+    <div style="font-family: 'Roboto', sans-serif;;">
+        <h1 style="text-align: center;  margin: 0;">GHANA EDUCATION SERVICE</h1>
+        <h1
+            style="text-align: center; margin: 0; padding-top: 0.5em; font-size: 2em; background-color: rgb(240, 240, 240);">
+            {{school.name}}
+        </h1>
+        <table>
+            <tr>
+                <td>
+                    <table>
+                        <tr>
+                            <td>
+                                <p style="text-align: left;">Student ID: </p>
+                            </td>
+                            <td>
+                                <h6 style="text-align: left;">{{user.student.student_id}}</h6>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p style="text-align: left;">Surname: </p>
+                            </td>
+                            <td>
+                                <h6 style="text-align: left;">{{user.surname}}</h6>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p style="text-align: left;">Other Names: </p>
+                            </td>
+                            <td>
+                                <h6 style="text-align: left;">{{user.other_names}}</h6>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td>
+                    <p style="text-align: center; padding: 0; margin: 0">
+                        <img src="{{user.student.logo_url}}" height="60">
+                    </p>
+                </td>
+                <td>
+                    <table>
+                        <tr>
+                            <td>
+                                <p style="text-align: right;">Course: </p>
+                            </td>
+                            <td colspan="2">
+                                <h6 style="text-align: right;">{{user.student.course.name}}</h6>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        
+        <!-- <table>
+            {% for low,high,grade in gradings %}
+            <tr style="border: 1px solid gray;">
+                <td style="padding:0.2em">{{high}}-{{low}}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td style="padding:0.2em">A</td>
+            </tr>
+        </table> -->
+    </div>
+    <h1 style="text-align: center;  margin: 0.4em 0 0 0; padding-top: 1em; background-color: #f0f0f0;">
+        UNOFFICIAL TRANSCRIPT
+    </h1>
+    <br>
+   
+    {% for session,records in data %}
+    <h1>
+        ACADEMIC YEAR: {{session.academic_year}},
+        &ThinSpace;
+        TERM/SEMESTER: {{session.semester}}
+    </h1>
+    <table>
+        <thead>
+            <tr style="border-bottom:1px solid gray; padding:0.3em">
+                <th style="text-align: start;">SUBJECT</th>
+                <th>TOTAL (100%)</th>
+                <th>GRADE</th>
+                <th>REMARK</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in records %}
+            <tr>
+                <td style="padding:0.3em"><h3>{{record.subject.name}}</h3></td>
+                <td style="text-align: center; padding:0.3em"><h3>{{record.total}}</h3></td>
+                <td style="text-align: center; padding:0.3em"><h3>{{record.grade}}</h3></td>
+                <td style="text-align: center; padding:0.3em"><h3>{{record.remark}}</h3></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    {% endfor %}
+    
+
+    <div id="footer_content">
+        <p style="text-align: left;" style="margin:0">
+            <i>Printed @ {{current_time}}</i>
+        </p>
+    </div>
+</div>
+
+<pdf:nextpage></pdf:nextpage>
