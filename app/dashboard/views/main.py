@@ -78,6 +78,8 @@ class DeleteModelView(PermissionRequiredMixin, View):
         try:
             if hasattr(model_class, "deleted"):
                 model_class.objects.filter(id=instance_id).update(deleted=True)
+                messages.success(request, "Successfully deleted.")
+                return redirect(request.META.get("HTTP_REFERER"))
             else:
                 res = model_class.objects.filter(id=instance_id).delete()
         except ProtectedError as _:
@@ -89,7 +91,7 @@ class DeleteModelView(PermissionRequiredMixin, View):
         except Exception as e:
             messages.error(request, str(e))
             return redirect(request.META.get("HTTP_REFERER"))
-        if res and res[0]:
+        if res:
             messages.success(request, "Successfully deleted.")
         else:
             messages.info(request, "Item not found")

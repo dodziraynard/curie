@@ -24,7 +24,7 @@ def send_notification(notification_id):
 
 @shared_task
 def update_students_account(total_affected_student_ids, invoice_id):
-    invoice = Invoice.objects.filter(id=invoice_id).first()
+    invoice = Invoice.objects.filter(id=invoice_id, deleted=False).first()
     if not invoice: return
 
     invoice.status = InvoiceStatus.PENDING.value
@@ -43,7 +43,7 @@ def update_students_account(total_affected_student_ids, invoice_id):
             else:
                 total_out += transaction.amount
 
-        invoice_items = InvoiceItem.objects.filter(invoice__students=student)
+        invoice_items = InvoiceItem.objects.filter(invoice__students=student,deleted=False)
         for item in invoice_items:
             if item.type.lower() == InvoiceItemType.CREDIT.value:
                 total_in += item.amount

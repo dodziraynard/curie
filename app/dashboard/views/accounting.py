@@ -40,7 +40,7 @@ class InvoicesView(PermissionRequiredMixin, View):
         query = request.GET.get("query")
         from_date = request.GET.get("from_date")
         to_date = request.GET.get("to_date")
-        invoices = Invoice.objects.all()
+        invoices = Invoice.objects.filter(deleted=False)
         if query:
             invoices = invoices.filter(name__icontains=query)
         if from_date:

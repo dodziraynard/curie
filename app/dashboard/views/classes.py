@@ -17,8 +17,8 @@ class ClassesView(PermissionRequiredMixin, View):
 
     @method_decorator(login_required(login_url="accounts:login"))
     def get(self, request):
-        classes = Klass.objects.all()
-        courses = Course.objects.all()
+        classes = Klass.objects.filter(deleted=False)
+        courses = Course.objects.filter(deleted=False)
         staff = Staff.objects.filter(user__is_active=True, has_left=False)
         context = {
             "classes": classes,
