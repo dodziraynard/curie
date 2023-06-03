@@ -177,7 +177,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for item in invoice.invoice_items.all %}
+                    {% for item in invoice_items %}
                     <tr>
                         <td>{{forloop.counter}}</td>
                         <td>{{item.name}}</td>
@@ -194,7 +194,7 @@
                             {% if perms.setup.delete_invoiceitem %}
                             <form action="{% url 'dashboard:delete_model' item.model_name item.id %}"
                                 method="POST" class="requires-confirmation"
-                                data-message="Click on okay to permanently delete '{{item.user.get_name}}'.">
+                                data-message="Click on okay to permanently delete '{{item.name}}'.">
                                 {% csrf_token %}
                                 <input type="hidden" name="item_id" value="{{student.id}}">
                                 <button type="submit" class="btn btn-sm btn-light"><span class="d-flex">

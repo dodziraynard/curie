@@ -16,9 +16,6 @@ class ModelMixin(models.Model):
     def model_name(self):
         return self.__class__.__name__.lower()
 
-    def save(self, *args, **kwargs):
-        # self.full_clean()
-        super().save(*args, **kwargs)
 
 
 # Just for permissions

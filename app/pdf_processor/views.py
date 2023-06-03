@@ -174,13 +174,14 @@ class BulkStudentBillSheet(PermissionRequiredMixin, View):
         data = []
         total = invoice.total_amount
         Statement = namedtuple("Statement", "name type amount")
-        for item in invoice.invoice_items.all():
+        for item in invoice.invoice_items.filter(deleted=False):
             statement = Statement(item.name, item.type, item.amount)
             data.append(statement)
 
         for student in invoice.students.all():
             arears = round(total - float(student.user.account.amount_payable),
                            2) * -1
+            arears = [0,arears][arears!=0]
             records.append([student, total, arears, data[::]])
 
         context = {

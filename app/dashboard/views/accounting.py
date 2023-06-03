@@ -109,6 +109,7 @@ class InvoiceDetailsView(PermissionRequiredMixin, View):
         classes = Klass.objects.filter(deleted=False)
         context = {
             "invoice": invoice,
+            "invoice_items": invoice.invoice_items.filter(deleted=False),
             "classes": classes,
             "sessions": SchoolSession.objects.filter(deleted=False),
         }
