@@ -29,7 +29,7 @@
 </div>
 
 <div class="modal fade" id="studentListModal" tabindex="-1" aria-labelledby="studentListModal" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content px-4">
             <div class="modal-header">
                 <h5 class="modal-title" id="studentListModal">Students</h5>
@@ -39,6 +39,7 @@
                 <thead>
                     <tr>
                         <th>Name</th>
+                        <th>Student ID</th>
                         <th>Balance</th>
                     </tr>
                 </thead>
@@ -46,6 +47,7 @@
                     {% for student in invoice.students.all %}
                     <tr>
                         <td>{{student.user.get_name}}</td>
+                        <td>{{student.student_id}}</td>
                         <td>{{student.user.account.balance}}</td>
                     </tr>
                     {% endfor %}

@@ -48,9 +48,10 @@
                         <th>S/N</th>
                         <th>CODE</th>
                         <th>NAME</th>
-                        <th>Department</th>
+                        <th>SHORT NAME</th>
+                        <th>DEPARTMENT</th>
                         <th>ELECTIVE</th>
-                        <th>Action</th>
+                        <th>ACTION</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -59,6 +60,7 @@
                         <td>{{forloop.counter}}</td>
                         <td>{{subject.code}}</td>
                         <td>{{subject.name}}</td>
+                        <td>{{subject.short_name}}</td>
                         <td>{{subject.department.name}}</td>
                         <td>{{subject.is_elective|yesno:"Yes,No" }}</td>
                         <td class="d-flex">

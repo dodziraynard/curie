@@ -1,7 +1,7 @@
 <form action="{% url 'dashboard:create_update_subject' %}" class="needs-validation my-4" method="POST" novalidate>
     {% csrf_token %}
     <input type="hidden" name="subject_id" value="{{subject.id}}">
-    <div class="form-group">
+    <div class="form-group mb-3">
         <label for="name">Code</label>
         <input class="form-control" placeholder="Subject Code e.g., GEO" value="{{code}}" type="text" name="code"
             id="code" required>
@@ -9,9 +9,18 @@
             Please this field is required.
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group my-3">
         <label for="name">Name</label>
         <input class="form-control" placeholder="Name e.g, Geography" value="{{name}}" type="text" name="name" id="name"
+            required>
+        <div class="invalid-feedback">
+            Please this field is required.
+        </div>
+    </div>
+    <div class="form-group my-3">
+        <label for="short_name">Short Name</label>
+        <p class="m-0 text-muted"><small>Will be used in SMS. It should not be more than 7 characters.</small></p>
+        <input class="form-control" placeholder="ENG L." value="{{short_name}}" type="text" name="short_name" id="short_name"
             required>
         <div class="invalid-feedback">
             Please this field is required.

@@ -181,7 +181,7 @@ class BulkStudentBillSheet(PermissionRequiredMixin, View):
         for student in invoice.students.all():
             arears = round(total - float(student.user.account.amount_payable),
                            2) * -1
-            arears = [0,arears][arears!=0]
+            arears = [0.00,arears][arears!=0]
             records.append([student, total, arears, data[::]])
 
         context = {

@@ -212,6 +212,7 @@ class Course(ModelMixin):
 class Subject(ModelMixin):
     code = models.CharField(max_length=50, unique=True)
     name = models.CharField(max_length=100, unique=True)
+    short_name = models.CharField(default="", max_length=100)
     department = models.ForeignKey("Department",
                                    related_name="subjects",
                                    null=True,
