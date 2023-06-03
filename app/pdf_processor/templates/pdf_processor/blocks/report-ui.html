@@ -155,7 +155,7 @@
         <tbody>
             <tr style="padding: 0.2em; background-color: #f0f0f0;">
                 <td colspan="7">
-                    <h3 style="text-align: center; padding: 1em auto 0.5em auto;">CORE SUBJECTS</h3>
+                    <h3 style="text-align: center; padding: 1em auto 0.5em auto;">SUBJECTS</h3>
                 </td>
             </tr>
             {% for record in records %}
@@ -185,12 +185,12 @@
             </tr>
             {% endif %}
             {% endfor %}
-
+<!-- 
             <tr style="padding: 0.2em; background-color: #f0f0f0;">
                 <td colspan="7">
                     <h3 style="text-align: center; padding: 1em auto 0.5em auto;">ELECTIVE SUBJECTS</h3>
                 </td>
-            </tr>
+            </tr> -->
             {% for record in records %}
             {% if record.subject.is_elective %}
             <tr style="padding: 0.5em;">
