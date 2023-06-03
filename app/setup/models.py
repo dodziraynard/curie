@@ -17,7 +17,7 @@ class ModelMixin(models.Model):
         return self.__class__.__name__.lower()
 
     def save(self, *args, **kwargs):
-        self.full_clean()
+        # self.full_clean()
         super().save(*args, **kwargs)
 
 

@@ -155,23 +155,31 @@
             </tr>
         </tbody>
     </table>
-    
+    <br>
     <table>
         <tbody>
             <tr>
                 <td colspan="1"></td>
                 <td>
-                    <br>
                     <h4>AREARS: <strong>GHC {{arears}}</strong></h4>
                     <h1>AMOUNT PAYABLE (AFTER AREARS): <strong>GHC {{student.user.account.amount_payable}}</strong></h1>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <p style="text-align: center; margin:0; padding:0;">
-                        <img src="{{school.assistant_head_teacher.user.signature_url}}" alt="" height="50">
-                    </p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <br>
+    <table>
+        <tbody>
+            {% if invoice.get_formated_note %}
+            <tr>
+                <h3 style="margin:0">NOTE:</h3>
+                <p style="margin:0">{{invoice.get_formated_note |safe}}</p>
+            </tr>
+            {% endif %}
+            <tr>
+                <td cols="2"></td>
+                <td>
                     <p style="font-size: 1.5em; text-align: center; margin:0; padding:0;">....................</p>
                     <p style="font-size: 1.5em; text-align: center; margin:0; padding:0;">
                         {{school.assistant_head_teacher.user.get_name}}</p>
@@ -180,11 +188,8 @@
             </tr>
         </tbody>
     </table>
-
     
-
     <br>
-
     <div id="footer_content">
         <p style="text-align: left;" style="margin:0">
             <i>Printed @ {{current_time}}</i>

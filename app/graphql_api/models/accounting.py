@@ -46,6 +46,13 @@ class Invoice(ModelMixin):
     def student_count(self):
         return self.students.all().count()
 
+    def get_formated_note(self):
+        lines = self.note.split("\n")
+        formated = []
+        for line in lines:
+            formated.append(f"{line}<br>")
+        return "".join(formated)
+
     @property
     def total_amount(self):
         amount = 0

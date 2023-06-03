@@ -25,14 +25,14 @@ class TransactionType(enum.Enum):
 
 
 class InvoiceStatus(enum.Enum):
-    DRAFT = "DRAFT".lower()
-    PENDING = "PENDING".lower()
-    APPLIED = "APPLIED".lower()
+    DRAFT = "draft"
+    PENDING = "pending"
+    APPLIED = "applied"
 
 
 class InvoiceItemType(enum.Enum):
-    CREDIT = "CREDIT".lower()
-    DEBIT = "DEBIT".lower()
+    CREDIT = "credit"
+    DEBIT = "debit"
 
 
 class TransactionDirection(enum.Enum):

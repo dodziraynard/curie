@@ -187,6 +187,7 @@ class BulkStudentBillSheet(PermissionRequiredMixin, View):
             "session": invoice.session,
             "school": School.objects.first(),
             "records": records,
+            "invoice": invoice,
             "current_time": timezone.now(),
         }
 
