@@ -22,10 +22,10 @@
             class="requires-confirmation mx-2"
             data-message="Click on okay to reset the mapping for the selected session.">
             {% csrf_token %}
-            <input type="text" name="session" value="{{session.id}}">
-            <input type="text" name="subject" value="{{subject.id}}">
+            <input type="hidden" name="session" value="{{session.id}}">
+            <input type="hidden" name="subject" value="{{subject.id}}">
             {% for klass in classes %}
-            <input type="text" name="classes" value="{{klass.id}}">
+            <input type="hidden" name="classes" value="{{klass.id}}">
             {% endfor %}
             <button type="submit" class="btn btn-sm btn-outline-primary"><span class="d-flex">
                     <i class="bi bi-arrow-clockwise"></i> Reset</span>
