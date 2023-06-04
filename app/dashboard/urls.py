@@ -44,10 +44,12 @@ urlpatterns = [
     # Action Center
     path('action-center/', views.ActionCenterView.as_view(), name='action_center'),
     path('action-center/subject-mapping', views.SubjectMappingView.as_view(), name='subject_mapping'),
+    path('action-center/reset-subject-mapping', views.ResetSubjectMappingView.as_view(), name='reset_subject_mapping'),
     path('action-center/student-promotion', views.StudentPromotionView.as_view(), name='student_promotion'),
     path('action-center/student-promotion-revert', views.RevertPromotionView.as_view(), name='student_promotion_revert'),
     path('action-center/academic-record-selection', views.AcademicRecordSelectionView.as_view(), name='academic_record_selection'),
     path('action-center/academic-record-data', views.AcademicRecordDataView.as_view(), name='academic_record_data'),
+    path('action-center/reset-academic-record-data', views.ResetAcademicRecord.as_view(), name='reset_academic_record_data'),
 
     # Reporting
     path('reporting/index', views.ReportingIndexView.as_view(), name='reporting_index'),

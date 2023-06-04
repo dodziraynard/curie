@@ -17,8 +17,8 @@ class SubjectsView(PermissionRequiredMixin, View):
 
     @method_decorator(login_required(login_url="accounts:login"))
     def get(self, request):
-        subjects = Subject.objects.all()
-        departments = Department.objects.all()
+        subjects = Subject.objects.filter(deleted=False)
+        departments = Department.objects.filter(deleted=False)
         context = {
             "subjects": subjects,
             "departments": departments,
@@ -40,5 +40,5 @@ class CreateUpdateSubjectView(PermissionRequiredMixin, CreateUpdateMixin):
 
     def get_context_data(self):
         return {
-            "departments": Department.objects.all(),
+            "departments": Department.objects.filter(deleted=False),
         }

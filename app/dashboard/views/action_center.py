@@ -110,6 +110,32 @@ class SubjectMappingView(PermissionRequiredMixin, View):
         return redirect(request.META.get("HTTP_REFERER"))
 
 
+class ResetSubjectMappingView(PermissionRequiredMixin, View):
+    permission_required = [
+        "setup.view_subject_mapping",
+    ]
+
+    @method_decorator(login_required(login_url="accounts:login"))
+    def get(self, request):
+        return redirect("dashboard:action_center")
+
+    @method_decorator(login_required(login_url="accounts:login"))
+    def post(self, request):
+        session_id = request.POST.get("session_id") or -1
+        current_session = SchoolSession.objects.filter(id=session_id).first(
+        ) or School.objects.first().get_current_session()
+
+        result = SubjectMapping.objects.filter(
+            session=current_session).delete()
+        if result:
+            messages.info(request,
+                          f"Mappting reset for {current_session.name}")
+        else:
+            messages.error(request,
+                           f"Couldn't reset for {current_session.name}")
+        return redirect(request.META.get("HTTP_REFERER"))
+
+
 class StudentPromotionView(PermissionRequiredMixin, View):
     template_name = "dashboard/action_center/student_promotion.html"
     permission_required = [
@@ -217,9 +243,10 @@ class AcademicRecordSelectionView(PermissionRequiredMixin, View):
 
     @method_decorator(login_required(login_url="accounts:login"))
     def get(self, request):
-        sessions = SchoolSession.objects.all().order_by("-start_date")
-        classes = Klass.objects.all()
-        subjects = Subject.objects.all()
+        sessions = SchoolSession.objects.filter(
+            deleted=False).order_by("-start_date")
+        classes = Klass.objects.filter(deleted=False)
+        subjects = Subject.objects.filter(deleted=False)
         if not request.user.has_perm("setup.manage_other_report"):
             staff = request.user.staff if hasattr(request.user,
                                                   "staff") else None
@@ -298,6 +325,7 @@ class AcademicRecordDataView(PermissionRequiredMixin, View):
             "records": records,
             "session": session,
             "subject": subject,
+            "classes": classes,
         }
         return render(request, self.template_name, context)
 
@@ -365,4 +393,43 @@ class AcademicRecordDataView(PermissionRequiredMixin, View):
         record.compute_position()
 
         messages.success(request, "Scores updated successfully")
+        return redirect(request.META.get("HTTP_REFERER"))
+
+
+class ResetAcademicRecord(PermissionRequiredMixin, View):
+    permission_required = [
+        "setup.change_academic_record",
+    ]
+
+    @method_decorator(login_required(login_url="accounts:login"))
+    def get(self, request):
+        return redirect("dashboard:academic_record_selection")
+
+    @method_decorator(login_required(login_url="accounts:login"))
+    def post(self, request):
+        session = request.POST.get("session")
+        subject = request.POST.get("subject")
+        classes = request.POST.getlist("classes")
+
+        session = get_object_or_404(SchoolSession, id=session)
+        subject = get_object_or_404(Subject, id=subject)
+        classes = Klass.objects.filter(id__in=classes)
+
+        students = Student.objects.filter(start_date__lte=session.start_date,
+                                          deleted=False,
+                                          end_date__gte=session.end_date)
+        if classes:
+            students = students.filter(klass__in=classes)
+        if subject.is_elective:
+            students = students.filter(electives=subject)
+
+        records = Record.objects.filter(session=session,
+                                        student__in=students,
+                                        subject=subject)
+        result = records.delete()
+        if result:
+            messages.info(request, "Record deleted.")
+            return redirect("dashboard:academic_record_selection")
+        else:
+            messages.info(request, "Record not found.")
         return redirect(request.META.get("HTTP_REFERER"))
