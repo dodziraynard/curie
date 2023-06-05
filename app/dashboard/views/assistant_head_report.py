@@ -49,7 +49,7 @@ class AssistantHeadSessionReportDataView(PermissionRequiredMixin, View):
                                                 session=session)
 
         reports = SessionReport.objects.filter(student__in=students,
-                                               session=session)
+                                               session=session).order_by("klass", "student__user__surname")
         context = {
             "reports": reports,
             "session": session,
