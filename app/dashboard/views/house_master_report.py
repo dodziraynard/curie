@@ -67,7 +67,7 @@ class HouseMasterSessionReportDataView(PermissionRequiredMixin, View):
         context = {
             "reports": reports.order_by("klass", "student__user__surname"),
             "session": session,
-            "remarks": Remark.objects.fil(),
+            "remarks": Remark.objects.filter(deleted=False),
         }
         return render(request, self.template_name, context)
 
