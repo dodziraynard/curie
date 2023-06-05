@@ -18,10 +18,10 @@
     </div>
 
     <div class="mt-4 form-group">
-        <p>Electives</p>
+        <p>All Subjects</p>
         {% for subject in subjects|dictsort:"name" %}
         <div class="form-check">
-            <label for="filed_{{subject.id}}">{{subject.name}}</label>
+            <label for="filed_{{subject.id}}">{{subject.name}} ({{subject.code}})</label>
             <input class="form-check-input" type="checkbox" value="{{subject.id}}" name="subjects"
                 id="filed_{{subject.id}}"
                 {% if subject in course.subjects.all or subject.id in subjects %}checked{% endif %}>
@@ -31,6 +31,21 @@
         <a href="{% url 'dashboard:subjects' %}" target="_blank" class="mt-2 text-end d-block text-primary"><i
                 class="bi bi-plus"></i> New subject</a>
     </div>
+    
+    <div class="mt-4 form-group">
+        <p>Departments</p>
+        {% for department in departments|dictsort:"name" %}
+        <div class="form-check">
+            <label for="filed_{{department.id}}">{{department.name}}</label>
+            <input class="form-check-input" type="checkbox" value="{{department.id}}" name="departments"
+                id="filed_{{department.id}}"
+                {% if department in course.departments.all or department.id in departments %}checked{% endif %}>
+        </div>
+        {% endfor %}
+        <a href="{% url 'dashboard:departments' %}" target="_blank" class="mt-2 text-end d-block text-primary"><i
+                class="bi bi-plus"></i> New department</a>
+    </div>
+
 
     <div class="mt-4 form-group">
         <button type="submit" class="btn btn-primary btn-sm">Submit</button>

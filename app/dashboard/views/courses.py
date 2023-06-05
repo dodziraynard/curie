@@ -6,7 +6,7 @@ from django.views import View
 
 from dashboard.forms import CourseForm
 from dashboard.mixins import CreateUpdateMixin
-from dashboard.models import Course, Subject
+from dashboard.models import Course, Department, Subject
 
 
 class CoursesView(PermissionRequiredMixin, View):
@@ -17,10 +17,12 @@ class CoursesView(PermissionRequiredMixin, View):
 
     @method_decorator(login_required(login_url="accounts:login"))
     def get(self, request):
-        courses = Course.objects.all()
-        subjects = Subject.objects.filter(is_elective=True)
+        courses = Course.objects.filter(deleted=False)
+        subjects = Subject.objects.filter(deleted=False)
+        departments = Department.objects.filter(deleted=False)
         context = {
             "courses": courses,
+            "departments": departments,
             "subjects": subjects,
         }
         return render(request, self.template_name, context)
@@ -39,6 +41,9 @@ class CreateUpdateCourseView(PermissionRequiredMixin, CreateUpdateMixin):
     )
 
     def get_context_data(self):
+        departments = Department.objects.filter(deleted=False)
+        subjects = Subject.objects.filter(deleted=False)
         return {
-            "subjects": Subject.objects.filter(is_elective=True),
+            "subjects": subjects,
+            "departments": departments,
         }

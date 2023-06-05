@@ -38,17 +38,16 @@ class SubjectMappingView(PermissionRequiredMixin, View):
     @method_decorator(login_required(login_url="accounts:login"))
     def get(self, request):
         session_id = request.GET.get("session_id") or -1
-
-        sessions = SchoolSession.objects.all().order_by("-start_date")
+        sessions = SchoolSession.objects.filter(
+            deleted=False).order_by("-start_date")
         classes = Klass.objects.filter(deleted=False)
-        subjects = Subject.objects.filter(is_elective=False)
         teachers = Staff.objects.filter(deleted=False)
 
         current_session = SchoolSession.objects.filter(id=session_id).first(
         ) or School.objects.first().get_current_session()
 
         for class_ in classes:
-            subjects = subjects.union(class_.course.subjects.all())
+            subjects = class_.course.subjects.filter(deleted=False)
             for subject in subjects:
                 mapping, created = SubjectMapping.objects.get_or_create(
                     klass=class_, subject=subject, session=current_session)

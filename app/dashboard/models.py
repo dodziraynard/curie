@@ -191,6 +191,7 @@ class Course(ModelMixin):
     code = models.CharField(max_length=50, unique=True)
     name = models.CharField(max_length=100, unique=True)
     subjects = models.ManyToManyField("Subject", related_name="courses")
+    departments = models.ManyToManyField("Department", related_name="courses", blank=True)
     hod = models.ForeignKey("Staff",
                             null=True,
                             blank=True,
