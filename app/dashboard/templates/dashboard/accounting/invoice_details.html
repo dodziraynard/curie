@@ -40,6 +40,7 @@
                     <tr>
                         <th>Name</th>
                         <th>Student ID</th>
+                        <th>CLASS</th>
                         <th>Balance</th>
                     </tr>
                 </thead>
@@ -48,6 +49,7 @@
                     <tr>
                         <td>{{student.user.get_name}}</td>
                         <td>{{student.student_id}}</td>
+                        <td>{{student.klass.name}}</td>
                         <td>{{student.user.account.balance}}</td>
                     </tr>
                     {% endfor %}
