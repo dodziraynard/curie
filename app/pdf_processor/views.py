@@ -25,10 +25,10 @@ class SingleAcademicRecordReportView(PermissionRequiredMixin, View):
     ]
 
     @method_decorator(login_required(login_url="accounts:login"))
-    def get(self, request, session_id, class_id, student_id):
+    def get(self, request, session_id, student_id):
         session = get_object_or_404(SchoolSession, pk=session_id)
         records = Record.objects.filter(session=session,
-                                        klass__class_id=class_id,
+                                        # klass__class_id=class_id,
                                         student__student_id=student_id)
 
         session_report = SessionReport.objects.filter(

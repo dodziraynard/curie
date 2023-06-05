@@ -5,8 +5,8 @@ from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
 
-from dashboard.models import Klass, SessionReport, StudentPromotionHistory
-from setup.models import Attitude, Conduct, Interest, Remark, SchoolSession
+from dashboard.models import SessionReport, StudentPromotionHistory
+from setup.models import SchoolSession
 
 
 class AssistantHeadSessionReportFilterView(PermissionRequiredMixin, View):
@@ -78,7 +78,6 @@ class AssistantHeadSessionReportDataView(PermissionRequiredMixin, View):
         for report in reports:
             report.assistant_head_signature = request.user.signature
             report.save()
-            print("report", report.assistant_head_signature)
 
         messages.success(request, "Record successfully updated.")
         return redirect(request.META.get("HTTP_REFERER"))
