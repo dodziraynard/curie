@@ -327,7 +327,7 @@
         <p>Electives</p>
         {% for subject in subjects|dictsort:"name" %}
         <div class="form-check">
-            <label for="filed_{{subject.id}}">{{subject.name}}</label>
+            <label for="filed_{{subject.id}}">{{subject.name}} ({{subject.code}})</label>
             <input class="form-check-input" type="checkbox" value="{{subject.id}}" name="elective_ids"
                 id="filed_{{subject.id}}" 
                 {% if subject in student.electives.all or subject.id in elective_ids%}checked{% endif %}>

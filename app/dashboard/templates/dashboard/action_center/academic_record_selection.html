@@ -37,7 +37,7 @@
                 <select class="form-select" name="subject" id="subject" required>
                     <option value="">Select Subject</option>
                     {% for subject in subjects %}
-                        <option value="{{subject.id}}">{{subject.name}}|{{subject.name}}</option>
+                        <option value="{{subject.id}}">{{subject.name}}|{{subject.code}}</option>
                     {% endfor %}
                 </select>
                 <div class="invalid-feedback">
