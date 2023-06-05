@@ -99,7 +99,7 @@
                                     {% endfor %}
                                 </select>
                                 <button type="button" class="btn btn-light m-0" data-bs-toggle="modal"
-                                    onclick=updateReportIframeSrc("{% url 'pdf:single_report' session.id report.klass.class_id report.student.student_id %}")
+                                    onclick=updateReportIframeSrc("{% url 'pdf:single_report' session.id report.student.student_id %}")
                                     data-bs-target="#reportModal">View Report</button>
                             </td>
                             <td class="text-center">
