@@ -21,9 +21,9 @@
         <p>All Subjects</p>
         {% for subject in subjects|dictsort:"name" %}
         <div class="form-check">
-            <label for="filed_{{subject.id}}">{{subject.name}} ({{subject.code}})</label>
+            <label for="filed_subject_{{subject.id}}">{{subject.name}} ({{subject.code}})</label>
             <input class="form-check-input" type="checkbox" value="{{subject.id}}" name="subjects"
-                id="filed_{{subject.id}}"
+                id="filed_subject_{{subject.id}}"
                 {% if subject in course.subjects.all or subject.id in subjects %}checked{% endif %}>
         </div>
         {% endfor %}
@@ -36,9 +36,9 @@
         <p>Departments</p>
         {% for department in departments|dictsort:"name" %}
         <div class="form-check">
-            <label for="filed_{{department.id}}">{{department.name}}</label>
+            <label for="filed_department_{{department.id}}">{{department.name}}</label>
             <input class="form-check-input" type="checkbox" value="{{department.id}}" name="departments"
-                id="filed_{{department.id}}"
+                id="filed_department_{{department.id}}"
                 {% if department in course.departments.all or department.id in departments %}checked{% endif %}>
         </div>
         {% endfor %}
