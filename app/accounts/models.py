@@ -135,7 +135,7 @@ class Account(models.Model):
 
 class ActivityLog(models.Model):
     username = models.CharField(max_length=100)
-    action = models.CharField(max_length=100)
+    action = models.TextField()
     ip = models.CharField(max_length=100, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
