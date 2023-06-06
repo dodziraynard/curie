@@ -1,7 +1,9 @@
+import time
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models import Q
+from django.http import StreamingHttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
@@ -12,7 +14,10 @@ from dashboard.tasks import update_students_account
 from graphql_api.models.accounting import Invoice, InvoiceItem, Transaction
 from lms.utils.constants import TransactionDirection, TransactionStatusMessages
 from lms.utils.functions import make_model_key_value
+from pdf_processor.tasks import generate_bulk_pdf_bill_sheet
 from setup.models import SchoolSession
+from celery.result import AsyncResult
+from django.utils import timezone
 
 
 class AccountingIndexView(PermissionRequiredMixin, View):
@@ -272,3 +277,57 @@ class CreateUpdatePayments(PermissionRequiredMixin, View):
             status_message=TransactionStatusMessages.SUCCESS.value)
         transaction.update_account_balances()
         return redirect("dashboard:payments")
+
+
+class BulkInvoiceGenerator(PermissionRequiredMixin, View):
+    template_name = "pdf_processor/bulk-student-bill-sheet.html"
+    permission_required = [
+        "setup.view_dashboard",
+    ]
+
+    @method_decorator(login_required(login_url="accounts:login"))
+    def get(self, request, invoice_id):
+        invoice = get_object_or_404(Invoice, id=invoice_id)
+        filename = f"{invoice.name.lower().replace(' ', '-')}_{timezone.now().strftime('%y%m%d%H%M%S%f')}.pdf"
+
+        task = generate_bulk_pdf_bill_sheet.delay(invoice_id, filename)
+
+        return redirect("dashboard:bulk_bill_sheet_generation_status",
+                        task.task_id, filename)
+
+
+class GeneralReportStatusView(View):
+    template_name = "dashboard/accounting/bulk_bill_sheet_generation_status.html"
+
+    @method_decorator(login_required(login_url="accounts:login"))
+    def get(self, request, task_id, filename):
+        context = {
+            "task_id": task_id,
+            "filename": filename,
+        }
+        return render(request, self.template_name, context)
+
+
+class StreamGeneralReportStatusView(View):
+
+    @method_decorator(login_required(login_url="accounts:login"))
+    def get(self, request, task_id):
+        result = AsyncResult(task_id)
+        self.link = "dfadf"
+
+        def get_task_progress():
+            while True:
+                data = ""
+                if result.info:
+                    self.link = result.info.get("link") or self.link
+                    data = str(result.info.get("current", "")) + "/" + str(
+                        result.info.get("total", "")) + " " + result.info.get(
+                            "info", "")
+                time.sleep(1)
+                if result.status == "SUCCESS":
+                    yield 'data: DONE %s\n\n' % self.link
+                    break
+                yield 'data: %s\n\n' % data
+
+        return StreamingHttpResponse(get_task_progress(),
+                                     content_type='text/event-stream')

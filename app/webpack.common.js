@@ -17,7 +17,7 @@ module.exports = {
                 "./dashboard/templates/dashboard/base_template.html",
             filename: "templates/dashboard/base_template.html",
             publicPath: "/static/",
-            inject: "body"
+            inject: "head"
         }),
         new HtmlWebpackPlugin({
             template:

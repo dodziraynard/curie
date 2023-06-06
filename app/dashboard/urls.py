@@ -88,6 +88,10 @@ urlpatterns += [
     path('accounting/create-update-invoice', views.CreateUpdateInvoiceView.as_view(), name='create_update_invoice'),
     path('accounting/invoice/<str:invoice_id>/create_update_invoice_item', views.CreateUpdateInvoiceItem.as_view(), name='create_update_invoice_item'),
     path('accounting/invoice/<str:invoice_id>/details', views.InvoiceDetailsView.as_view(), name='invoice_details'),
+    
+    path('accounting/generate-bill-sheet/<str:invoice_id>', views.BulkInvoiceGenerator.as_view(), name='gerate_bulk_student_bill_sheet'),
+    path('accounting/generate-bill-sheet/<str:task_id>/<str:filename>/status', views.GeneralReportStatusView.as_view(), name='bulk_bill_sheet_generation_status'),
+    path('accounting/generate-bill-sheet/<str:task_id>/stream-status', views.StreamGeneralReportStatusView.as_view(), name='stream_bill_sheet_generation_status'),
 ]
 
 urlpatterns += [
