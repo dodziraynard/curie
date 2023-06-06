@@ -288,7 +288,8 @@ class BulkInvoiceGenerator(PermissionRequiredMixin, View):
     @method_decorator(login_required(login_url="accounts:login"))
     def get(self, request, invoice_id):
         invoice = get_object_or_404(Invoice, id=invoice_id)
-        filename = f"{invoice.name.lower().replace(' ', '-')}_{timezone.now().strftime('%y%m%d%H%M%S%f')}.pdf"
+        name = ''.join(filter(str.isalnum, invoice.name.lower()))
+        filename = f"{name}_{timezone.now().strftime('%y%m%d%H%M%S%f')}.pdf"
 
         task = generate_bulk_pdf_bill_sheet.delay(invoice_id, filename)
 
@@ -313,7 +314,7 @@ class StreamGeneralReportStatusView(View):
     @method_decorator(login_required(login_url="accounts:login"))
     def get(self, request, task_id):
         result = AsyncResult(task_id)
-        self.link = "dfadf"
+        self.link = "null"
 
         def get_task_progress():
             while True:
@@ -323,7 +324,6 @@ class StreamGeneralReportStatusView(View):
                     data = str(result.info.get("current", "")) + "/" + str(
                         result.info.get("total", "")) + " " + result.info.get(
                             "info", "")
-                time.sleep(1)
                 if result.status == "SUCCESS":
                     yield 'data: DONE %s\n\n' % self.link
                     break

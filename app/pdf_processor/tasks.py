@@ -110,7 +110,7 @@ def generate_bulk_pdf_bill_sheet(self, invoice_id, filename="file.pdf"):
     set_task_state(self,
                    "WRITING",
                    2,
-                   info=f"Writing the pdf: Found {4} records.")
+                   info=f"Writing the pdf: Found {len(records)} records.")
     render_to_pdf_file("pdf_processor/bulk-student-bill-sheet.html", filename,
                        context)
 
