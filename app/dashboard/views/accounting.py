@@ -3,7 +3,6 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models import Q
-from django.http import StreamingHttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
@@ -16,7 +15,6 @@ from lms.utils.constants import TransactionDirection, TransactionStatusMessages
 from lms.utils.functions import make_model_key_value
 from pdf_processor.tasks import generate_bulk_pdf_bill_sheet
 from setup.models import SchoolSession
-from celery.result import AsyncResult
 from django.utils import timezone
 
 
@@ -308,26 +306,3 @@ class GeneralReportStatusView(View):
         }
         return render(request, self.template_name, context)
 
-
-class StreamGeneralReportStatusView(View):
-
-    @method_decorator(login_required(login_url="accounts:login"))
-    def get(self, request, task_id):
-        result = AsyncResult(task_id)
-        self.link = "null"
-
-        def get_task_progress():
-            while True:
-                data = ""
-                if result.info:
-                    self.link = result.info.get("link") or self.link
-                    data = str(result.info.get("current", "")) + "/" + str(
-                        result.info.get("total", "")) + " " + result.info.get(
-                            "info", "")
-                if result.status == "SUCCESS":
-                    yield 'data: DONE %s\n\n' % self.link
-                    break
-                yield 'data: %s\n\n' % data
-
-        return StreamingHttpResponse(get_task_progress(),
-                                     content_type='text/event-stream')

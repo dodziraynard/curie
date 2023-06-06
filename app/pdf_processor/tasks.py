@@ -3,10 +3,13 @@ This module is responsible for processing files using the celery worker
 """
 from collections import namedtuple
 import django
+from dashboard.models import Record, SessionReport
+from django.db.models import Q
 
 from graphql_api.models.accounting import Invoice
-from setup.models import School
+from setup.models import School, SchoolSession
 from django.utils import timezone
+from num2words import num2words
 
 django.setup()
 
@@ -38,34 +41,6 @@ def set_task_state(task,
     except Exception as e:
         logger.error(str(e))
         return
-
-
-@shared_task(bind=True)
-def generate_bulk_pdf_report(self, filename="file.pdf"):
-    # Retrieving data
-    # set_task_state(self,
-    #                "RETRIEVING",
-    #                1,
-    #                info=f"Found {registrations.count()} records.")
-
-    context = {
-        "current_time": datetime.now().strftime("%d %B, %Y"),
-    }
-
-    # Writing PDF
-    parent = settings.BASE_DIR / "assets/generated/"
-    parent.mkdir(parents=True, exist_ok=True)
-    filename = parent / filename
-
-    set_task_state(self,
-                   "WRITING",
-                   2,
-                   info=f"Writing the pdf: Found {4} records.")
-    render_to_pdf_file('pdf_engine/general_report.html', filename, context)
-
-    # Preparing link
-    set_task_state(self, "GENERATING", 3, info="Generating download link")
-    set_task_state(self, "DONE", 3, info="Done")
 
 
 @shared_task(bind=True)
@@ -107,11 +82,69 @@ def generate_bulk_pdf_bill_sheet(self, invoice_id, filename="file.pdf"):
     parent.mkdir(parents=True, exist_ok=True)
     filename = parent / filename
 
+    set_task_state(
+        self,
+        "WRITING",
+        2,
+        info=f"Found {len(records)} records. Writing the pdf ......")
+    render_to_pdf_file("pdf_processor/bulk-student-bill-sheet.html", filename,
+                       context)
+
+    # Preparing link
+    set_task_state(self, "GENERATING", 3, info="Generating download link")
+    set_task_state(self, "DONE", 3, info="Done")
+
+
+@shared_task(bind=True)
+def generate_bulk_pdf_report(self,
+                             session_id,
+                             classes,
+                             student_ids,
+                             filename="file.pdf"):
+    set_task_state(self,
+                   "RETRIEVING RECORDS",
+                   1,
+                   info=f"Retrieving report data.")
+
+    session = SchoolSession.objects.filter(pk=session_id).first()
+    records = Record.objects.filter(
+        Q(session=session, klass_id__in=classes)
+        | Q(session=session, student__student_id__in=student_ids))
+
+    student_ids = set(records.values_list("student__student_id", flat=True))
+
+    session_reports = SessionReport.objects.filter(session=session)
+
+    data = []
+
+    for student_id in student_ids:
+        st_records = records.filter(student__student_id=student_id)
+        positions = st_records.values_list("position", flat=True)
+        st_reports = session_reports.filter(
+            student__student_id=student_id).first()
+        average_pos = "N/A"
+        if all(positions):
+            average_pos = num2words(sum(positions) // st_records.count(),
+                                    to="ordinal_num")
+        data.append((st_records, st_reports, average_pos))
+
+    context = {
+        "session": session,
+        "school": School.objects.first(),
+        "data": data,
+        "current_time": timezone.now(),
+    }
+
+    # Writing PDF
+    parent = settings.BASE_DIR / "assets/generated/"
+    parent.mkdir(parents=True, exist_ok=True)
+    filename = parent / filename
+
     set_task_state(self,
                    "WRITING",
                    2,
-                   info=f"Writing the pdf: Found {len(records)} records.")
-    render_to_pdf_file("pdf_processor/bulk-student-bill-sheet.html", filename,
+                   info=f"Found {len(data)} records. Writing the pdf ......")
+    render_to_pdf_file("pdf_processor/bulk-student-report.html", filename,
                        context)
 
     # Preparing link

@@ -160,49 +160,49 @@ class BulkAcademicRecordReportView(PermissionRequiredMixin, View):
         return HttpResponse("Not found", status=404)
 
 
-class BulkStudentBillSheet(PermissionRequiredMixin, View):
-    template_name = "pdf_processor/bulk-student-bill-sheet.html"
-    permission_required = [
-        "setup.view_dashboard",
-    ]
+# class BulkStudentBillSheet(PermissionRequiredMixin, View):
+#     template_name = "pdf_processor/bulk-student-bill-sheet.html"
+#     permission_required = [
+#         "setup.view_dashboard",
+#     ]
 
-    @method_decorator(login_required(login_url="accounts:login"))
-    def get(self, request, invoice_id):
-        invoice = get_object_or_404(Invoice, id=invoice_id)
+#     @method_decorator(login_required(login_url="accounts:login"))
+#     def get(self, request, invoice_id):
+#         invoice = get_object_or_404(Invoice, id=invoice_id)
 
-        records = []
-        data = []
-        total = invoice.total_amount
-        Statement = namedtuple("Statement", "name type amount")
-        for item in invoice.invoice_items.filter(deleted=False):
-            statement = Statement(item.name, item.type, item.amount)
-            data.append(statement)
+#         records = []
+#         data = []
+#         total = invoice.total_amount
+#         Statement = namedtuple("Statement", "name type amount")
+#         for item in invoice.invoice_items.filter(deleted=False):
+#             statement = Statement(item.name, item.type, item.amount)
+#             data.append(statement)
 
-        for student in invoice.students.all():
-            arears = round(total - float(student.user.account.amount_payable),
-                           2) * -1
-            arears = [0.00,arears][arears!=0]
-            records.append([student, total, arears, data[::]])
+#         for student in invoice.students.all():
+#             arears = round(total - float(student.user.account.amount_payable),
+#                            2) * -1
+#             arears = [0.00,arears][arears!=0]
+#             records.append([student, total, arears, data[::]])
 
-        context = {
-            "session": invoice.session,
-            "school": School.objects.first(),
-            "records": records,
-            "invoice": invoice,
-            "current_time": timezone.now(),
-        }
+#         context = {
+#             "session": invoice.session,
+#             "school": School.objects.first(),
+#             "records": records,
+#             "invoice": invoice,
+#             "current_time": timezone.now(),
+#         }
 
-        pdf = render_to_pdf(self.template_name, context)
-        if pdf:
-            response = HttpResponse(pdf, content_type='application/pdf')
-            filename = "Bulk-Student-Report-Sheet.pdf"
-            content = "inline; filename=%s" % (filename)
-            download = request.GET.get("download")
-            if download:
-                content = "attachment; filename=%s" % (filename)
-            response['Content-Disposition'] = content
-            return response
-        return HttpResponse("Not found", status=404)
+#         pdf = render_to_pdf(self.template_name, context)
+#         if pdf:
+#             response = HttpResponse(pdf, content_type='application/pdf')
+#             filename = "Bulk-Student-Report-Sheet.pdf"
+#             content = "inline; filename=%s" % (filename)
+#             download = request.GET.get("download")
+#             if download:
+#                 content = "attachment; filename=%s" % (filename)
+#             response['Content-Disposition'] = content
+#             return response
+#         return HttpResponse("Not found", status=404)
 
 
 class PersonalTranscriptionView(PermissionRequiredMixin, View):

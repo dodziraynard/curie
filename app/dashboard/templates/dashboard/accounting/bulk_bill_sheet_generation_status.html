@@ -42,7 +42,7 @@
 {% block page_scripts %}
 <script>
     if (typeof (EventSource) !== "undefined") {
-        var source = new EventSource("{% url 'dashboard:stream_bill_sheet_generation_status' task_id %}");
+        var source = new EventSource("{% url 'dashboard:stream_task_status' task_id %}");
         source.onmessage = function (event) {
             if (event.data.includes("DONE")) {
                 source.close();

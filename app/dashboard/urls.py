@@ -10,6 +10,7 @@ urlpatterns = [
     path('delete/<str:model_name>/<str:instance_id>', views.DeleteModelView.as_view(), name='delete_model'),
     path('model_agnostic_image_upload/<str:model_name>/<str:model_id>/<str:field_name>', views.ModelAgnosticImageUploadView.as_view(), name='model_agnostic_image_upload'),
     path('crop-model-image/<str:model_name>/<str:model_id>/<str:field_name>', views.CropModelImageView.as_view(), name='crop_model_image'),
+    path('tasks/<str:task_id>/stream-status', views.StreamTaskStatusView.as_view(), name='stream_task_status'),
 
 
     # Students
@@ -54,6 +55,8 @@ urlpatterns = [
     # Reporting
     path('reporting/index', views.ReportingIndexView.as_view(), name='reporting_index'),
     path('reporting/student-full-report', views.StudentFullReportView.as_view(), name='student_full_report'),
+    path('reporting/generate-report-sheet', views.BulkAcademicRecordReportView.as_view(), name='gerate_bulk_student_report_sheet'),
+    path('reporting/generate-report-sheet/<str:task_id>/<str:filename>/status', views.StudentReportGenerationStatusView.as_view(), name='bulk_report_sheet_generation_status'),
 
     # Class teacher reporting
     path('reporting/class-teacher-report-filter', views.ClassTeacherSessionReportFilterView.as_view(), name='class_teacher_report_filter'),
@@ -91,7 +94,6 @@ urlpatterns += [
     
     path('accounting/generate-bill-sheet/<str:invoice_id>', views.BulkInvoiceGenerator.as_view(), name='gerate_bulk_student_bill_sheet'),
     path('accounting/generate-bill-sheet/<str:task_id>/<str:filename>/status', views.GeneralReportStatusView.as_view(), name='bulk_bill_sheet_generation_status'),
-    path('accounting/generate-bill-sheet/<str:task_id>/stream-status', views.StreamGeneralReportStatusView.as_view(), name='stream_bill_sheet_generation_status'),
 ]
 
 urlpatterns += [

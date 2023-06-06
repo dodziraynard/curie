@@ -19,6 +19,8 @@ from setup.models import School
 from dashboard.models import Student
 
 from lms.utils.functions import crop_image
+from celery.result import AsyncResult
+from django.http import StreamingHttpResponse
 
 
 class IndexView(PermissionRequiredMixin, View):
@@ -190,3 +192,27 @@ class CropModelImageView(PermissionRequiredMixin, View):
                 new_image).save(filename, new_image)
         model_instance.save()
         return redirect(request.META.get("HTTP_REFERER"))
+
+
+class StreamTaskStatusView(View):
+
+    @method_decorator(login_required(login_url="accounts:login"))
+    def get(self, request, task_id):
+        result = AsyncResult(task_id)
+        self.link = "null"
+
+        def get_task_progress():
+            while True:
+                data = ""
+                if result.info:
+                    self.link = result.info.get("link") or self.link
+                    data = str(result.info.get("current", "")) + "/" + str(
+                        result.info.get("total", "")) + " " + result.info.get(
+                            "info", "")
+                if result.status == "SUCCESS":
+                    yield 'data: DONE %s\n\n' % self.link
+                    break
+                yield 'data: %s\n\n' % data
+
+        return StreamingHttpResponse(get_task_progress(),
+                                     content_type='text/event-stream')
