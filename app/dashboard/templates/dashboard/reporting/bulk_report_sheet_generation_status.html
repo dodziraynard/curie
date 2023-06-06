@@ -1,0 +1,57 @@
+{% extends 'templates/dashboard/base_template.html' %}
+{% block page_title %}Reporting{% endblock %}
+{% block active-sidebar-item-id %}reporting{%endblock%}
+
+{% block breadcrumb %}
+<section class="breadcrumb">
+    <a href="{% url 'dashboard:index' %}" class="">Home <i class="bi bi-chevron-right"></i></a>
+    <a href="" class="active">Reporting</a>
+</section>
+{% endblock %}
+
+{% block content %}
+
+<!--div-->
+<div class="col-xl-12">
+    <div class="card mg-b-20">
+        <div class="card-header pb-0">
+            <div class="d-flex justify-content-between">
+                <h4 class="card-title mg-b-0">Student Report Sheet</h4>
+                <i class="mdi mdi-dots-horizontal text-gray"></i>
+            </div>
+            <p class="tx-12 tx-gray-500 mb-2">The report sheets are being generated ....</p>
+        </div>
+        <div class="card-body col-md-8 mx-auto">
+            <div class="table-responsive">
+                <h3 class="text text-center text-primary">The report sheets are being generated ....</h3>
+                <p class="text text-center">A download link will be shown below when done.</p>
+                <p id="progress_update" class="text text-center m-2"></p>
+                <a href="/assets/generated/{{filename}}" target="_blank">
+                    <p id="download_link" class="text-center m-2 d-none">
+                        <button class="btn btn-primary"><i class="bi bi-download"></i> Download</button>
+                    </p>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/div-->
+{% endblock %}
+
+{% block page_scripts %}
+<script>
+    if (typeof (EventSource) !== "undefined") {
+        var source = new EventSource("{% url 'dashboard:stream_task_status' task_id %}");
+        source.onmessage = function (event) {
+            if (event.data.includes("DONE")) {
+                source.close();
+                document.getElementById("download_link").classList.remove("d-none")
+            } else {
+                document.getElementById("progress_update").innerHTML = event.data + "<br>";
+            }
+        };
+    } else {
+        document.getElementById("progress_update").innerHTML = "Sorry, your browser does not support server-sent events...";
+    }
+</script>
+{% endblock %}
