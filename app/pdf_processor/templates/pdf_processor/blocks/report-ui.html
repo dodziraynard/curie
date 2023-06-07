@@ -70,10 +70,10 @@
                         </tr>
                         <tr>
                             <td>
-                                <p style="text-align: left;">House: </p>
+                                <p style="text-align: left;">Class: </p>
                             </td>
-                            <td>
-                                <h6 style="text-align: left;">{{records.first.student.house}}</h6>
+                            <td colspan="2">
+                                <h6 style="text-align: left;">{{records.first.klass.name}}</h6>
                             </td>
                         </tr>
                     </table>
@@ -95,7 +95,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <p style="text-align: right;">Semester: </p>
+                                <p style="text-align: right;">Semester/Term: </p>
                             </td>
                             <td colspan="2">
                                 <h6 style="text-align: right;">{{records.first.session.semester}}</h6>
@@ -103,18 +103,24 @@
                         </tr>
                         <tr>
                             <td>
-                                <p style="text-align: right;">Course: </p>
+                                <p style="text-align: right;">Vacation Date: </p>
                             </td>
                             <td colspan="2">
-                                <h6 style="text-align: right;">{{records.first.student.course.name}}</h6>
+                                <h6 style="text-align: right;">{{records.first.session.end_date}}</h6>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <p style="text-align: right;">Class: </p>
+                                <p style="text-align: right;">Resuming On: </p>
                             </td>
                             <td colspan="2">
-                                <h6 style="text-align: right;">{{records.first.klass.name}}</h6>
+                                <h6 style="text-align: right;">
+                                    {% if records.first.session.next_start_date %}
+                                    {{records.first.session.next_start_date}}
+                                    {% else %}
+                                    N/A
+                                    {% endif %}
+                                </h6>
                             </td>
                         </tr>
                     </table>
@@ -155,7 +161,7 @@
             {% for record in records %}
             <tr style="padding: 0.5em;">
                 <td colspan="2">
-                    <h3 style="text-align: center;">{{record.subject.name}}</h3>
+                    <h3 style="text-align: left;">{{record.subject.name}}</h3>
                 </td>
                 <td>
                     <h3 style="text-align: center;">{{record.get_class_score}}</h3>

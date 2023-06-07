@@ -17,7 +17,6 @@ class ModelMixin(models.Model):
         return self.__class__.__name__.lower()
 
 
-
 # Just for permissions
 class SetupPerms(models.Model):
 
@@ -185,17 +184,19 @@ class SetupPerms(models.Model):
             ("add_inventory", "Can add inventory"),
             ("change_inventory", "Can change inventory"),
             ("delete_inventory", "Can delete inventory"),
-            
-             # Inventory
+
+            # Inventory
             ("view_issuance", "Can view issuance"),
             ("add_issuance", "Can add issuance"),
             ("change_issuance", "Can change issuance"),
             ("delete_issuance", "Can delete issuance"),
-            
+
             # Personal permissions
-            ("view_personal_academic_record", "Can view personal academic record"),
+            ("view_personal_academic_record",
+             "Can view personal academic record"),
             ("view_personal_invoice", "Can view personal invoice"),
-            ("view_personal_payment_history", "Can view personal payment history"),
+            ("view_personal_payment_history",
+             "Can view personal payment history"),
         ]
 
 
@@ -207,6 +208,9 @@ class SchoolSession(ModelMixin):
     start_date = models.DateField(verbose_name="Start Date",
                                   null=True,
                                   blank=True)
+    next_start_date = models.DateField(verbose_name="Next Date",
+                                       null=True,
+                                       blank=True)
     end_date = models.DateField(verbose_name="End Date", null=True, blank=True)
 
     class Meta:
