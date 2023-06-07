@@ -360,7 +360,7 @@ class Record(ModelMixin):
         records = Record.objects.filter(group_tag=self.group_tag)
         for record in records:
             totals.add(record.total)
-        totals = sorted(list(totals))
+        totals = sorted(list(totals), reverse=True)
 
         for record in records:
             record.position =  totals.index(record.total) + 1
