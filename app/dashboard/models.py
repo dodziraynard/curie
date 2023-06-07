@@ -333,18 +333,16 @@ class Record(ModelMixin):
 
     def get_class_score(self):
         if self.class_score:
-            print('class_score', self.student, self.EXAM_SCORE_PERCENTAGE , self.class_score , self.total_class_score)
             return round(self.CLASS_SCORE_PERCENTAGE * self.class_score / self.total_class_score)
         return 0
 
     def get_exam_score(self):
         if self.exam_score:
-            print('get_exam_score', self.student, self.EXAM_SCORE_PERCENTAGE , self.exam_score , self.total_exam_score)
             return round(self.EXAM_SCORE_PERCENTAGE * self.exam_score / self.total_exam_score)
         return 0
 
     def save(self, *args, **kwargs):
-        if self.class_score and self.exam_score and self.total_class_score and self.total_exam_score:
+        if self.class_score is not None and self.exam_score is not None and self.total_class_score is not None and self.total_exam_score is not None:
             self.total = round(self.get_class_score() + self.get_exam_score())
 
             grading_system = GradingSystem.objects.filter(
