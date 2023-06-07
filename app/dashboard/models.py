@@ -359,7 +359,8 @@ class Record(ModelMixin):
         totals = set()
         records = Record.objects.filter(group_tag=self.group_tag)
         for record in records:
-            totals.add(record.total)
+            if record.total:
+                totals.add(record.total)
         totals = sorted(list(totals), reverse=True)
 
         for record in records:
