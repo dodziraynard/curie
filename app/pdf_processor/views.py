@@ -27,9 +27,10 @@ class SingleAcademicRecordReportView(PermissionRequiredMixin, View):
     @method_decorator(login_required(login_url="accounts:login"))
     def get(self, request, session_id, student_id):
         session = get_object_or_404(SchoolSession, pk=session_id)
-        records = Record.objects.filter(session=session,
-                                        # klass__class_id=class_id,
-                                        student__student_id=student_id)
+        records = Record.objects.filter(
+            session=session,
+            # klass__class_id=class_id,
+            student__student_id=student_id)
 
         session_report = SessionReport.objects.filter(
             session=session, student__student_id=student_id).first()
@@ -65,7 +66,7 @@ class PersonalAcadmicReport(PermissionRequiredMixin, View):
         session_id = SchoolSession.objects.first().id or request.GET.get(
             "session")
         session = get_object_or_404(SchoolSession, pk=session_id)
-        student_id = "3333" or request.user.student.student_id
+        student_id = request.user.student.student_id
         records = Record.objects.filter(
             Q(session=session)
             | Q(session=session, student__student_id=student_id))
@@ -81,7 +82,8 @@ class PersonalAcadmicReport(PermissionRequiredMixin, View):
             student__student_id=student_id).first()
         average_pos = "N/A"
         if all(positions):
-            average_pos = num2words(sum(positions) // max(st_records.count(), 1),
+            average_pos = num2words(sum(positions) //
+                                    max(st_records.count(), 1),
                                     to="ordinal_num")
         data.append((st_records, st_reports, average_pos))
 
@@ -136,7 +138,8 @@ class BulkAcademicRecordReportView(PermissionRequiredMixin, View):
                 student__student_id=student_id).first()
             average_pos = "N/A"
             if all(positions):
-                average_pos = num2words(sum(positions) // st_records.count(),
+                average_pos = num2words(sum(positions) //
+                                        max(st_records.count(), 1),
                                         to="ordinal_num")
             data.append((st_records, st_reports, average_pos))
 
@@ -158,51 +161,6 @@ class BulkAcademicRecordReportView(PermissionRequiredMixin, View):
             response['Content-Disposition'] = content
             return response
         return HttpResponse("Not found", status=404)
-
-
-# class BulkStudentBillSheet(PermissionRequiredMixin, View):
-#     template_name = "pdf_processor/bulk-student-bill-sheet.html"
-#     permission_required = [
-#         "setup.view_dashboard",
-#     ]
-
-#     @method_decorator(login_required(login_url="accounts:login"))
-#     def get(self, request, invoice_id):
-#         invoice = get_object_or_404(Invoice, id=invoice_id)
-
-#         records = []
-#         data = []
-#         total = invoice.total_amount
-#         Statement = namedtuple("Statement", "name type amount")
-#         for item in invoice.invoice_items.filter(deleted=False):
-#             statement = Statement(item.name, item.type, item.amount)
-#             data.append(statement)
-
-#         for student in invoice.students.all():
-#             arears = round(total - float(student.user.account.amount_payable),
-#                            2) * -1
-#             arears = [0.00,arears][arears!=0]
-#             records.append([student, total, arears, data[::]])
-
-#         context = {
-#             "session": invoice.session,
-#             "school": School.objects.first(),
-#             "records": records,
-#             "invoice": invoice,
-#             "current_time": timezone.now(),
-#         }
-
-#         pdf = render_to_pdf(self.template_name, context)
-#         if pdf:
-#             response = HttpResponse(pdf, content_type='application/pdf')
-#             filename = "Bulk-Student-Report-Sheet.pdf"
-#             content = "inline; filename=%s" % (filename)
-#             download = request.GET.get("download")
-#             if download:
-#                 content = "attachment; filename=%s" % (filename)
-#             response['Content-Disposition'] = content
-#             return response
-#         return HttpResponse("Not found", status=404)
 
 
 class PersonalTranscriptionView(PermissionRequiredMixin, View):

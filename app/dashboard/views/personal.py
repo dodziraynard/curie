@@ -78,6 +78,7 @@ class MyInvoiceDetailView(PermissionRequiredMixin, View):
 
         context = {
             "invoice": invoice,
+            "invoice_items": invoice.invoice_items.filter(deleted=False)
         }
         return render(request, self.template_name, context)
 

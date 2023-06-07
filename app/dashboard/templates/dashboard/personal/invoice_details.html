@@ -24,7 +24,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for item in invoice.invoice_items.all %}
+                    {% for item in invoice_items %}
                     <tr>
                         <td>{{forloop.counter}}</td>
                         <td>{{item.name}}</td>
