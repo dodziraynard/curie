@@ -81,7 +81,7 @@ class PersonalAcadmicReport(PermissionRequiredMixin, View):
             student__student_id=student_id).first()
         average_pos = "N/A"
         if all(positions):
-            average_pos = num2words(sum(positions) // st_records.count(),
+            average_pos = num2words(sum(positions) // max(st_records.count(), 1),
                                     to="ordinal_num")
         data.append((st_records, st_reports, average_pos))
 
