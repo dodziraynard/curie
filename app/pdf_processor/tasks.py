@@ -63,7 +63,8 @@ def generate_bulk_pdf_bill_sheet(self, invoice_id, filename="file.pdf"):
         statement = Statement(item.name, item.type, item.amount)
         data.append(statement)
 
-    for student in invoice.students.all():
+    for student in invoice.students.filter(
+            deleted=False).order_by("user__surname"):
         arears = round(total - float(student.user.account.amount_payable),
                        2) * -1
         arears = [0.00, arears][arears != 0]
@@ -118,7 +119,7 @@ def generate_bulk_pdf_report(self,
     data = []
 
     for student_id in student_ids:
-        st_records = records.filter(student__student_id=student_id)
+        st_records = records.filter(student__student_id=student_id).order_by("subject__name")
         positions = st_records.values_list("position", flat=True)
         st_reports = session_reports.filter(
             student__student_id=student_id).first()

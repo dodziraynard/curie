@@ -71,7 +71,7 @@ class Student(ModelMixin):
             student_id__startswith=prefix).order_by("-created_at").first()
         if last_student:
             last_id = int(last_student.student_id[2:])
-        
+
         next_id = last_id + 1
         return "GE" + str(next_id).zfill(6)
 
@@ -283,12 +283,15 @@ class Staff(ModelMixin):
             staff_id__startswith=prefix).order_by("-created_at").first()
         if last_staff:
             last_id = int(last_staff.staff_id[2:])
-        
+
         next_id = last_id + 1
         return "GEST" + str(next_id).zfill(6)
 
 
 class Record(ModelMixin):
+    CLASS_SCORE_PERCENTAGE = 30
+    EXAM_SCORE_PERCENTAGE = 100 - CLASS_SCORE_PERCENTAGE
+
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     klass = models.ForeignKey(Klass,
                               on_delete=models.SET_NULL,
@@ -328,11 +331,21 @@ class Record(ModelMixin):
     def rank(self):
         return f"{self.position}/{self.roll_no}"
 
+    def get_class_score(self):
+        if self.class_score:
+            print('class_score', self.student, self.EXAM_SCORE_PERCENTAGE , self.class_score , self.total_class_score)
+            return round(self.CLASS_SCORE_PERCENTAGE * self.class_score / self.total_class_score)
+        return 0
+
+    def get_exam_score(self):
+        if self.exam_score:
+            print('get_exam_score', self.student, self.EXAM_SCORE_PERCENTAGE , self.exam_score , self.total_exam_score)
+            return round(self.EXAM_SCORE_PERCENTAGE * self.exam_score / self.total_exam_score)
+        return 0
+
     def save(self, *args, **kwargs):
         if self.class_score and self.exam_score and self.total_class_score and self.total_exam_score:
-            self.total = round(
-                30 * float(self.class_score / self.total_class_score) +
-                70 * float(self.exam_score / self.total_exam_score))
+            self.total = round(self.get_class_score() + self.get_exam_score())
 
             grading_system = GradingSystem.objects.filter(
                 min_score__lte=self.total).order_by("-min_score").first()

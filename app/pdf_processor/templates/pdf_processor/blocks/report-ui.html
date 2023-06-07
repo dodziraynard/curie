@@ -127,15 +127,15 @@
     <br>
     <table style="border: 1px solid gray;">
         <thead>
-            <tr style="padding: 0.3em;">
+            <tr style="padding: 0.3em; background-color: #f0f0f0;">
                 <th colspan="2">
                     <h2>Subject</h2>
                 </th>
                 <th>
-                    <h2>Class Score</h2>
+                    <h2>Class Score (30)</h2>
                 </th>
                 <th>
-                    <h2>Exam Score</h2>
+                    <h2>Exam Score (70)</h2>
                 </th>
                 <th>
                     <h2>Total</h2>
@@ -152,22 +152,16 @@
             </tr>
         </thead>
         <tbody>
-            <tr style="padding: 0.2em; background-color: #f0f0f0;">
-                <td colspan="8">
-                    <h3 style="text-align: center; padding: 1em auto 0.5em auto;">SUBJECTS</h3>
-                </td>
-            </tr>
             {% for record in records %}
-            {% if not record.subject.is_elective %}
             <tr style="padding: 0.5em;">
                 <td colspan="2">
                     <h3 style="text-align: center;">{{record.subject.name}}</h3>
                 </td>
                 <td>
-                    <h3 style="text-align: center;">{{record.class_score}}</h3>
+                    <h3 style="text-align: center;">{{record.get_class_score}}</h3>
                 </td>
                 <td>
-                    <h3 style="text-align: center;">{{record.exam_score}}</h3>
+                    <h3 style="text-align: center;">{{record.get_exam_score}}</h3>
                 </td>
                 <td>
                     <h3 style="text-align: center;">{{record.total}}</h3>
@@ -182,40 +176,6 @@
                     <h3 style="text-align: center;">{{record.rank}}</h3>
                 </td>
             </tr>
-            {% endif %}
-            {% endfor %}
-<!-- 
-            <tr style="padding: 0.2em; background-color: #f0f0f0;">
-                <td colspan="7">
-                    <h3 style="text-align: center; padding: 1em auto 0.5em auto;">ELECTIVE SUBJECTS</h3>
-                </td>
-            </tr> -->
-            {% for record in records %}
-            {% if record.subject.is_elective %}
-            <tr style="padding: 0.5em;">
-                <td colspan="2">
-                    <h3 style="text-align: center;">{{record.subject.name}}</h3>
-                </td>
-                <td>
-                    <h3 style="text-align: center;">{{record.class_score}}</h3>
-                </td>
-                <td>
-                    <h3 style="text-align: center;">{{record.exam_score}}</h3>
-                </td>
-                <td>
-                    <h3 style="text-align: center;">{{record.total}}</h3>
-                </td>
-                <td>
-                    <h3 style="text-align: center;">{{record.grade}}</h3>
-                </td>
-                <td>
-                    <h3 style="text-align: center;">{{record.remark}}</h3>
-                </td>
-                <td>
-                    <h3 style="text-align: center;">{{record.rank}}</h3>
-                </td>
-            </tr>
-            {% endif %}
             {% endfor %}
         </tbody>
     </table>
@@ -304,7 +264,9 @@
                 <td colspan="2"></td>
                 <td>
                     <p style="text-align: center; margin:0; padding:0;">
+                        {% if session_report.signature_url %}
                         <img src="{{session_report.signature_url}}" alt="" height="50">
+                        {% endif %}
                     </p>
                     <p style="font-size: 1.5em; text-align: center; margin:0; padding:0;">....................</p>
                     <p style="font-size: 1.5em; text-align: center; margin:0; padding:0;">

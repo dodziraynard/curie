@@ -202,17 +202,25 @@ class StreamTaskStatusView(View):
         self.link = "null"
 
         def get_task_progress():
+            retry_count = 0
             while True:
+                time.sleep(0.05)
                 data = ""
-                if result.info:
-                    self.link = result.info.get("link") or self.link
-                    data = str(result.info.get("current", "")) + "/" + str(
-                        result.info.get("total", "")) + " " + result.info.get(
-                            "info", "")
-                if result.status == "SUCCESS":
-                    yield 'data: DONE %s\n\n' % self.link
-                    break
-                yield 'data: %s\n\n' % data
-
+                try:
+                    if result.info:
+                        self.link = result.info.get("link") or self.link
+                        data = str(result.info.get("current", "")) + "/" + str(
+                            result.info.get("total",
+                                            "")) + " " + result.info.get(
+                                                "info", "")
+                    if result.status == "SUCCESS":
+                        yield 'data: DONE %s\n\n' % self.link
+                        break
+                    yield 'data: %s\n\n' % data
+                except AttributeError as e:
+                    yield 'data: Error occured: %s\n\n' % str(e)
+                    if retry_count > 20:
+                        break
+                    retry_count += 1
         return StreamingHttpResponse(get_task_progress(),
                                      content_type='text/event-stream')
