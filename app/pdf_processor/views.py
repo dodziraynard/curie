@@ -76,7 +76,7 @@ class PersonalAcadmicReport(PermissionRequiredMixin, View):
         data = []
 
         # for student_id in student_ids:
-        st_records = records.filter(student__student_id=student_id)
+        st_records = records.filter(student__student_id=student_id).order_by("subject__name")
         positions = st_records.values_list("position", flat=True)
         st_reports = session_reports.filter(
             student__student_id=student_id).first()
