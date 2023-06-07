@@ -116,7 +116,7 @@ class ComposeSMS(PermissionRequiredMixin, View):
             phone_numbers.extend(teacher_phones)
 
         request.session['message'] = message
-        request.session['phone_numbers'] = set(phone_numbers)
+        request.session['phone_numbers'] = list(set(phone_numbers))
 
         return redirect("dashboard:preview_sms")
 
