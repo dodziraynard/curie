@@ -289,7 +289,7 @@ class Staff(ModelMixin):
 
 
 class Record(ModelMixin):
-    CLASS_SCORE_PERCENTAGE = 30
+    CLASS_SCORE_PERCENTAGE = 50
     EXAM_SCORE_PERCENTAGE = 100 - CLASS_SCORE_PERCENTAGE
 
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
