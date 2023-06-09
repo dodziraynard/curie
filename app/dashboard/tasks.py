@@ -45,7 +45,7 @@ def update_students_account(total_affected_student_ids, invoice_id):
             else:
                 total_out += transaction.amount
 
-        invoice_items = InvoiceItem.objects.filter(invoice__students=student,deleted=False)
+        invoice_items = InvoiceItem.objects.filter(invoice__students=student,deleted=False, invoice__deleted=False)
         for item in invoice_items:
             if item.type.lower() == InvoiceItemType.CREDIT.value:
                 total_in += item.amount
