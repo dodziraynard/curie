@@ -50,7 +50,7 @@ def generate_bulk_pdf_bill_sheet(self, invoice_id, filename="file.pdf"):
                    1,
                    info=f"Retrieving invoice data.")
 
-    invoice = Invoice.objects.filter(id=invoice_id).first()
+    invoice = Invoice.objects.filter(id=invoice_id, deleted=False).first()
     if not invoice:
         set_task_state(self, "NO RECORD FOUND", 3, info="Done")
         return

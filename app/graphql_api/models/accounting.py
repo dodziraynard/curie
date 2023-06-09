@@ -56,7 +56,7 @@ class Invoice(ModelMixin):
     @property
     def total_amount(self):
         amount = 0
-        for item in self.invoice_items.all():
+        for item in self.invoice_items.filter(deleted=False):
             amount += item.amount if item.type == InvoiceItemType.DEBIT.value else -item.amount
         return round(float(amount), 2)
 
