@@ -30,12 +30,14 @@ def update_students_account(total_affected_student_ids, invoice_id):
     invoice.status = InvoiceStatus.PENDING.value
     invoice.save()
     students = Student.objects.filter(
+        deleted=False,
         student_id__in=total_affected_student_ids)
 
     for student in students:
         total_in = 0
         total_out = 0
         transactions = Transaction.objects.filter(account=student.user.account,
+                                                  deleted=False,
                                                   status="success")
         for transaction in transactions:
             if transaction.direction == TransactionDirection.IN.value:
