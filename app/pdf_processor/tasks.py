@@ -66,7 +66,7 @@ def generate_bulk_pdf_bill_sheet(self, invoice_id, filename="file.pdf"):
     for student in invoice.students.filter(
             deleted=False).order_by("user__surname"):
         arears = round(total - float(student.user.account.amount_payable),
-                       2) * -1
+                       2)
         arears = [0.00, arears][arears != 0]
         records.append([student, total, arears, data[::]])
 
