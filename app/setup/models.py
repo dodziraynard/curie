@@ -172,6 +172,7 @@ class SetupPerms(models.Model):
             ('compose_sms', 'Can compose sms'),
             ('send_pin_notification', 'Can send pin notification'),
             ('send_report_notification', 'Can send report notification'),
+            ('send_bill_notification', 'Can send bill notification'),
             ('resend_notification', 'Can resend notifications'),
             ('view_notification_history', 'Can view notification history'),
 

@@ -1,0 +1,45 @@
+{% extends 'templates/dashboard/base_template.html' %}
+{% block page_title %}Confirm Bill Notification{% endblock %}
+{% block active-sidebar-item-id %}notifications{%endblock%}
+
+{% load static %}
+
+{% block breadcrumb %}
+<section class="breadcrumb">
+    <a href="{% url 'dashboard:index' %}" class="">Home <i class="bi bi-chevron-right"></i></a>
+    <a href="" class="active">Confirm Bill Notification</a>
+</section>
+{% endblock %}
+
+{% block content %}
+
+<h4 class="page-header"><i class='icon bx bx-group'></i> Confirm Bill Notification</h4>
+<section class="card">
+    <div class="card-header d-flex justify-content-between">
+        <h4>Confirm Bill Notification</h4>
+    </div>
+    <div class="card-body row">
+        <div class="col-md-7 mx-auto" style="height: 40vh; overflow: auto;">
+            <h5>Sample SMS</h5>
+            <pre>{{sample_sms}}</pre>
+        </div>
+        <form class="col-md-5 row mx-auto overflow-auto needs-validation" method="POST" novalidate>
+            {% csrf_token %}
+            <div class="mx-auto" style="height: 40vh; overflow: auto;">
+                <h5>Recipients by their ids</h5>
+                <hr>
+                <div>
+                    {% for id in student_ids %}
+                    <span class="badge bg-primary">{{id}}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            <hr>
+            <div class="form-group my-5 d-flex justify-content-center">
+                <button class="btn btn-primary"><i class="bi bi-send"></i> SEND</button>
+            </div>
+        </form>
+    </div>
+</section>
+
+{% endblock %}

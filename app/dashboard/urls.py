@@ -77,9 +77,10 @@ urlpatterns = [
     path('notifications/preview-sms/', views.PreviewSMS.as_view(), name='preview_sms'),
     path('notifications/send-pin-sms/', views.SendPINNotification.as_view(), name='send_pin_sms'),
     path('notifications/confirm-pin-notification/', views.ConfirmPINNotification.as_view(), name='confirm_pin_notification'),
-
     path('notifications/report-notifications/', views.SendReportNotification.as_view(), name='report_notifications'),
+    path('notifications/bill-notifications/', views.SendBillNotification.as_view(), name='bill_notifications'),
     path('notifications/report-notification-confirmation/', views.ConfirmReportNotification.as_view(), name='report_notification_confirmation'),
+    path('notifications/bill-notification-confirmation/', views.ConfirmBillNotification.as_view(), name='bill_notification_confirmation'),
 ]
 
 

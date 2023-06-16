@@ -17,6 +17,9 @@ from accounts.models import User
 from dashboard.models import (Klass, Notification, Record, SessionReport,
                               Staff, Student)
 from dashboard.tasks import send_notification, send_notifications_with_id_tag
+from graphql_api.models.accounting import Invoice
+from lms.utils.constants import (InvoiceItemType)
+from pdf_processor.tasks import generate_and_send_bill_via_sms
 from setup.models import School, SchoolSession
 
 
@@ -95,7 +98,8 @@ class ComposeSMS(PermissionRequiredMixin, View):
             "\r", "").replace("\n", "").replace(" ", "").split(",")
         recipient_file = request.FILES.get("recipient_file")
 
-        phone_numbers = [phone for phone in recipients if len(phone)==10 and phone[0] == "0"] #yapf: disable
+        phone_numbers = [phone for phone in recipients if len(
+            phone) == 10 and phone[0] == "0"]  # yapf: disable
         if recipient_file:
             df = pd.read_excel(BytesIO(recipient_file.file.read()),
                                skiprows=1,
@@ -107,12 +111,14 @@ class ComposeSMS(PermissionRequiredMixin, View):
 
         if all_students:
             students = Student.objects.filter(completed=False, deleted=False)
-            student_phones  = [student.sms_number for student in students if student.sms_number and student.sms_number[0] == "0"] #yapf: disable
+            student_phones = [
+                student.sms_number for student in students if student.sms_number and student.sms_number[0] == "0"]  # yapf: disable
             phone_numbers.extend(student_phones)
-            
+
         if all_staff:
             teachers = Staff.objects.filter(has_left=False, deleted=False)
-            teacher_phones  = [teacher.user.phone for teacher in teachers if teacher.user.phone and teacher.user.phone[0] == "0"] #yapf: disable
+            teacher_phones = [
+                teacher.user.phone for teacher in teachers if teacher.user.phone and teacher.user.phone[0] == "0"]  # yapf: disable
             phone_numbers.extend(teacher_phones)
 
         request.session['message'] = message
@@ -196,7 +202,8 @@ class ConfirmPINNotification(PermissionRequiredMixin, View):
         id_tag = timezone.now().strftime("%y%m%d%H%M%S%f")
         sender_id = School.objects.first().sms_sender_id
         for user in users:
-            if not user.phone: continue
+            if not user.phone:
+                continue
 
             if reset_pin or not user.temporal_pin:
                 user.temporal_pin = "".join(
@@ -275,8 +282,8 @@ class SendReportNotification(PermissionRequiredMixin, View):
 
     @method_decorator(login_required(login_url="accounts:login"))
     def get(self, request):
-        sessions = SchoolSession.objects.all()
-        classes = Klass.objects.all()
+        sessions = SchoolSession.objects.filter(deleted=False)
+        classes = Klass.objects.filter(deleted=False)
 
         context = {
             "sessions": sessions,
@@ -363,7 +370,7 @@ class ConfirmReportNotification(PermissionRequiredMixin, View):
             message += "\nFULL REPORT AT: " + request.META.get(
                 "HTTP_ORIGIN") + reverse(
                     "pdf:bulk_report"
-                ) + f"?session={session_id}&student_ids={student_id}"
+            ) + f"?session={session_id}&student_ids={student_id}"
             if student.sms_number:
                 Notification.objects.create(text=message,
                                             id_tag=id_tag,
@@ -379,4 +386,105 @@ class ConfirmReportNotification(PermissionRequiredMixin, View):
         request.session.pop('session_id')
         request.session.pop('classes')
         request.session.pop('student_ids')
+        return redirect("dashboard:notifications")
+
+
+class SendBillNotification(PermissionRequiredMixin, View):
+    template_name = "dashboard/notifications/bill_notifications.html"
+    permission_required = [
+        "setup.view_dashboard",
+        "setup.send_bill_notification",
+    ]
+
+    @method_decorator(login_required(login_url="accounts:login"))
+    def get(self, request):
+        sessions = SchoolSession.objects.filter(deleted=False)
+        classes = Klass.objects.filter(deleted=False)
+
+        context = {
+            "sessions": sessions,
+            "classes": classes,
+        }
+        return render(request, self.template_name, context)
+
+    @method_decorator(login_required(login_url="accounts:login"))
+    def post(self, request):
+        session_id = request.POST.get("session")
+        class_ids = request.POST.getlist("classes")
+        student_ids = request.POST.get("student_ids",
+                                       "").replace(" ",
+                                                   "").replace("\r",
+                                                               "").split(",")
+        session = get_object_or_404(SchoolSession, pk=session_id)
+        students = Student.objects.filter(
+            completed=False, deleted=False, klass_id__in=class_ids)
+        including_students = Student.objects.filter(
+            student_id__in=student_ids, deleted=False)
+
+        students = students.union(including_students)
+        student_ids = students.values_list("student_id", flat=True)
+        sample_invoice = Invoice.objects.filter(
+            session=session, students__student_id__in=student_ids).first()
+        request.session['session_id'] = session_id
+        request.session['student_ids'] = list(set(student_ids))
+        request.session['sample_invoice_id'] = sample_invoice.id if sample_invoice else None
+
+        return redirect("dashboard:bill_notification_confirmation")
+
+
+class ConfirmBillNotification(PermissionRequiredMixin, View):
+    template_name = "dashboard/notifications/bill_notification_confirmation.html"
+    permission_required = [
+        "setup.view_dashboard",
+        "setup.send_bill_notification",
+    ]
+
+    @method_decorator(login_required(login_url="accounts:login"))
+    def get(self, request):
+        sample_invoice_id = request.session.get('sample_invoice_id')
+        student_ids = request.session.get('student_ids')
+        session_id = request.session.get('session_id')
+        if not sample_invoice_id:
+            messages.error(request, "No results found.")
+            return redirect("dashboard:bill_notifications")
+
+        sample_invoice = Invoice.objects.filter(id=sample_invoice_id).first()
+        sms_lines = [
+            "Dear Parent,", f"Bill summary for your ward, {sample_invoice.students.first().user.get_name()}, {sample_invoice.session.name}:"]
+        total = 0
+        for item in sample_invoice.invoice_items.filter(deleted=False):
+            sms_lines.append(f"{item.name} : GHS{item.amount} ({item.type}).")
+            if item.type == InvoiceItemType.DEBIT.value:
+                total += item.amount
+            else:
+                total -= item.amount
+        sms_lines.append(f"Amount payable: GHS{total}.")
+        sms_lines.append(
+            f"Full report: {request.build_absolute_uri(reverse('dashboard:notifications'))}")
+        sample_sms = "\n".join(sms_lines)
+        context = {
+            "sample_invoice": sample_invoice,
+            "student_ids": student_ids,
+            "session_id": session_id,
+            "sample_sms": sample_sms,
+        }
+        return render(request, self.template_name, context=context)
+
+    @method_decorator(login_required(login_url="accounts:login"))
+    def post(self, request):
+        student_ids = request.session.get('student_ids')
+        session_id = request.session.get('session_id')
+
+        generate_and_send_bill_via_sms.delay(
+            session_id=session_id, student_ids=student_ids, base_url=request.build_absolute_uri(
+                ""),
+            initiation_user_id=request.user.id
+        )
+
+        messages.info(request, "Task submitted successfully.")
+
+        # Delete preview data from session cache
+        request.session.pop('sample_invoice_id')
+        request.session.pop('student_ids')
+        request.session.pop('session_id')
         return redirect("dashboard:notifications")
