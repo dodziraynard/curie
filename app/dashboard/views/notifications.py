@@ -453,7 +453,7 @@ class ConfirmBillNotification(PermissionRequiredMixin, View):
             "Dear Parent,", f"Bill summary for your ward, {sample_invoice.students.first().user.get_name()}, {sample_invoice.session.name}:"]
         total = 0
         for item in sample_invoice.invoice_items.filter(deleted=False):
-            sms_lines.append(f"{item.name} : GHS{item.amount} ({item.type}).")
+            # sms_lines.append(f"{item.name} : GHS{item.amount} ({item.type}).")
             if item.type == InvoiceItemType.DEBIT.value:
                 total += item.amount
             else:
