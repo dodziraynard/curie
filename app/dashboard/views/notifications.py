@@ -477,7 +477,7 @@ class ConfirmBillNotification(PermissionRequiredMixin, View):
 
         generate_and_send_bill_via_sms.delay(
             session_id=session_id, student_ids=student_ids, base_url=request.build_absolute_uri(
-                ""),
+                "/"),
             initiation_user_id=request.user.id
         )
 
