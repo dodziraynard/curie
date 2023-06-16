@@ -227,10 +227,11 @@ def generate_and_send_bill_via_sms(session_id, student_ids=None, base_url="http:
             sms_lines.append(
                 f"Full report: {base_url}{urls[student.student_id]}")
             sms_text = "\n".join(sms_lines)
-        if student.sms_number:
-            notification = Notification.objects.create(text=sms_text,
-                                                       status="new",
-                                                       purpose="BILL",
-                                                       destination=student.sms_number,
-                                                       initiated_by_id=initiation_user_id)
-            send_notification(notification.id)
+            
+            if student.sms_number:
+                notification = Notification.objects.create(text=sms_text,
+                                                        status="new",
+                                                        purpose="BILL",
+                                                        destination=student.sms_number,
+                                                        initiated_by_id=initiation_user_id)
+                send_notification(notification.id)
