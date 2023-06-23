@@ -14,10 +14,10 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from accounts.models import Account
 from accounts.models import User
-from dashboard.models import Klass, Staff
-from setup.models import School
+from dashboard.models import Klass, Staff, Task
+from setup.models import School, SchoolSession
 from dashboard.models import Student
-
+from django.db.models import Q
 from lms.utils.functions import crop_image
 from celery.result import AsyncResult
 from django.http import StreamingHttpResponse
@@ -26,7 +26,7 @@ from django.http import StreamingHttpResponse
 class IndexView(PermissionRequiredMixin, View):
     template_name = "dashboard/index.html"
     permission_required = [
-        "setup.view_dashboard",
+        
     ]
 
     @method_decorator(login_required(login_url="accounts:login"))
@@ -36,8 +36,27 @@ class IndexView(PermissionRequiredMixin, View):
                 "user", flat=True)[:100]
         users = User.objects.filter(id__in=user_ids)
         students = Student.objects.filter(user__in=users)
-
         school = School.objects.first()
+        sessions = SchoolSession.objects.filter(
+            deleted=False).order_by("end_date")
+
+        tasks = Task.objects.filter(deleted=False)
+
+        # Get filtering params
+        query = request.GET.get("query")
+        session_id = request.GET.get("session_id")
+        task_status = request.GET.get("task_status")
+        if query:
+            tasks = tasks.filter(Q(assigned_to__surname__icontains=query) | Q(
+                assigned_to__other_names__icontains=query))
+        if session_id:
+            tasks = tasks.filter(session_id=session_id)
+        if task_status:
+            tasks = tasks.filter(status=task_status)
+
+        if not request.user.has_perm("setup.manage_tasks"):
+            tasks = tasks.filter(user=request.user)
+
         class_count = Klass.objects.filter(deleted=False).count()
         student_count = Student.objects.filter(deleted=False).count()
         staff_count = Staff.objects.filter(deleted=False).count()
@@ -49,6 +68,10 @@ class IndexView(PermissionRequiredMixin, View):
             "student_count": student_count,
             "staff_count": staff_count,
             "user_count": user_count,
+            "tasks": tasks,
+            "sessions": sessions,
+            **{k: v
+               for k, v in request.GET.items()}
         }
         return render(request, self.template_name, context)
 

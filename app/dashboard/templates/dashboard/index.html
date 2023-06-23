@@ -5,11 +5,29 @@
 {% block content %}
 {% block breadcrumb %}{% endblock %}
 
-<h4 class="page-header">Dashboard</h4>
-<p class="">Welcome to your analytics dashboard.</p>
+<!-- Modal -->
+<div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-l">
+        <div class="modal-content px-4">
+            <div class="modal-header">
+                <h5 class="modal-title" id="taskModalLabel">Add Task</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            {% include 'dashboard/tasks/form_task.html' %}
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End of Modal -->
 
+<h4 class="page-header">DASHBOARD</h4>
+<p class="">Welcome to your summary dashboard.</p>
+
+{% if perms.setup.view_entity_statistics %}
 <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-3 px-4 py-2">
         <div class="card">
             <div class="card-header">
                 <h4 class="text-center">STUDENTS</h4>
@@ -22,7 +40,7 @@
         </div>
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-3 px-4 py-2">
         <div class="card">
             <div class="card-header">
                 <h4 class="text-center">STAFF</h4>
@@ -35,7 +53,7 @@
         </div>
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-3 px-4 py-2">
         <div class="card">
             <div class="card-header">
                 <h4 class="text-center">USERS</h4>
@@ -48,7 +66,7 @@
         </div>
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-3 px-4 py-2">
         <div class="card">
             <div class="card-header">
                 <h4 class="text-center">CLASSES</h4>
@@ -61,14 +79,84 @@
         </div>
     </div>
 </div>
+{% endif %}
+<br>
+<br>
+<hr>
+<h4 class="page-header">PENDING TASKS</h4>
+<div class="col-12">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between">
+            <div>
+                <button data-bs-toggle="modal" data-bs-target="#taskModal" class="btn btn-sm btn-primary">+ New task</button>
+            </div>
+            <div class="d-flex align-items-between">
+                <form action="{% url 'dashboard:index' %}" method="GET"
+                    class="d-flex align-items-center">
+                    <div class="form-group d-none d-md-block" style="min-width: 20vw;">
+                        <input type="search" value="{{query}}" placeholder="Enter user's name" name="query" id="query" class="form-control">
+                    </div>
+                    <select class="form-select" name="session" id="session">
+                        <option value="">Select Session</option>
+                        {% for session in sessions %}
+                        <option value="{{session.id}}" {% if session.id == school.current_session.id  %} selected {% endif %}>{{session.name}}</option>
+                        {% endfor %}
+                    </select>
+                    <select class="form-select" name="task_status" id="task_status">
+                        <option value="">All</option>
+                        <option value="pending" {% if task_status == 'pending' %} selected {% endif %}>Pending</option>
+                        <option value="completed" {% if task_status == 'completed' %} selected {% endif %}>Completed</option>
+                    </select>
+                    <div class="form-group mx-2">
+                        <button type="submit" class="btn btn-sm btn-primary">Load</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="card-body" style="max-height: 60vh; overflow-y: auto;">
+            {% if tasks %}
+                {% for task in tasks %}
+                <div  class="card m-3">
+                    <div class="card-body row justify-content-between align-items-center p-3">
+                        <div class="col-md-3">
+                            <p class="m-0">{{task.assigned_to.get_name}}</p>
+                            <p class="m-0"><span class="badge bg-primary">{{task.get_task_type}}</span></p>
+                            <p class="m-0"><span class="text text-primary">{{task.expires_at}}</span></p>
+                        </div>
+                        <div class="col-md-4">
+                            <a {% if task.status != 'completed' %} href="{{task.redirect_link}}" {% endif %}>
+                                <p class="m-0">{{task.message}}</p>
+                            </a>
+                            {% if task.status != 'completed' %} 
+                            <a href="{{task.redirect_link}}" class="btn btn-sm btn-primary mx-1">
+                                Start
+                            </a>
+                            {% endif %} 
+                        </div>
+                        <div class="col-md-3 d-flex justify-content-end align-items-center">
+                            <span class="badge bg-primary p-2">{{task.status}}</span>
+                            {% if perms.setup.manage_tasks %}
+                            <a href="{% url 'dashboard:create_update_task' %}?task_id={{task.id}}" class="btn btn-sm btn-light mx-1">Edit</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+            <p class="text text-primary text-center my-4 h4">No tasks available</p>
+            {% endif %} 
+        </div>
+    </div>
+</div>
 
+{% if perms.setup.view_system_configuration %}
 <br>
 <br>
 <br>
 <hr>
-<h4 class="page-header">Current Configuration</h4>
+<h4 class="page-header">CURRENT CONFIGURATIONS</h4>
 <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-3 px-4 py-2">
         <div class="card">
             <div class="card-header">
                 <h5 class="text-center">CURRENT SESSION</h5>
@@ -81,7 +169,7 @@
         </div>
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-3 px-4 py-2">
         <div class="card">
             <div class="card-header">
                 <h5 class="text-center">SMS ID</h5>
@@ -94,7 +182,7 @@
         </div>
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-3 px-4 py-2">
         <div class="card">
             <div class="card-header">
                 <h5 class="text-center">SMS BALANCE</h5>
@@ -107,7 +195,7 @@
         </div>
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-3 px-4 py-2">
         <div class="card">
             <div class="card-header">
                 <h5 class="text-center">SCHOOL NAME</h5>
@@ -120,11 +208,12 @@
         </div>
     </div>
 </div>
-
+{% endif %}
+{% if perms.setup.view_substatial_debt_holders %}
 <br>
 <br>
 <hr>
-<h4 class="page-header">Substantial Debt Holders</h4>
+<h4 class="page-header">SUBSTANTIAL DEBT HOLDERS</h4>
 <div class="col-12">
     <div class="card">
         <div class="card-body">
@@ -172,5 +261,6 @@
         </div>
     </div>
 </div>
+{% endif %}
 
 {% endblock %}

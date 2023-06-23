@@ -97,7 +97,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_name(self):
         if self.surname and self.other_names:
             return f"{self.surname.title()} {self.other_names.title()}"
-        return self.username.split('@')[0].title()
+        return self.username.split('@')[0].upper()
 
     def save(self, *args, **kwargs):
         if self.gender:

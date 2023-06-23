@@ -1,0 +1,103 @@
+{% extends 'templates/dashboard/base_template.html' %}
+{% block page_title %}Tasks{% endblock %}
+{% block active-sidebar-item-id %}tasks{%endblock%}
+
+{% block breadcrumb %}
+<section class="breadcrumb">
+    <a href="{% url 'dashboard:index' %}" class="">Home <i class="bi bi-chevron-right"></i></a>
+    <a href="" class="active">Tasks</a>
+</section>
+{% endblock %}
+
+{% block content %}
+
+<!-- Modal -->
+<div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-l">
+        <div class="modal-content px-4">
+            <div class="modal-header">
+                <h5 class="modal-title" id="taskModalLabel">Add Task</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            {% include 'dashboard/tasks/form_task.html' %}
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End of Modal -->
+
+<h4 class="page-header"><i class='icon bx bx-group'></i> TASK</h4>
+<section class="card">
+    <div class="card-header d-flex justify-content-between">
+        <div>
+            <button data-bs-toggle="modal" data-bs-target="#taskModal" class="btn btn-sm btn-primary">+ New task</button>
+        </div>
+        <div class="d-flex align-items-between">
+            <form action="{% url 'dashboard:tasks' %}" method="GET"
+                class="d-flex align-items-center">
+                <div class="form-group d-none d-md-block" style="min-width: 20vw;">
+                    <input type="search" value="{{query}}" placeholder="Enter user's name or message" name="query" id="query" class="form-control">
+                </div>
+                <select class="form-select" name="session" id="session">
+                    <option value="">Select Session</option>
+                    {% for session in sessions %}
+                    <option value="{{session.id}}" {% if session.id == school.current_session.id  %} selected {% endif %}>{{session.name}}</option>
+                    {% endfor %}
+                </select>
+                <select class="form-select" name="task_status" id="task_status">
+                    <option value="">All</option>
+                    <option value="pending" {% if task_status == 'pending' %} selected {% endif %}>Pending</option>
+                    <option value="completed" {% if task_status == 'completed' %} selected {% endif %}>Completed</option>
+                </select>
+                <div class="form-group mx-2">
+                    <button type="submit" class="btn btn-sm btn-primary">Load</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="card-body" style="max-height: 60vh; overflow-y: auto;">
+        {% if tasks %}
+            {% for task in tasks %}
+            <div  class="card m-1">
+                <div class="card-body row justify-content-between align-items-center p-3">
+                    <div class="col-md-3 mb-2">
+                        <p class="m-0">{{task.assigned_to.get_name}}</p>
+                        <p class="m-0"><span class="badge bg-primary">{{task.get_task_type}}</span></p>
+                        <p class="m-0"><span class="text text-primary">{{task.expires_at}}</span></p>
+                    </div>
+                    <div class="col-md-4 my-2">
+                        <a {% if task.status != 'completed' %} href="{{task.redirect_link}}" {% endif %}>
+                            <p class="mb-3">{{task.message}}</p>
+                        </a>
+                        <span class="badge bg-primary p-2">{{task.status}}</span>
+                        {% if task.status != 'completed' %} 
+                        <a href="{{task.redirect_link}}" class="btn btn-sm btn-primary mx-1">
+                            Start
+                        </a>
+                        {% endif %} 
+                    </div>
+                    <div class="col-md-4 d-flex justify-content-end align-items-center">
+                        {% if task.notified_at %} <p class="m-0 text-center"><small>Notified at {{task.notified_at}}</small></p> {% endif %}
+                        {% if perms.setup.manage_tasks %}
+                        <a href="{% url 'dashboard:create_update_task' %}?task_id={{task.id}}" class="btn btn-sm btn-light mx-1">Edit</a>    
+                        <form action="{% url 'dashboard:task_send_notification' %}" method="POST"
+                                class="requires-confirmation"
+                            data-message="Would you like to send a notification to the user in question using the provided message?">
+                            {% csrf_token %}
+                            <input type="hidden" name="task_id" value="{{task.id}}">
+                            <button type="submit" href="{% url 'dashboard:create_update_task' %}?task_id={{task.id}}" class="btn btn-sm btn-light"><i class="bi bi-bell"></i> Notify via sms</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+        <p class="text text-primary text-center my-4 h4">No tasks available</p>
+        {% endif %} 
+    </div>
+</section>
+
+{% endblock %}

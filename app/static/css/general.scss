@@ -1,5 +1,5 @@
 html {
-  font-family: 'Helvetica', 'Arial', sans-serif;
+  font-family: "Helvetica", "Arial", sans-serif;
 }
 
 body {
@@ -163,7 +163,7 @@ a {
       overflow: hidden;
 
       &::after {
-        content: '';
+        content: "";
         position: absolute;
         bottom: 0.1em;
         right: 0.1em;

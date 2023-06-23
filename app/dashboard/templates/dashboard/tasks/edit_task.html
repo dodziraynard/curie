@@ -1,0 +1,27 @@
+{% extends 'templates/dashboard/base_template.html' %}
+{% block page_title %}House{% endblock %}
+{% block active-sidebar-item-id %}tasks{%endblock%}
+
+{% block breadcrumb %}
+<section class="breadcrumb">
+    <a href="{% url 'dashboard:index' %}" class="">Home <i class="bi bi-chevron-right"></i></a>
+    <a href="{% url 'dashboard:tasks' %}">House <i class="bi bi-chevron-right"></i></a>
+    <a class="active">{{task.name|title}}</a>
+</section>
+{% endblock %}
+
+{% block content %}
+
+<div class="row col-md-11 mx-auto">
+    <section class="col-md-6 mx-auto">
+        <div class="card p-4">
+            <div class="d-flex justify-content-between">
+                <h6>TASK</h6>
+            </div>
+            <div class="card-body">
+                {% include 'dashboard/tasks/form_task.html' %}
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

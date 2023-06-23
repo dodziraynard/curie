@@ -1,0 +1,65 @@
+
+{% load absolute_url %}
+
+<form action="{% url 'dashboard:create_update_task' %}" class="needs-validation my-4" method="POST" novalidate>
+    {% csrf_token %}
+    <input type="hidden" name="task_id" value="{{task.id}}">
+    
+    <div class="form-group my-3">
+        <label class="h6" for="session">Session <span class="text-danger">*</span></label>
+        <select class="form-select" name="session" id="session" required>
+            {% for session in sessions %}
+            <option value="{{session.id}}" {% if session.id == task.session.id  %} selected {% endif %}>{{session.name}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    
+    <div class="form-group my-3">
+        <label class="h6" for="task_type">Task Type <span class="text-danger">*</span></label>
+        <select class="form-select" name="task_type" id="task_type" required>
+            <option value="other" {% if task_type == 'other' %}selected{% endif %}>Other</option>
+            <option value="academic_record" {% if task_type == 'academic_record' %}selected{% endif %}>Academic record</option>
+            <option value="class_teacher_report" {% if task_type == 'class_teacher_report' %}selected{% endif %}>Class teacher report</option>
+            <option value="asistant_head_signature" {% if task_type == 'asistant_head_signature' %}selected{% endif %}>Assistant head signature</option>
+            <option value="house_master_report" {% if task_type == 'house_master_report' %}selected{% endif %}>House master report</option>
+        </select>
+    </div>
+    
+    <div class="form-group my-3">
+        <label class="h6" for="username">Assignee's Username/Staff ID <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" name="username" {%if not username %} value="{{task.assigned_to.username}}" {% else %} value = {{username}} {% endif %} required>
+    </div>
+    
+    <div class="form-group my-3">
+        <label class="h6" for="message">Message <span class="text-danger">*</span></label>
+        <textarea name="message" id="message" cols="30" rows="3" class="form-control" required>{{message}}</textarea>
+    </div>
+    
+    <div class="form-group my-3">
+        <label class="h6" for="redirect_link">Redirect to</label>
+        <input type="url" name="redirect_link" id="redirect_link" value="{% absolute_url redirect_link %}" class="form-control"></textarea>
+    </div>
+    
+    <div class="form-group my-3">
+        <label class="h6" for="expires_at">Expires at</label>
+        <input type="date" name="expires_at" id="expires_at" value="{{expires_at}}" class="form-control">
+    </div>
+    
+    <div class="form-group my-3">
+        <label class="h6" for="status">Status</label>
+        <div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="status" id="status_pending" value="pending" {% if status == 'pending' %} checked {% endif %}>
+                <label class="form-check-label" for="status_pending">Pending</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="status" id="status_completed" value="completed"  {% if status == 'completed' %} checked {% endif %}>
+                <label class="form-check-label" for="status_completed">Completed</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4 form-group">
+        <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+    </div>
+</form>

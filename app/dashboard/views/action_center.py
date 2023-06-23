@@ -257,11 +257,10 @@ class AcademicRecordSelectionView(PermissionRequiredMixin, View):
             sessions = sessions.filter(id__in=session_ids).distinct()
             classes = classes.filter(id__in=class_ids).distinct()
             subjects = subjects.filter(id__in=subject_ids).distinct()
-
         context = {
-            "sessions": sessions,
-            "classes": classes,
-            "subjects": subjects
+            "sessions": sessions.order_by("id"),
+            "classes": classes.order_by("stage"),
+            "subjects": subjects.order_by("name")
         }
         return render(request, self.template_name, context)
 
@@ -365,6 +364,9 @@ class AcademicRecordDataView(PermissionRequiredMixin, View):
         group_tag = str(time.time_ns())
         for record_id, class_id, class_score, exam_score in zip(
                 record_ids, classes, class_scores, exam_scores):
+            
+            print("record_id", record_id, class_id, class_score, exam_score, sep=",")
+            
             record = get_object_or_404(Record, id=record_id)
             klass = get_object_or_404(Klass, id=class_id)
 
@@ -378,18 +380,19 @@ class AcademicRecordDataView(PermissionRequiredMixin, View):
                     )
                     return redirect(request.META.get("HTTP_REFERER"))
 
-            record.total_class_score = int(total_class_score)
-            record.total_exam_score = int(total_exam_score)
-            record.class_score = int(class_score)
-            record.exam_score = int(exam_score)
+            record.total_class_score = int(total_class_score) if total_class_score.isdigit() else None
+            record.total_exam_score = int(total_exam_score) if total_exam_score.isdigit() else None
+            record.class_score = int(class_score) if class_score.isdigit() else None
+            record.exam_score = int(exam_score) if exam_score.isdigit() else None
             record.klass = klass
             record.group_tag = group_tag
             record.updated_by = request.user
             record.save()
 
-        # Compute position
+        # Compute position for this group
         record = Record.objects.filter(group_tag=group_tag).first()
-        record.compute_position()
+        if record:
+            record.compute_position()
 
         messages.success(request, "Scores updated successfully")
         return redirect(request.META.get("HTTP_REFERER"))

@@ -27,6 +27,10 @@ class SetupPerms(models.Model):
             ('manage_setup', 'Can manage system setup'),
             ('manage_users', 'Can manage system users'),
             ('view_dashboard', 'Can view dashboard'),
+            ('view_entity_statistics', 'Can view entity statistics'),
+            ('view_system_configuration', 'Can view system configuration'),
+            ('view_substatial_debt_holders', 'Can view substantial debt holders'),
+            ("manage_tasks", "Can manage tasks"),
             ("manage_other_report", "Can manage reports others"),
             ("manage_roles", "Can manage roles"),
 
@@ -160,6 +164,12 @@ class SetupPerms(models.Model):
             ("add_invoiceitem", "Can add invoice item"),
             ("change_invoiceitem", "Can change invoice item"),
             ("delete_invoiceitem", "Can delete invoice item"),
+            
+              # Staff
+            ("view_task", "Can view task"),
+            ("add_task", "Can add task"),
+            ("change_task", "Can change task"),
+            ("delete_task", "Can delete task"),
 
             # Paymnet
             ("view_payment", "Can view payment item"),

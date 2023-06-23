@@ -15,3 +15,4 @@ from .students import *
 from .subjects import *
 from .inventory import *
 from .personal import *
+from .tasks import *

@@ -38,3 +38,17 @@ class InvoiceItemType(enum.Enum):
 class TransactionDirection(enum.Enum):
     IN = 'IN'.lower()
     OUT = 'OUT'.lower()
+    
+class TaskType(enum.Enum):
+    ACADEMIC_RECORD = "ACADEMIC_RECORD".lower()
+    CLASS_TEACHER_REPORT = "CLASS_TEACHER_REPORT".lower()
+    ASSITANT_HEAD_SIGNATURE = "ASSITANT_HEAD_SIGNATURE".lower()
+    HOUE_MASTER_REPORT = "HOUE_MASTER_REPORT".lower()
+    OTHER = "OTHER".lower()
+    
+class TaskStatus(enum.Enum):
+    PENDING = "PENDING".lower()
+    IN_PROCESS = "IN_PROCESS".lower()
+    COMPLETED = "COMPLETED".lower()
+    WARNING = "WARNING".lower()
+    OVERDUE = "OVERDUE".lower()

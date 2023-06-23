@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
+from lms.utils.constants import TaskStatus, TaskType
 
 from lms.utils.functions import get_current_session
 from setup.models import (Attitude, Conduct, GradingSystem, Interest,
@@ -28,34 +29,44 @@ class Relative(ModelMixin):
     religion = models.CharField(max_length=100, null=True, blank=True)
     spouses = models.IntegerField(null=True, blank=True)
     date_of_demise = models.DateField(null=True, blank=True)
-    relationship = models.CharField(max_length=100, choices=RELATIONSHIP_STATUS)
-    user = models.OneToOneField(User,related_name="relative",on_delete=models.SET_NULL, null=True, blank=True)
+    relationship = models.CharField(
+        max_length=100, choices=RELATIONSHIP_STATUS)
+    user = models.OneToOneField(
+        User, related_name="relative", on_delete=models.SET_NULL, null=True, blank=True)
 
 
-#yapf: disable
+# yapf: disable
 class Student(ModelMixin):
     student_id = models.CharField(max_length=100, unique=True)
-    klass = models.ForeignKey("Klass",related_name="students",on_delete=models.SET_NULL,blank=True,null=True)
-    electives = models.ManyToManyField("Subject",related_name="students",blank=True)
-    house = models.ForeignKey("House",on_delete=models.SET_NULL,blank=True,null=True)
+    klass = models.ForeignKey("Klass", related_name="students",
+                              on_delete=models.SET_NULL, blank=True, null=True)
+    electives = models.ManyToManyField(
+        "Subject", related_name="students", blank=True)
+    house = models.ForeignKey(
+        "House", on_delete=models.SET_NULL, blank=True, null=True)
     bio = models.TextField(null=True, blank=True)
-    track = models.ForeignKey(Track,on_delete=models.SET_NULL,null=True,blank=True)
-    course = models.ForeignKey("Course",on_delete=models.SET_NULL,null=True,blank=True)
+    track = models.ForeignKey(
+        Track, on_delete=models.SET_NULL, null=True, blank=True)
+    course = models.ForeignKey(
+        "Course", on_delete=models.SET_NULL, null=True, blank=True)
     father = models.CharField(max_length=200, null=True, blank=True)
     mother = models.CharField(max_length=200, null=True, blank=True)
     sms_number = models.CharField(max_length=10, null=True, blank=True)
     completed = models.BooleanField(default=False, db_index=True)
-    user = models.OneToOneField(User,related_name="student",on_delete=models.PROTECT)
+    user = models.OneToOneField(
+        User, related_name="student", on_delete=models.PROTECT)
     last_promotion_date = models.DateField(default=timezone.now)
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
     dob = models.DateField(null=True, blank=True)
     relatives = models.ManyToManyField(Relative, related_name="students")
     religion = models.CharField(max_length=200, null=True, blank=True)
-    religious_denomination = models.CharField(max_length=200, null=True, blank=True)
+    religious_denomination = models.CharField(
+        max_length=200, null=True, blank=True)
     home_town = models.CharField(max_length=100, null=True, blank=True)
     other_tongue = models.CharField(max_length=100, null=True, blank=True)
-    last_school_attended = models.CharField(max_length=100, null=True, blank=True)
+    last_school_attended = models.CharField(
+        max_length=100, null=True, blank=True)
 
     class Meta:
         db_table = "students"
@@ -74,7 +85,6 @@ class Student(ModelMixin):
 
         next_id = last_id + 1
         return "GE" + str(next_id).zfill(6)
-
 
     def get_balance(self):
         return self.user.account.balance
@@ -98,7 +108,8 @@ class Student(ModelMixin):
         return Klass.objects.filter(course=self.klass.course)
 
     def promote(self, step):
-        if self.completed: return (True, False)
+        if self.completed:
+            return (True, False)
         final_stage = Klass.objects.order_by("-stage").first().stage
         self.last_promotion_date = timezone.now()
         if self.klass.stage + step > final_stage:
@@ -137,6 +148,11 @@ class Student(ModelMixin):
         if self.user:
             return f"{self.user.get_name()}"
         return f"{self.student_id}"
+
+    def get_subjects(self):
+        subjects = self.course.subjects.exclude(is_elective=True)
+        subjects = self.electives.union(subjects)
+        return subjects
 
 
 class Klass(ModelMixin):
@@ -191,7 +207,8 @@ class Course(ModelMixin):
     code = models.CharField(max_length=50, unique=True)
     name = models.CharField(max_length=100, unique=True)
     subjects = models.ManyToManyField("Subject", related_name="courses")
-    departments = models.ManyToManyField("Department", related_name="courses", blank=True)
+    departments = models.ManyToManyField(
+        "Department", related_name="courses", blank=True)
     hod = models.ForeignKey("Staff",
                             null=True,
                             blank=True,
@@ -232,7 +249,6 @@ class Subject(ModelMixin):
         for klass in self.courses.all():
             num += klass.get_student_count()
         return num
-
 
     class Meta:
         db_table = "subjects"
@@ -297,11 +313,11 @@ class Record(ModelMixin):
                               on_delete=models.SET_NULL,
                               blank=True,
                               null=True)
-    exam_score = models.IntegerField(default=0, blank=True, null=True)
-    class_score = models.IntegerField(default=0, blank=True, null=True)
+    exam_score = models.IntegerField(blank=True, null=True)
+    class_score = models.IntegerField(blank=True, null=True)
     total_exam_score = models.IntegerField(default=100, blank=True, null=True)
     total_class_score = models.IntegerField(default=100, blank=True, null=True)
-    total = models.IntegerField(default=0, blank=True, null=True)
+    total = models.IntegerField(blank=True, null=True)
     subject = models.ForeignKey("Subject", on_delete=models.PROTECT)
     updated_by = models.ForeignKey(User,
                                    blank=True,
@@ -313,7 +329,8 @@ class Record(ModelMixin):
     session = models.ForeignKey(SchoolSession,
                                 on_delete=models.PROTECT,
                                 null=True)
-    group_tag = models.CharField(max_length=100, null=True, blank=True, db_index=True)
+    group_tag = models.CharField(
+        max_length=100, null=True, blank=True, db_index=True)
     roll_no = models.IntegerField(blank=True, null=True)
     position = models.IntegerField(null=True, blank=True)
 
@@ -357,14 +374,14 @@ class Record(ModelMixin):
 
     def compute_position(self):
         totals = set()
-        records = Record.objects.filter(group_tag=self.group_tag)
+        records = Record.objects.filter(group_tag=self.group_tag).exclude(total=None)
         for record in records:
             if record.total is not None:
                 totals.add(record.total)
         totals = sorted(list(totals), reverse=True)
 
         for record in records:
-            record.position =  totals.index(record.total) + 1
+            record.position = totals.index(record.total) + 1
             record.roll_no = len(records)
             record.save()
 
@@ -498,6 +515,7 @@ class StudentPromotionHistory(ModelMixin):
     session = models.ForeignKey(SchoolSession,
                                 on_delete=models.CASCADE,
                                 null=True)
+
     class Meta:
         db_table = "student_promotion_history"
 
@@ -507,16 +525,16 @@ class StudentPromotionHistory(ModelMixin):
 
 class Notification(models.Model):
     PURPOSE_CHOICES = [
-        ("PIN_RESET","PIN_RESET"),
-        ("REPORT","REPORT"),
-        ("GENERAL","GENERAL"),
+        ("PIN_RESET", "PIN_RESET"),
+        ("REPORT", "REPORT"),
+        ("GENERAL", "GENERAL"),
     ]
     text = models.TextField()
-    id_tag = models.CharField(max_length=50,null=True, blank=True)
+    id_tag = models.CharField(max_length=50, null=True, blank=True)
     sender_id = models.CharField(max_length=100, null=True, blank=True)
     status = models.CharField(max_length=100)
     destination = models.CharField(max_length=50)
-    type = models.CharField(max_length=50,default="sms")
+    type = models.CharField(max_length=50, default="sms")
     purpose = models.CharField(max_length=50, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -531,7 +549,8 @@ class Notification(models.Model):
         sender_id = School.objects.first().sms_sender_id
 
         api_key = settings.ARKESEL_API_KEY
-        if not (api_key and sender_id): return
+        if not (api_key and sender_id):
+            return
 
         message = message.replace(" ", "+")
 
@@ -546,15 +565,17 @@ class Notification(models.Model):
 
         self.save()
 
+
 class Inventory(ModelMixin):
     INVENTORY_STATUS_CHOICES = [
-        ("available","available"),
-        ("unavailable","unavailable"),
+        ("available", "available"),
+        ("unavailable", "unavailable"),
     ]
     name = models.CharField(max_length=200)
     quantity = models.IntegerField(default=0)
     note = models.TextField()
-    status = models.CharField(max_length=50, default="available", choices=INVENTORY_STATUS_CHOICES)
+    status = models.CharField(
+        max_length=50, default="available", choices=INVENTORY_STATUS_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     created_by = models.ForeignKey(User, on_delete=models.PROTECT)
@@ -565,26 +586,64 @@ class Inventory(ModelMixin):
 
     @property
     def remain_quantity(self):
-        leased = sum(Issuance.objects.filter(item=self,status="pending").values_list("quantity", flat=True))
+        leased = sum(Issuance.objects.filter(
+            item=self, status="pending").values_list("quantity", flat=True))
         return self.quantity - leased
+
 
 class Issuance(ModelMixin):
     ISSUANCE_STATUS_CHOICES = [
-        ("returned","returned"),
-        ("pending","pending"),
-        ("overdue","overdue"),
+        ("returned", "returned"),
+        ("pending", "pending"),
+        ("overdue", "overdue"),
     ]
-    recipient = models.ForeignKey(User, related_name="issued_items", on_delete=models.PROTECT)
+    recipient = models.ForeignKey(
+        User, related_name="issued_items", on_delete=models.PROTECT)
     item = models.ForeignKey(Inventory, on_delete=models.PROTECT)
     quantity = models.IntegerField(default=0)
-    status = models.CharField(max_length=50, default="pending", choices=ISSUANCE_STATUS_CHOICES)
+    status = models.CharField(
+        max_length=50, default="pending", choices=ISSUANCE_STATUS_CHOICES)
     note = models.TextField(default="")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    issued_by = models.ForeignKey(User, related_name="items_issued", on_delete=models.PROTECT)
+    issued_by = models.ForeignKey(
+        User, related_name="items_issued", on_delete=models.PROTECT)
     updated_by = models.ForeignKey(User, on_delete=models.PROTECT)
-    expiry_date = models.DateTimeField(auto_now_add=True)
+    expiry_date = models.DateTimeField(null=True, blank=True)
     deleted = models.BooleanField(default=False)
 
     def __str__(self):
         return self.recipient
+
+
+class Task(ModelMixin):
+    TASKS_STATUS_CHOICES = [
+        (TaskStatus.PENDING.value, TaskStatus.PENDING.value),
+        (TaskStatus.IN_PROCESS.value, TaskStatus.IN_PROCESS.value),
+        (TaskStatus.COMPLETED.value, TaskStatus.COMPLETED.value),
+        (TaskStatus.WARNING.value, TaskStatus.WARNING.value),
+        (TaskStatus.OVERDUE.value, TaskStatus.OVERDUE.value),
+    ]
+    # yapf: disable
+    TASKS_TYPE = [
+        (TaskType.ACADEMIC_RECORD.value, TaskType.ACADEMIC_RECORD.value),
+        (TaskType.CLASS_TEACHER_REPORT.value, TaskType.CLASS_TEACHER_REPORT.value),
+        (TaskType.ASSITANT_HEAD_SIGNATURE.value,
+         TaskType.ASSITANT_HEAD_SIGNATURE.value),  # yapf: disable
+        (TaskType.HOUE_MASTER_REPORT.value, TaskType.HOUE_MASTER_REPORT.value),
+        (TaskType.OTHER.value, TaskType.OTHER.value),
+    ]
+    task_type = models.CharField(max_length=50, choices=TASKS_TYPE)
+    assigned_to = models.ForeignKey(
+        User, related_name="tasks", null=True, blank=True, on_delete=models.CASCADE)
+    initiated_by = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True)
+    message = models.TextField()
+    status = models.CharField(max_length=20, choices=TASKS_STATUS_CHOICES)
+    expires_at = models.DateTimeField(null=True, blank=True)
+    redirect_link = models.URLField(null=True, blank=True)
+    session = models.ForeignKey(SchoolSession, on_delete=models.CASCADE)
+    notified_at = models.DateTimeField(null=True, blank=True)
+
+    def get_task_type(self):
+        return self.task_type.replace("_", " ").capitalize()

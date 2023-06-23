@@ -1,6 +1,6 @@
 from django import forms
 
-from dashboard.models import Course, Department, House, Klass, Subject, Inventory, Issuance
+from dashboard.models import Course, Department, House, Klass, Subject, Inventory, Issuance, Task
 
 
 class SubjectForm(forms.ModelForm):
@@ -81,4 +81,16 @@ class IssuanceForm(forms.ModelForm):
             "updated_by",
             "issued_by",
             "updated_at",
+        ]
+
+
+class TaskForm(forms.ModelForm):
+
+    class Meta:
+        model = Task
+        exclude = [
+            "id",
+            "created_at",
+            "updated_at",
+            "assigned_to",
         ]

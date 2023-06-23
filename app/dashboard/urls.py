@@ -12,7 +12,6 @@ urlpatterns = [
     path('crop-model-image/<str:model_name>/<str:model_id>/<str:field_name>', views.CropModelImageView.as_view(), name='crop_model_image'),
     path('tasks/<str:task_id>/stream-status', views.StreamTaskStatusView.as_view(), name='stream_task_status'),
 
-
     # Students
     path('students/', views.StudentsView.as_view(), name='students'),
     path('students/create-update', views.CreateUpdateStudentView.as_view(), name='create_update_student'),
@@ -41,6 +40,11 @@ urlpatterns = [
     # House
     path('houses/', views.HousesView.as_view(), name='houses'),
     path('houses/create-update', views.CreateUpdateHouseView.as_view(), name="create_update_house"),
+
+    # House
+    path('tasks/', views.TasksView.as_view(), name='tasks'),
+    path('tasks/create-update', views.CreateUpdateTaskView.as_view(), name="create_update_task"),
+    path('tasks/task-send-notification', views.SendTaskNotification.as_view(), name="task_send_notification"),
 
     # Action Center
     path('action-center/', views.ActionCenterView.as_view(), name='action_center'),
@@ -112,5 +116,4 @@ urlpatterns += [
     path('personal/my-invoices', views.MyInvoicesView.as_view(), name='my_invoices'),
     path('personal/my-invoices/<str:invoice_id>/detail', views.MyInvoiceDetailView.as_view(), name='my_invoice_detail'),
     path('personal/payment-history', views.PersonalPaymentHistory.as_view(), name='payment_history'),
-    
 ]
