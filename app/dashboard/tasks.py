@@ -91,9 +91,10 @@ def create_or_update_user_academic_record_tasks():
         if not mapping:
             logger.info(f"No mapping for {mapping}")
             continue
-        
+
         task_code = key
-        redirect_link = reverse("dashboard:academic_record_selection")
+        redirect_link = reverse("dashboard:academic_record_data") + \
+            f"?session={current_session.id}&subject={subject.id}&classes={klass.id}"
         user = mapping.staff.user if mapping.staff else None
         task, created = Task.objects.get_or_create(assigned_to=user,
                                                    session=current_session,
