@@ -80,7 +80,7 @@ def create_or_update_user_academic_record_tasks():
                 klass=student.klass,
                 student=student, subject=subject, session=current_session).exists()
             key = "|".join([student.klass.name, subject.name])
-            class_subject_pending_count[key] += not record_exists
+            class_subject_pending_count[key] += record_exists
 
     for key, pending_count in class_subject_pending_count.items():
         class_name, subject_name = key.split("|")
