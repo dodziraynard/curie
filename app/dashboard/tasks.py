@@ -75,12 +75,12 @@ def create_or_update_user_academic_record_tasks():
     for student in students:
         subjects = student.get_subjects()
         for subject in subjects:
-            record_exists = Record.objects.filter(Q(class_score=None) | Q(exam_score=None))\
-                .filter(
-                klass=student.klass,
-                student=student, subject=subject, session=current_session).exists()
+            valid_record_exists = Record.objects.exclude(Q(class_score=None) | Q(exam_score=None))\
+                .filter(deleted=False,
+                        klass=student.klass,
+                        student=student, subject=subject, session=current_session).exists()
             key = "|".join([student.klass.name, subject.name])
-            class_subject_pending_count[key] += record_exists
+            class_subject_pending_count[key] += not valid_record_exists
 
     for key, pending_count in class_subject_pending_count.items():
         class_name, subject_name = key.split("|")
