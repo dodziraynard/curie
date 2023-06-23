@@ -376,6 +376,7 @@ class Record(ModelMixin):
     def compute_position(self):
         totals = set()
         records = Record.objects.filter(
+            deleted=False,
             group_tag=self.group_tag).exclude(total=None)
         for record in records:
             if record.total is not None:
