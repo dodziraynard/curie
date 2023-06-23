@@ -212,7 +212,7 @@ class PaymentsView(PermissionRequiredMixin, View):
         status = request.GET.get("status")
         transactions = Transaction.objects.all()
         if query:
-            transactions = transactions.filter(name__icontains=query)
+            transactions = transactions.filter(fullname__icontains=query)
         if status:
             transactions = transactions.filter(status__icontains=status)
         if from_date:
