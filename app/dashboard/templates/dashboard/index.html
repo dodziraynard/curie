@@ -83,7 +83,7 @@
 <br>
 <br>
 <hr>
-<h4 class="page-header">PENDING TASKS</h4>
+<h4 class="page-header">TASKS [{{tasks.count}} items]</h4>
 <div class="col-12">
     <div class="card">
         <div class="card-header d-flex justify-content-between">
@@ -124,14 +124,13 @@
                             <p class="m-0"><span class="text text-primary">{{task.expires_at}}</span></p>
                         </div>
                         <div class="col-md-4">
-                            <a {% if task.status != 'completed' %} href="{{task.redirect_link}}" {% endif %}>
-                                <p class="m-0">{{task.message}}</p>
-                            </a>
+                            <p class="mb-3">{{task.message}}</p>
+                            <span class="badge bg-primary p-2">{{task.status}}</span>
                             {% if task.status != 'completed' %} 
                             <a href="{{task.redirect_link}}" class="btn btn-sm btn-primary mx-1">
                                 Start
                             </a>
-                            {% endif %} 
+                            {% endif %}
                         </div>
                         <div class="col-md-3 d-flex justify-content-end align-items-center">
                             <span class="badge bg-primary p-2">{{task.status}}</span>

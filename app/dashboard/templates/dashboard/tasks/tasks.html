@@ -28,7 +28,7 @@
 </div>
 <!-- End of Modal -->
 
-<h4 class="page-header"><i class='icon bx bx-group'></i> TASK</h4>
+<h4 class="page-header"><i class='icon bx bx-group'></i> TASK [{{tasks.count}} items]</h4>
 <section class="card">
     <div class="card-header d-flex justify-content-between">
         <div>
@@ -68,9 +68,7 @@
                         <p class="m-0"><span class="text text-primary">{{task.expires_at}}</span></p>
                     </div>
                     <div class="col-md-4 my-2">
-                        <a {% if task.status != 'completed' %} href="{{task.redirect_link}}" {% endif %}>
-                            <p class="mb-3">{{task.message}}</p>
-                        </a>
+                        <p class="mb-3">{{task.message}}</p>
                         <span class="badge bg-primary p-2">{{task.status}}</span>
                         {% if task.status != 'completed' %} 
                         <a href="{{task.redirect_link}}" class="btn btn-sm btn-primary mx-1">
