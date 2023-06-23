@@ -78,7 +78,7 @@ def create_or_update_user_academic_record_tasks():
             record_exists = Record.objects.exclude(Q(class_score=None) | Q(exam_score=None))\
                 .filter(
                 klass=student.klass,
-                student=student, subject=subject, session=current_session).first()
+                student=student, subject=subject, session=current_session).exists()
             key = "|".join([student.klass.name, subject.name])
             class_subject_pending_count[key] += not record_exists
 
