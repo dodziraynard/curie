@@ -70,11 +70,9 @@
                     <div class="col-md-4 my-2">
                         <p class="mb-3">{{task.message}}</p>
                         <span class="badge bg-primary p-2">{{task.status}}</span>
-                        {% if task.status != 'completed' %} 
                         <a href="{{task.redirect_link}}" class="btn btn-sm btn-primary mx-1">
-                            Start
+                            view
                         </a>
-                        {% endif %} 
                     </div>
                     <div class="col-md-4 d-flex justify-content-end align-items-center">
                         {% if task.notified_at %} <p class="m-0 text-center"><small>Notified at {{task.notified_at}}</small></p> {% endif %}
