@@ -75,7 +75,7 @@ def create_or_update_user_academic_record_tasks():
     for student in students:
         subjects = student.get_subjects()
         for subject in subjects:
-            record_exists = Record.objects.exclude(Q(class_score=None) | Q(exam_score=None))\
+            record_exists = Record.objects.filter(Q(class_score=None) | Q(exam_score=None))\
                 .filter(
                 klass=student.klass,
                 student=student, subject=subject, session=current_session).exists()
