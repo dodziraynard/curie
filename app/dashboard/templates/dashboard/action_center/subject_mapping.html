@@ -49,7 +49,7 @@
                     <tbody>
                         {% for mapping in mappings %}
                         <tr>
-                            <td>{{mapping.subject.name}}</td>
+                            <td>{{mapping.subject.name}} ({{mapping.subject.code}})</td>
                             <td>{{mapping.klass.name}}</td>
                             <td>
                                 <select class="form-select" {% if not mapping.session.active %} disabled {% endif %}
