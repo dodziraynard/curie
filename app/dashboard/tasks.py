@@ -79,14 +79,14 @@ def create_or_update_user_academic_record_tasks():
                 .filter(deleted=False,
                         klass=student.klass,
                         student=student, subject=subject, session=current_session).exists()
-            key = "|".join([student.klass.name, subject.name])
+            key = "|".join([student.klass.class_id, subject.code])
             class_subject_pending_count[key] += not valid_record_exists
 
     for key, pending_count in class_subject_pending_count.items():
-        class_name, subject_name = key.split("|")
-        klass = Klass.objects.filter(name=class_name, deleted=False).first()
+        class_class_id, subject_code = key.split("|")
+        klass = Klass.objects.filter(class_id=class_class_id, deleted=False).first()
         subject = Subject.objects.filter(
-            name=subject_name, deleted=False).first()
+            code=subject_code, deleted=False).first()
         mapping = mappings.filter(subject=subject, klass=klass).first()
         if not mapping:
             logger.info(f"No mapping for {mapping}")
