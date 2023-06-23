@@ -333,6 +333,7 @@ class Record(ModelMixin):
         max_length=100, null=True, blank=True, db_index=True)
     roll_no = models.IntegerField(blank=True, null=True)
     position = models.IntegerField(null=True, blank=True)
+    noted = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
         permissions = [
