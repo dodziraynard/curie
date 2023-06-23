@@ -27,7 +27,7 @@ class SingleAcademicRecordReportView(PermissionRequiredMixin, View):
     @method_decorator(login_required(login_url="accounts:login"))
     def get(self, request, session_id, student_id):
         session = get_object_or_404(SchoolSession, pk=session_id)
-        records = Record.objects.filter(
+        records = Record.objects.filter(deleted=False).filter(
             session=session,
             # klass__class_id=class_id,
             student__student_id=student_id)
@@ -67,7 +67,7 @@ class PersonalAcadmicReport(PermissionRequiredMixin, View):
             "session")
         session = get_object_or_404(SchoolSession, pk=session_id)
         student_id = request.user.student.student_id
-        records = Record.objects.filter(
+        records = Record.objects.filter(deleted=False).filter(
             Q(session=session)
             | Q(session=session, student__student_id=student_id))
 
@@ -120,7 +120,7 @@ class BulkAcademicRecordReportView(PermissionRequiredMixin, View):
         student_ids = request.GET.get("student_ids").replace(" ",
                                                              "").split(",")
         session = get_object_or_404(SchoolSession, pk=session_id)
-        records = Record.objects.filter(
+        records = Record.objects.filter(deleted=False).filter(
             Q(session=session, klass_id__in=classes)
             | Q(session=session, student__student_id__in=student_ids))
 
@@ -176,7 +176,7 @@ class PersonalTranscriptionView(PermissionRequiredMixin, View):
         except User.student.RelatedObjectDoesNotExist:
             return HttpResponse("No records found.")
 
-        records = Record.objects.filter(student__student_id=student_id)
+        records = Record.objects.filter(deleted=False).filter(student__student_id=student_id)
 
         session_ids = records.values_list("session", flat=True)
         sessions = SchoolSession.objects.filter(id__in=session_ids)

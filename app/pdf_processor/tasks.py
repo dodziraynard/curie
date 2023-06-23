@@ -2,15 +2,13 @@
 This module is responsible for processing files using the celery worker
 """
 from dashboard.tasks import send_notification
-from lms.utils.constants import InvoiceItemType
 from pdf_processor.utils import render_to_pdf_file
 from django.conf import settings
 from celery import shared_task
-from datetime import datetime
 import logging
 from collections import namedtuple
 import django
-from dashboard.models import Notification, Record, SessionReport, Student
+from dashboard.models import Notification, Record, SessionReport
 from django.db.models import Q
 
 from graphql_api.models.accounting import Invoice
@@ -110,8 +108,8 @@ def generate_bulk_pdf_report(self,
                    1,
                    info=f"Retrieving report data.")
 
-    session = SchoolSession.objects.filter(pk=session_id).first()
-    records = Record.objects.filter(
+    session = SchoolSession.objects.filter(deleted=False,pk=session_id).first()
+    records = Record.objects.filter(deleted=False).filter(
         Q(session=session, klass_id__in=classes)
         | Q(session=session, student__student_id__in=student_ids))
 
