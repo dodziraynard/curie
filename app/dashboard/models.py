@@ -374,7 +374,8 @@ class Record(ModelMixin):
 
     def compute_position(self):
         totals = set()
-        records = Record.objects.filter(group_tag=self.group_tag).exclude(total=None)
+        records = Record.objects.filter(
+            group_tag=self.group_tag).exclude(total=None)
         for record in records:
             if record.total is not None:
                 totals.add(record.total)
@@ -634,6 +635,7 @@ class Task(ModelMixin):
         (TaskType.OTHER.value, TaskType.OTHER.value),
     ]
     task_type = models.CharField(max_length=50, choices=TASKS_TYPE)
+    task_code = models.CharField(max_length=100, null=True, blank=True)
     assigned_to = models.ForeignKey(
         User, related_name="tasks", null=True, blank=True, on_delete=models.CASCADE)
     initiated_by = models.ForeignKey(

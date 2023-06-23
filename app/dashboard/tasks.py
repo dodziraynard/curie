@@ -79,7 +79,6 @@ def create_or_update_user_academic_record_tasks():
                 .filter(
                 klass=student.klass,
                 student=student, subject=subject, session=current_session).first()
-
             key = "|".join([student.klass.name, subject.name])
             class_subject_pending_count[key] += not record_exists
 
@@ -92,12 +91,14 @@ def create_or_update_user_academic_record_tasks():
         if not mapping:
             logger.info(f"No mapping for {mapping}")
             continue
-
+        
+        task_code = key
         redirect_link = reverse("dashboard:academic_record_selection")
         user = mapping.staff.user if mapping.staff else None
         task, created = Task.objects.get_or_create(assigned_to=user,
                                                    session=current_session,
                                                    deleted=False,
+                                                   task_code=task_code,
                                                    task_type=TaskType.ACADEMIC_RECORD.value,
                                                    )
         if pending_count > 0:
