@@ -32,7 +32,9 @@
 <section class="card">
     <div class="card-header d-flex justify-content-between">
         <div>
+            {% if perms.setup.manage_tasks %}
             <button data-bs-toggle="modal" data-bs-target="#taskModal" class="btn btn-sm btn-primary">+ New task</button>
+            {% endif %}
         </div>
         <div class="d-flex align-items-between">
             <form action="{% url 'dashboard:tasks' %}" method="GET"

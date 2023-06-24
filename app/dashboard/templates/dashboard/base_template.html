@@ -50,7 +50,7 @@
             <p class="ms-2 h3">GEB-LMS</p>
         </section>
 
-        {% if perms.setup.view_dashboard or perms.setup.view_action_center %}
+        {% if perms.setup.view_dashboard or perms.setup.view_action_center or perms.setup.view_task %}
         <h6 class="header text-muted mt-4">HOME</h6>
         {% if perms.setup.view_dashboard %}
         <a href="{% url 'dashboard:index' %}">
@@ -68,12 +68,14 @@
             </div>
         </a>
         {% endif %}
+        {% if perms.setup.view_task %}
         <a href="{% url 'dashboard:tasks' %}">
             <div class="menu-item" id="tasks">
                 <i class='icon bi bi-list-task'></i>
                 <span class="label">Tasks</span>
             </div>
         </a>
+        {% endif %}
         <hr>
         {% endif %}
 
