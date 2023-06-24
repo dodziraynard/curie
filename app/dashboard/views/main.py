@@ -55,7 +55,7 @@ class IndexView(PermissionRequiredMixin, View):
             tasks = tasks.filter(status=task_status)
 
         if not request.user.has_perm("setup.manage_tasks"):
-            tasks = tasks.filter(user=request.user)
+            tasks = tasks.filter(assigned_to=request.user)
 
         class_count = Klass.objects.filter(deleted=False).count()
         student_count = Student.objects.filter(deleted=False).count()
