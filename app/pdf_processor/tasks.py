@@ -94,7 +94,6 @@ def generate_bulk_pdf_bill_sheet(self, invoice_id, filename="file.pdf", student_
     # Preparing link
     set_task_state(self, "GENERATING", 3, info="Generating download link")
     set_task_state(self, "DONE", 3, info="Done")
-    return True
 
 
 @shared_task(bind=True)

@@ -227,15 +227,12 @@ class StreamTaskStatusView(View):
         def get_task_progress():
             retry_count = 0
             while True:
-                time.sleep(0.05)
+                time.sleep(0.2)
                 data = ""
                 try:
                     if result.info:
                         self.link = result.info.get("link") or self.link
-                        data = str(result.info.get("current", "")) + "/" + str(
-                            result.info.get("total",
-                                            "")) + " " + result.info.get(
-                                                "info", "")
+                        data = str(result.info.get("current", "")) + "/" + str(result.info.get("total", "")) + " " + result.info.get("info", "")
                     if result.status == "SUCCESS":
                         yield 'data: DONE %s\n\n' % self.link
                         break
