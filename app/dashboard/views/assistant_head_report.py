@@ -46,9 +46,11 @@ class AssistantHeadSessionReportDataView(PermissionRequiredMixin, View):
 
         for student_id in students:
             SessionReport.objects.get_or_create(student_id=student_id,
+                                                deleted=False,
                                                 session=session)
 
         reports = SessionReport.objects.filter(student__in=students,
+                                               deleted=False,
                                                session=session).order_by("klass", "student__user__surname")
         context = {
             "reports": reports,
@@ -71,13 +73,15 @@ class AssistantHeadSessionReportDataView(PermissionRequiredMixin, View):
 
         for student_id in students:
             SessionReport.objects.get_or_create(student_id=student_id,
+                                                deleted=False,
                                                 session=session)
 
         reports = SessionReport.objects.filter(student__in=students,
+                                               deleted=False,
                                                session=session)
         for report in reports:
             report.assistant_head_signature = request.user.signature
             report.save()
 
-        messages.success(request, "Record successfully updated.")
+        messages.success(request, "Record successfully signed.")
         return redirect(request.META.get("HTTP_REFERER"))
