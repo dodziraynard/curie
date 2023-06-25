@@ -92,10 +92,11 @@ class PersonalAcadmicReport(PermissionRequiredMixin, View):
         average_pos = "N/A"
         results = Record.objects.filter(klass=klass, deleted=False).exclude(total=None).values(
             'student__student_id').annotate(total_record=Sum('total')).order_by("-total_record")
-        totals = sorted([record["total_record"] for record in results])
+        totals = sorted([-record["total_record"] for record in results])
         for result in results:
             if result.get("student__student_id") == student_id:
-                average_pos = num2words(bisect.bisect_left(totals, result.get("total_record")) + 1, to="ordinal_num")
+                pos = bisect.bisect_left(totals, -result.get("total_record")) + 1
+                average_pos = num2words(pos, to="ordinal_num")
                 break
             
         st_reports = session_reports.filter(
@@ -154,10 +155,11 @@ class BulkAcademicRecordReportView(PermissionRequiredMixin, View):
             average_pos = "N/A"
             results = Record.objects.filter(klass=student.klass, deleted=False).exclude(total=None).values(
                 'student__student_id').annotate(total_record=Sum('total')).order_by("-total_record")
-            totals = sorted([record["total_record"] for record in results])
+            totals = sorted([-record["total_record"] for record in results])
             for result in results:
                 if result.get("student__student_id") == student_id:
-                    average_pos = num2words(bisect.bisect_left(totals, result.get("total_record")) + 1, to="ordinal_num")
+                    pos = bisect.bisect_left(totals, -result.get("total_record")) + 1
+                    average_pos = num2words(pos, to="ordinal_num")
                     break
 
             data.append((st_records, st_reports, average_pos))
