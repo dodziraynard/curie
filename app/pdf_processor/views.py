@@ -36,11 +36,12 @@ class SingleAcademicRecordReportView(PermissionRequiredMixin, View):
             session=session, student__student_id=student_id).first()
         average_position = "N/A"
         results = Record.objects.filter(klass=student.klass, deleted=False).exclude(total=None).values(
-            'student__student_id').annotate(total_record=Sum('total')).order_by("-total_record")
-        totals = sorted([record["total_record"] for record in results])
+            'student__student_id').annotate(total_record=Sum('total'))
+        totals = sorted([-record["total_record"] for record in results])
         for result in results:
             if result.get("student__student_id") == student_id:
-                average_position = num2words(bisect.bisect_left(totals, result.get("total_record")) + 1, to="ordinal_num")
+                pos = bisect.bisect_left(totals, -result.get("total_record")) + 1
+                average_position = num2words(pos, to="ordinal_num")
                 break
             
         context = {
