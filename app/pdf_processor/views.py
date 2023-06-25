@@ -1,18 +1,16 @@
-from collections import namedtuple
-
+import bisect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models import Q
-from django.http import Http404
 from django.shortcuts import HttpResponse, get_object_or_404
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views import View
 from accounts.models import User
+from django.db.models import Sum
 
-from dashboard.models import Record, SessionReport
-from graphql_api.models.accounting import Invoice
-from setup.models import GradingSystem, School, SchoolSession
+from dashboard.models import Record, SessionReport, Student
+from setup.models import School, SchoolSession
 from num2words import num2words
 
 from .utils import render_to_pdf
@@ -27,18 +25,30 @@ class SingleAcademicRecordReportView(PermissionRequiredMixin, View):
     @method_decorator(login_required(login_url="accounts:login"))
     def get(self, request, session_id, student_id):
         session = get_object_or_404(SchoolSession, pk=session_id)
+        student = get_object_or_404(Student, student_id=student_id)
         records = Record.objects.filter(deleted=False).filter(
             session=session,
-            # klass__class_id=class_id,
-            student__student_id=student_id)
+            deleted=False,
+            student__student_id=student_id).order_by("subject__name")
 
         session_report = SessionReport.objects.filter(
+            deleted=False,
             session=session, student__student_id=student_id).first()
+        average_position = "N/A"
+        results = Record.objects.filter(klass=student.klass, deleted=False).exclude(total=None).values(
+            'student__student_id').annotate(total_record=Sum('total')).order_by("-total_record")
+        totals = sorted([record["total_record"] for record in results])
+        for result in results:
+            if result.get("student__student_id") == student_id:
+                average_position = num2words(bisect.bisect_left(totals, result.get("total_record")) + 1, to="ordinal_num")
+                break
+            
         context = {
             "session": session,
             "session_report": session_report,
             "school": School.objects.first(),
             "records": records,
+            "average_position":average_position,
             "current_time": timezone.now(),
         }
 
@@ -67,6 +77,7 @@ class PersonalAcadmicReport(PermissionRequiredMixin, View):
             "session")
         session = get_object_or_404(SchoolSession, pk=session_id)
         student_id = request.user.student.student_id
+        klass = request.user.student.klass
         records = Record.objects.filter(deleted=False).filter(
             Q(session=session)
             | Q(session=session, student__student_id=student_id))
@@ -74,19 +85,21 @@ class PersonalAcadmicReport(PermissionRequiredMixin, View):
         session_reports = SessionReport.objects.filter(session=session)
 
         data = []
-
-        # for student_id in student_ids:
-        st_records = records.filter(student__student_id=student_id).order_by("subject__name")
-        positions = st_records.values_list("position", flat=True)
+        st_records = records.filter(
+            student__student_id=student_id).order_by("subject__name")
+        
+        average_pos = "N/A"
+        results = Record.objects.filter(klass=klass, deleted=False).exclude(total=None).values(
+            'student__student_id').annotate(total_record=Sum('total')).order_by("-total_record")
+        totals = sorted([record["total_record"] for record in results])
+        for result in results:
+            if result.get("student__student_id") == student_id:
+                average_pos = num2words(bisect.bisect_left(totals, result.get("total_record")) + 1, to="ordinal_num")
+                break
+            
         st_reports = session_reports.filter(
             student__student_id=student_id).first()
-        average_pos = "N/A"
-        if all(positions):
-            average_pos = num2words(sum(positions) //
-                                    max(st_records.count(), 1),
-                                    to="ordinal_num")
         data.append((st_records, st_reports, average_pos))
-
         context = {
             "session": session,
             "school": School.objects.first(),
@@ -132,15 +145,20 @@ class BulkAcademicRecordReportView(PermissionRequiredMixin, View):
         data = []
 
         for student_id in student_ids:
+            student = Student.objects.filter(student_id=student_id).first()
             st_records = records.filter(student__student_id=student_id)
-            positions = st_records.values_list("position", flat=True)
             st_reports = session_reports.filter(
                 student__student_id=student_id).first()
+
             average_pos = "N/A"
-            if all(positions):
-                average_pos = num2words(sum(positions) //
-                                        max(st_records.count(), 1),
-                                        to="ordinal_num")
+            results = Record.objects.filter(klass=student.klass, deleted=False).exclude(total=None).values(
+                'student__student_id').annotate(total_record=Sum('total')).order_by("-total_record")
+            totals = sorted([record["total_record"] for record in results])
+            for result in results:
+                if result.get("student__student_id") == student_id:
+                    average_pos = num2words(bisect.bisect_left(totals, result.get("total_record")) + 1, to="ordinal_num")
+                    break
+
             data.append((st_records, st_reports, average_pos))
 
         context = {
@@ -176,7 +194,8 @@ class PersonalTranscriptionView(PermissionRequiredMixin, View):
         except User.student.RelatedObjectDoesNotExist:
             return HttpResponse("No records found.")
 
-        records = Record.objects.filter(deleted=False).filter(student__student_id=student_id)
+        records = Record.objects.filter(deleted=False).filter(
+            student__student_id=student_id)
 
         session_ids = records.values_list("session", flat=True)
         sessions = SchoolSession.objects.filter(id__in=session_ids)

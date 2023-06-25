@@ -1,6 +1,7 @@
 """
 This module is responsible for processing files using the celery worker
 """
+import bisect
 from dashboard.tasks import send_notification
 from pdf_processor.utils import render_to_pdf_file
 from django.conf import settings
@@ -8,8 +9,9 @@ from celery import shared_task
 import logging
 from collections import namedtuple
 import django
-from dashboard.models import Notification, Record, SessionReport
+from dashboard.models import Notification, Record, SessionReport, Student
 from django.db.models import Q
+from django.db.models import Sum
 
 from graphql_api.models.accounting import Invoice
 from setup.models import School, SchoolSession
@@ -107,7 +109,8 @@ def generate_bulk_pdf_report(self,
                    1,
                    info=f"Retrieving report data.")
 
-    session = SchoolSession.objects.filter(deleted=False,pk=session_id).first()
+    session = SchoolSession.objects.filter(
+        deleted=False, pk=session_id).first()
     records = Record.objects.filter(deleted=False).filter(
         Q(session=session, klass_id__in=classes)
         | Q(session=session, student__student_id__in=student_ids))
@@ -119,15 +122,20 @@ def generate_bulk_pdf_report(self,
     data = []
 
     for student_id in student_ids:
+        student = Student.objects.filter(student_id=student_id).first()
         st_records = records.filter(
             student__student_id=student_id).order_by("subject__name")
-        positions = st_records.values_list("position", flat=True)
         st_reports = session_reports.filter(
             student__student_id=student_id).first()
+
         average_pos = "N/A"
-        if all(positions):
-            average_pos = num2words(sum(positions) // st_records.count(),
-                                    to="ordinal_num")
+        results = Record.objects.filter(klass=student.klass, deleted=False).exclude(total=None).values(
+            'student__student_id').annotate(total_record=Sum('total')).order_by("-total_record")
+        totals = sorted([record["total_record"] for record in results])
+        for result in results:
+            if result.get("student__student_id") == student_id:
+                average_pos = num2words(bisect.bisect_left(totals, result.get("total_record")) + 1, to="ordinal_num")
+                break
         data.append((st_records, st_reports, average_pos))
 
     context = {
@@ -224,11 +232,11 @@ def generate_and_send_bill_via_sms(session_id, student_ids=None, base_url="http:
             sms_lines.append(
                 f"Full report: {base_url}{urls[student.student_id]}")
             sms_text = "\n".join(sms_lines)
-            
+
             if student.sms_number:
                 notification = Notification.objects.create(text=sms_text,
-                                                        status="new",
-                                                        purpose="BILL",
-                                                        destination=student.sms_number,
-                                                        initiated_by_id=initiation_user_id)
+                                                           status="new",
+                                                           purpose="BILL",
+                                                           destination=student.sms_number,
+                                                           initiated_by_id=initiation_user_id)
                 send_notification(notification.id)
