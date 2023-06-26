@@ -309,6 +309,7 @@ class AcademicRecordDataView(PermissionRequiredMixin, View):
         # Get the academic records for the selected classes
         for student in students:
             record, created = Record.objects.get_or_create(student=student,
+                                                           deleted=False,
                                                            subject=subject,
                                                            session=session)
             if created:
@@ -317,6 +318,7 @@ class AcademicRecordDataView(PermissionRequiredMixin, View):
 
         records = Record.objects.filter(
             session=session, student__in=students,
+             deleted=False,
             subject=subject).order_by("student__user__surname")
 
         context = {
@@ -363,10 +365,7 @@ class AcademicRecordDataView(PermissionRequiredMixin, View):
         # Updating records
         group_tag = str(time.time_ns())
         for record_id, class_id, class_score, exam_score in zip(
-                record_ids, classes, class_scores, exam_scores):
-            
-            print("record_id", record_id, class_id, class_score, exam_score, sep=",")
-            
+                record_ids, classes, class_scores, exam_scores):            
             record = get_object_or_404(Record, id=record_id)
             klass = get_object_or_404(Klass, id=class_id)
 
@@ -390,7 +389,7 @@ class AcademicRecordDataView(PermissionRequiredMixin, View):
             record.save()
 
         # Compute position for this group
-        record = Record.objects.filter(group_tag=group_tag).first()
+        record = Record.objects.filter(group_tag=group_tag,  deleted=False).first()
         if record:
             record.compute_position()
 
