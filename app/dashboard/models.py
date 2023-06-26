@@ -380,7 +380,7 @@ class Record(ModelMixin):
             group_tag=self.group_tag).exclude(total=None)
         for record in records:
             if record.total is not None:
-                totals.add(record.total)
+                totals.append(record.total)
         totals = sorted(totals, reverse=True)
 
         for record in records:
