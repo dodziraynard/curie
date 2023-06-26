@@ -374,14 +374,14 @@ class Record(ModelMixin):
         super(Record, self).save(*args, **kwargs)
 
     def compute_position(self):
-        totals = set()
+        totals = []
         records = Record.objects.filter(
             deleted=False,
             group_tag=self.group_tag).exclude(total=None)
         for record in records:
             if record.total is not None:
                 totals.add(record.total)
-        totals = sorted(list(totals), reverse=True)
+        totals = sorted(totals, reverse=True)
 
         for record in records:
             record.position = totals.index(record.total) + 1
