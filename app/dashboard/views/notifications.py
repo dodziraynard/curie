@@ -154,7 +154,7 @@ class SendPINNotification(PermissionRequiredMixin, View):
         ] if all_staff else []
         student_ids = [
             student.user.username
-            for student in Student.objects.filter(completed=False)
+            for student in Student.objects.filter(completed=False, deleted=False)
         ] if all_students else []
 
         users = User.objects.filter(
