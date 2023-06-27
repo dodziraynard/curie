@@ -360,7 +360,7 @@ class ConfirmReportNotification(PermissionRequiredMixin, View):
                                               flat=True))
         id_tag = timezone.now().strftime("%y%m%d%H%M%S%f")
         for student_id in student_ids:
-            student = Student.objects.filter(student_id=student_id)
+            student = Student.objects.filter(student_id=student_id).first()
             student_records = records.filter(student=student)
 
             message = f"STUDENT REPORT\nName: {student.user.get_name()}\nClass: {student_records.first().klass.name}"
