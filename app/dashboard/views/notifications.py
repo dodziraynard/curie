@@ -352,7 +352,7 @@ class ConfirmReportNotification(PermissionRequiredMixin, View):
         student_ids = request.session.get('student_ids')
 
         session = get_object_or_404(SchoolSession, pk=session_id)
-        records = Record.objects.filter(
+        records = Record.objects.filter(deleted=False).filter(
             Q(session=session, klass_id__in=classes)
             | Q(session=session, student__student_id__in=student_ids))
 
