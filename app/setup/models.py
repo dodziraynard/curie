@@ -3,18 +3,7 @@ from datetime import datetime
 from django.db import models
 from django.utils import timezone
 
-
-class ModelMixin(models.Model):
-    id = models.AutoField(primary_key=True, unique=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    deleted = models.BooleanField(default=False)
-
-    class Meta:
-        abstract = True
-
-    def model_name(self):
-        return self.__class__.__name__.lower()
+from dashboard.models.utils import BaseModel
 
 
 # Just for permissions
@@ -164,8 +153,8 @@ class SetupPerms(models.Model):
             ("add_invoiceitem", "Can add invoice item"),
             ("change_invoiceitem", "Can change invoice item"),
             ("delete_invoiceitem", "Can delete invoice item"),
-            
-              # Staff
+
+            # Staff
             ("view_task", "Can view task"),
             ("add_task", "Can add task"),
             ("change_task", "Can change task"),
@@ -211,7 +200,7 @@ class SetupPerms(models.Model):
         ]
 
 
-class SchoolSession(ModelMixin):
+class SchoolSession(BaseModel):
     name = models.CharField(max_length=50)
     semester = models.IntegerField(verbose_name="Semester/Term")
     academic_year = models.CharField(max_length=10)
@@ -234,42 +223,42 @@ class SchoolSession(ModelMixin):
         return self.start_date <= datetime.today().date() <= self.end_date
 
 
-class Track(ModelMixin):
+class Track(BaseModel):
     name = models.CharField(max_length=255)
 
     def __str__(self):
         return self.name
 
 
-class Attitude(ModelMixin):
+class Attitude(BaseModel):
     text = models.CharField(max_length=255)
 
     def __str__(self):
         return self.text
 
 
-class Conduct(ModelMixin):
+class Conduct(BaseModel):
     text = models.CharField(max_length=255)
 
     def __str__(self):
         return self.text
 
 
-class Interest(ModelMixin):
+class Interest(BaseModel):
     text = models.CharField(max_length=255)
 
     def __str__(self):
         return self.text
 
 
-class Remark(ModelMixin):
+class Remark(BaseModel):
     text = models.CharField(max_length=255)
 
     def __str__(self):
         return self.text
 
 
-class GradingSystem(ModelMixin):
+class GradingSystem(BaseModel):
     min_score = models.IntegerField(unique=True)
     grade = models.CharField(max_length=2)
     remark = models.CharField(max_length=50)
@@ -282,7 +271,7 @@ class GradingSystem(ModelMixin):
         return f"{self.min_score} - {self.grade} - {self.remark}"
 
 
-class School(ModelMixin):
+class School(BaseModel):
     code = models.CharField(max_length=255, blank=True, null=True)
     name = models.CharField(max_length=255, blank=True, null=True)
     address = models.CharField(max_length=255, blank=True, null=True)
