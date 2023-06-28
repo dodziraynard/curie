@@ -366,7 +366,7 @@ class ConfirmReportNotification(PermissionRequiredMixin, View):
             student_records = records.filter(student=student)
             message = f"STUDENT REPORT\nName: {student.user.get_name()}\nClass: {student_records.first().klass.name}"
             for record in student_records:
-                message += f"\n{record.subject.name.title()} - {record.grade}"
+                message += f"\n{record.subject.short_name.title()} - {record.grade}"
 
             message += "\nFULL REPORT AT: " + request.META.get(
                 "HTTP_ORIGIN") + reverse(
