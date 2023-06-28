@@ -361,16 +361,17 @@ class ConfirmReportNotification(PermissionRequiredMixin, View):
         id_tag = timezone.now().strftime("%y%m%d%H%M%S%f")
         for student_id in student_ids:
             student = Student.objects.filter(student_id=student_id).first()
+            if not student:
+                continue
             student_records = records.filter(student=student)
-
             message = f"STUDENT REPORT\nName: {student.user.get_name()}\nClass: {student_records.first().klass.name}"
             for record in student_records:
                 message += f"\n{record.subject.name.title()} - {record.grade}"
 
             message += "\nFULL REPORT AT: " + request.META.get(
                 "HTTP_ORIGIN") + reverse(
-                    "pdf:bulk_report"
-            ) + f"?session={session_id}&student_ids={student_id}"
+                    "pdf:personal_academic_report"
+            ) + f"?session={session_id}"
             if student.sms_number:
                 Notification.objects.create(text=message,
                                             id_tag=id_tag,

@@ -29,7 +29,7 @@ class ClassTeacherSessionReportFilterView(PermissionRequiredMixin, View):
 
         context = {
             "sessions": sessions,
-            "classes": classes,
+            "classes": classes.order_by("stage"),
         }
         return render(request, self.template_name, context)
 
@@ -68,10 +68,10 @@ class ClassTeacherSessionReportDataView(PermissionRequiredMixin, View):
             "reports": reports,
             "session": session,
             "class": klass,
-            "attitudes": Attitude.objects.all(),
-            "interests": Interest.objects.all(),
-            "conducts": Conduct.objects.all(),
-            "remarks": Remark.objects.all(),
+            "attitudes": Attitude.objects.all().order_by("text"),
+            "interests": Interest.objects.all().order_by("text"),
+            "conducts": Conduct.objects.all().order_by("text"),
+            "remarks": Remark.objects.all().order_by("text"),
         }
         return render(request, self.template_name, context)
 

@@ -2,6 +2,7 @@ import bisect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models import Q
+from django.http import Http404
 from django.shortcuts import HttpResponse, get_object_or_404
 from django.utils import timezone
 from django.utils.decorators import method_decorator
@@ -77,8 +78,11 @@ class PersonalAcadmicReport(PermissionRequiredMixin, View):
         session_id = SchoolSession.objects.first().id or request.GET.get(
             "session")
         session = get_object_or_404(SchoolSession, pk=session_id)
-        student_id = request.user.student.student_id
-        klass = request.user.student.klass
+        try:
+            student_id = request.user.student.student_id
+            klass = request.user.student.klass
+        except User.student.RelatedObjectDoesNotExist:
+            raise Http404()
         records = Record.objects.filter(deleted=False).filter(
             Q(session=session)
             | Q(session=session, student__student_id=student_id))
