@@ -4,9 +4,10 @@ from django.db import models
 from django.utils import timezone
 
 from dashboard.models import Student
+from dashboard.models.utils import BaseModel
 from lms.utils.constants import (InvoiceItemType, InvoiceStatus,
                                  TransactionDirection, TransactionStatus)
-from setup.models import ModelMixin, SchoolSession
+from setup.models import SchoolSession
 from django.db import transaction as django_db_transaction
 from django.utils.decorators import method_decorator
 
@@ -14,7 +15,7 @@ User = get_user_model()
 logger = logging.getLogger("app")
 
 
-class Invoice(ModelMixin):
+class Invoice(BaseModel):
     INVOICE_STATUS = [
         (InvoiceStatus.APPLIED.value, InvoiceStatus.APPLIED.value),
         (InvoiceStatus.DRAFT.value, InvoiceStatus.DRAFT.value),
@@ -61,7 +62,7 @@ class Invoice(ModelMixin):
         return round(float(amount), 2)
 
 
-class InvoiceItem(ModelMixin):
+class InvoiceItem(BaseModel):
     INVOICE_ITEM_TYPES = [
         (InvoiceItemType.DEBIT.value, InvoiceItemType.DEBIT.value),
         (InvoiceItemType.CREDIT.value, InvoiceItemType.CREDIT.value),
@@ -85,7 +86,7 @@ class InvoiceItem(ModelMixin):
         return self.__class__.__name__.lower()
 
 
-class Transaction(ModelMixin):
+class Transaction(BaseModel):
     TRANSACTION_STATUS = [
         ("new", "New"),
         ("pending", "Pending"),
