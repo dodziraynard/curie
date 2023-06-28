@@ -9,8 +9,7 @@ from dashboard.models.utils import BaseModel
 from lms.utils.constants import TaskStatus, TaskType
 
 from lms.utils.functions import get_current_session
-from setup.models import (Attitude, Conduct, GradingSystem, Interest,
-                          ModelMixin, Remark, SchoolSession, Track)
+from setup.models import (Attitude, Conduct, GradingSystem, Interest, Remark, SchoolSession, Track)
 
 User = get_user_model()
 
