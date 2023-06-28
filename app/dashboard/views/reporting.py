@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
-from dashboard.models import SubjectMapping
+from dashboard.models.models import SubjectMapping
 
 from dashboard.models import Klass
 from pdf_processor.tasks import generate_bulk_pdf_report

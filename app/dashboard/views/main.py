@@ -16,7 +16,7 @@ from accounts.models import Account
 from accounts.models import User
 from dashboard.models import Klass, Staff, Task
 from setup.models import School, SchoolSession
-from dashboard.models import Student
+from dashboard.models.models import Student
 from django.db.models import Q
 from lms.utils.functions import crop_image
 from celery.result import AsyncResult

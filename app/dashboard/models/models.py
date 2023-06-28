@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
+from dashboard.models.utils import BaseModel
 from lms.utils.constants import TaskStatus, TaskType
 
 from lms.utils.functions import get_current_session
@@ -15,7 +16,7 @@ User = get_user_model()
 
 
 # yapf: disable
-class Relative(ModelMixin):
+class Relative(BaseModel):
     RELATIONSHIP_STATUS = [
         ("mother", "mother"),
         ("father", "father"),
@@ -36,7 +37,7 @@ class Relative(ModelMixin):
 
 
 # yapf: disable
-class Student(ModelMixin):
+class Student(BaseModel):
     student_id = models.CharField(max_length=100, unique=True)
     klass = models.ForeignKey("Klass", related_name="students",
                               on_delete=models.SET_NULL, blank=True, null=True)
@@ -155,7 +156,7 @@ class Student(ModelMixin):
         return subjects
 
 
-class Klass(ModelMixin):
+class Klass(BaseModel):
     class_id = models.CharField(max_length=50, unique=True)
     name = models.CharField(max_length=50, unique=True)
     class_teacher = models.ForeignKey("Staff",
@@ -189,7 +190,7 @@ class Klass(ModelMixin):
         return self.students.all().count()
 
 
-class Department(ModelMixin):
+class Department(BaseModel):
     name = models.CharField(max_length=100, unique=True)
     hod = models.ForeignKey("Staff",
                             null=True,
@@ -203,7 +204,7 @@ class Department(ModelMixin):
         return self.name
 
 
-class Course(ModelMixin):
+class Course(BaseModel):
     code = models.CharField(max_length=50, unique=True)
     name = models.CharField(max_length=100, unique=True)
     subjects = models.ManyToManyField("Subject", related_name="courses")
@@ -227,7 +228,7 @@ class Course(ModelMixin):
         return num
 
 
-class Subject(ModelMixin):
+class Subject(BaseModel):
     code = models.CharField(max_length=50, unique=True)
     name = models.CharField(max_length=100)
     short_name = models.CharField(default="", max_length=100)
@@ -266,7 +267,7 @@ class Subject(ModelMixin):
         return self.students.all().count()
 
 
-class Staff(ModelMixin):
+class Staff(BaseModel):
     staff_id = models.CharField(max_length=100, unique=True)
     has_left = models.BooleanField(default=False)
     teaching = models.BooleanField(default=True)
@@ -304,7 +305,7 @@ class Staff(ModelMixin):
         return "GEST" + str(next_id).zfill(6)
 
 
-class Record(ModelMixin):
+class Record(BaseModel):
     CLASS_SCORE_PERCENTAGE = 50
     EXAM_SCORE_PERCENTAGE = 100 - CLASS_SCORE_PERCENTAGE
 
@@ -389,7 +390,7 @@ class Record(ModelMixin):
             record.save()
 
 
-class SubjectMapping(ModelMixin):
+class SubjectMapping(BaseModel):
     subject = models.ForeignKey("Subject",
                                 on_delete=models.CASCADE,
                                 related_name="teachers")
@@ -426,7 +427,7 @@ class SubjectMapping(ModelMixin):
             return str(self.id)
 
 
-class SessionReport(ModelMixin):
+class SessionReport(BaseModel):
     student = models.ForeignKey("Student", on_delete=models.PROTECT)
     session = models.ForeignKey(SchoolSession,
                                 on_delete=models.SET_NULL,
@@ -487,7 +488,7 @@ class SessionReport(ModelMixin):
             return ""
 
 
-class House(ModelMixin):
+class House(BaseModel):
     name = models.CharField(max_length=200)
     code = models.CharField(max_length=200)
     house_master = models.ForeignKey("Staff",
@@ -501,7 +502,7 @@ class House(ModelMixin):
         return self.name
 
 
-class StudentPromotionHistory(ModelMixin):
+class StudentPromotionHistory(BaseModel):
     student = models.ForeignKey("Student",
                                 related_name="promotion_histories",
                                 on_delete=models.CASCADE)
@@ -569,7 +570,7 @@ class Notification(models.Model):
         self.save()
 
 
-class Inventory(ModelMixin):
+class Inventory(BaseModel):
     INVENTORY_STATUS_CHOICES = [
         ("available", "available"),
         ("unavailable", "unavailable"),
@@ -594,7 +595,7 @@ class Inventory(ModelMixin):
         return self.quantity - leased
 
 
-class Issuance(ModelMixin):
+class Issuance(BaseModel):
     ISSUANCE_STATUS_CHOICES = [
         ("returned", "returned"),
         ("pending", "pending"),
@@ -619,7 +620,7 @@ class Issuance(ModelMixin):
         return self.recipient
 
 
-class Task(ModelMixin):
+class Task(BaseModel):
     TASKS_STATUS_CHOICES = [
         (TaskStatus.PENDING.value, TaskStatus.PENDING.value),
         (TaskStatus.IN_PROCESS.value, TaskStatus.IN_PROCESS.value),
