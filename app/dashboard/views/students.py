@@ -143,6 +143,7 @@ class CreateUpdateStudentView(PermissionRequiredMixin, CreateUpdateMixin):
         if photo:
             user.photo = photo
 
+        user.phone = student.sms_number
         user.save()
         student.electives.set(electives)
         student.completed = completed
