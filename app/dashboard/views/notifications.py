@@ -51,7 +51,7 @@ class NotificationHistoryView(PermissionRequiredMixin, View):
         status = request.GET.get("status")
 
         if query:
-            notifications = notifications.filter(destination__icontains=query)
+            notifications = notifications.filter(Q(destination__icontains=query)|Q(text__icontains=query))
         if status:
             notifications = notifications.filter(status__icontains=status)
         if from_date:
