@@ -221,14 +221,10 @@ def generate_and_send_bill_via_sms(session_id, student_ids=None, base_url="http:
             sms_lines = [
                 "Dear Parent,", f"Bill summary for your ward, {student.user.get_name()}, {invoice.session.name}:",
             ]
-            # for item in invoice.invoice_items.filter(deleted=False):
-            #     sms_lines.append(
-            #         f"{item.name} : GHC{item.amount} ({item.type}).")
-
             arears = round(
                 total - float(student.user.account.amount_payable), 2)
             arears = [0.00, arears][arears != 0]
-            sms_lines.append(f"Areas: GHC{arears}.")
+            sms_lines.append(f"Arrears : GHC{arears}.")
             sms_lines.append(
                 f"Amount payable: GHC{student.user.account.amount_payable}.")
 
