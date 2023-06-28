@@ -210,7 +210,7 @@ class ConfirmPINNotification(PermissionRequiredMixin, View):
                     sample(list(map(str, [1, 2, 3, 4, 5, 6, 7, 8, 9, 0])), 4))
                 user.set_password(user.temporal_pin)
                 user.save()
-            message = f"Dear {user.get_name()}, Your login credentials are:\nUsername: {user.username}\nDefualt PIN: {user.temporal_pin}."
+            message = f"Dear {user.get_name()}, Your login credentials are:\nUsername: {user.username}\nDefualt PIN: {user.temporal_pin}.\nPortal: {request.build_absolute_uri(reverse('accounts:login'))}"
             Notification.objects.create(text=message,
                                         id_tag=id_tag,
                                         status="new",
