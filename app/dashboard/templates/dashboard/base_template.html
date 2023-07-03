@@ -244,10 +244,21 @@
                 </span>
             </div>
             <div class=""></div>
-            <div class="d-flex align-items-center">
+            <div class="nav-right d-flex align-items-center">
                 <div class="me-4">
-                    <span class="notification" data-count="3"><i class="bi bi-bell"></i></span>
+                    <div class="">
+                        <span class="notification" data-count="{{request.user_notifications.count}}"><i class="bi bi-bell"></i></span>
+                    </div>
+                    <div class="nav-drop-down">
+                        {% for notification in request.user_notifications %}
+                        <a href="/" class="drop-down-item">
+                            <p class="m-0 p-0">Pending tasks</p>
+                            <small class="m-0 p-0 text-muted">You have 3 pending tasks</small>
+                        </a>
+                        {% endfor %}
+                    </div>
                 </div>
+             
                 <div class="me-3">
                     <p class="m-0 p-0 text-end">{{request.user.get_name}}</p>
                     <p class="m-0 p-0 text-end text text-muted"><small

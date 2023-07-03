@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from typing import Iterable, Optional
 
 import requests
 from django.conf import settings
@@ -9,7 +10,8 @@ from dashboard.models.utils import BaseModel
 from lms.utils.constants import TaskStatus, TaskType
 
 from lms.utils.functions import get_current_session
-from setup.models import (Attitude, Conduct, GradingSystem, Interest, Remark, SchoolSession, Track)
+from setup.models import (Attitude, Conduct, GradingSystem,
+                          Interest, Remark, SchoolSession, Track)
 
 User = get_user_model()
 
@@ -651,3 +653,17 @@ class Task(BaseModel):
 
     def get_task_type(self):
         return self.task_type.replace("_", " ").capitalize()
+
+
+class SystemNotification(BaseModel):
+    user = models.ForeignKey(User, related_name="system_notifications",
+                             null=True, blank=True, on_delete=models.CASCADE)
+    title = models.CharField(max_length=100)
+    message = models.TextField()
+    read = models.BooleanField(default=False)
+    expires_at = models.DateTimeField(null=True, blank=True)
+
+    def save(self, *args, **kwargs) -> None:
+        if not self.pk and self.created_at:
+            self.expires_at = self.created_at + timedelta(days=30)
+        return super().save(*args, **kwargs)

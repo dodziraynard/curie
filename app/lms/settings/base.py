@@ -51,6 +51,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_auto_logout.middleware.auto_logout',
     'lms.middleware.LogUserVisits',
+    'lms.middleware.AddRequestObjects',
     'lms.middleware.SingleUserSession',
 ]
 

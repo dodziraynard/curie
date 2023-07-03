@@ -115,3 +115,18 @@ croppableContainers?.forEach(container => {
         });
     }
 })
+
+
+const notification = document.querySelector('.notification');
+const dropDown = document.querySelector('.nav-right .nav-drop-down');
+document.addEventListener("click", (event) => {
+    const clickedClasses = event.target.classList
+    console.log(clickedClasses)
+    if (!clickedClasses?.contains("notification") && !clickedClasses?.contains("bi-bell")) {
+        dropDown?.classList?.remove("active")
+    }
+})
+
+notification?.addEventListener("click", () => {
+    dropDown?.classList?.toggle("active")
+})

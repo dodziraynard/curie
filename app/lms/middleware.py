@@ -5,6 +5,7 @@ from django.core.cache import cache
 from ipware import get_client_ip
 
 from accounts.models import ActivityLog
+from dashboard.models.models import SystemNotification
 from setup.models import School
 
 
@@ -56,4 +57,18 @@ class LogUserVisits(object):
                 ActivityLog.objects.create(ip=ip,
                                            username=username,
                                            action=action)
+        return self.get_response(request)
+
+
+class AddRequestObjects(object):
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        """
+        Log the different pages visited by user.
+        """
+        request.user_notifications = SystemNotification.objects.filter(
+            user=request.user)
         return self.get_response(request)

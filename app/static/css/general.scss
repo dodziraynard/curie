@@ -52,8 +52,8 @@ a {
   &.active {
     width: $sidebar-size;
   }
-  
-  hr{
+
+  hr {
     color: $white;
   }
 
@@ -92,7 +92,7 @@ a {
   }
 
   .menu-item {
-    color: $white;;
+    color: $white;
     font-weight: 500;
     padding: 0.5em 0.5em;
     margin-right: 0.5em;
@@ -269,4 +269,38 @@ a {
 .inline-input {
   width: 5em;
   display: inline !important;
+}
+
+.nav-right {
+  position: relative;
+
+  .nav-drop-down {
+    background-color: white;
+    position: absolute;
+    width: 20em;
+    z-index: 0;
+    right: 0;
+    border-radius: 0.4em;
+    box-shadow: 0 0.1em 1em rgba(0, 0, 0, 0.1);
+    top: calc(#{$nav-height} - 0.8em);
+    max-height: 50vh;
+    overflow-y: auto;
+    display: none;
+    
+    .drop-down-item {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      padding: 0.5em;
+      display: block;
+      border-radius: 0.4em;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+      }
+    }
+
+    &.active {
+      display: block;
+    }
+  }
 }
