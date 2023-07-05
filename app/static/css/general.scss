@@ -286,7 +286,7 @@ a {
     max-height: 50vh;
     overflow-y: auto;
     display: none;
-    
+
     .drop-down-item {
       border-bottom: 1px solid rgba(0, 0, 0, 0.1);
       padding: 0.5em;
@@ -301,6 +301,28 @@ a {
 
     &.active {
       display: block;
+    }
+  }
+}
+
+.page-menus {
+  
+  .side-bar {
+    background-color: rgba($white, 1);
+    padding-top: 3em;
+    padding-bottom: 3em;
+    border-top-right-radius: 1em;
+    border-bottom-right-radius: 1em;
+    min-height: 90vh;
+    
+
+    .menu-item{
+      padding: 1em;
+      border-bottom: 0.5px solid  rgba(0, 0, 0, 0.2);;
+      
+      &:hover{
+        background-color: rgba($primary, 0.1);
+      }
     }
   }
 }

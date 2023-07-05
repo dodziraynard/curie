@@ -117,3 +117,9 @@ urlpatterns += [
     path('personal/my-invoices/<str:invoice_id>/detail', views.MyInvoiceDetailView.as_view(), name='my_invoice_detail'),
     path('personal/payment-history', views.PersonalPaymentHistory.as_view(), name='payment_history'),
 ]
+
+# User profile
+urlpatterns += [
+    path('user-profile', views.UserProfileIndexView.as_view(), name='user_profile'),
+    path('user-profile/photo', views.UserProfilePhotoView.as_view(), name='user_profile_profile'),
+]

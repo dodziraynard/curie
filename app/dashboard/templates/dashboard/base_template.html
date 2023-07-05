@@ -252,21 +252,21 @@
                     <div class="nav-drop-down">
                         {% for notification in request.user_notifications %}
                         <a href="/" class="drop-down-item">
-                            <p class="m-0 p-0">Pending tasks</p>
-                            <small class="m-0 p-0 text-muted">You have 3 pending tasks</small>
+                            <p class="m-0 p-0">{{notification.title}}</p>
+                            <small class="m-0 p-0 text-muted">{{notification.message}}</small>
                         </a>
                         {% endfor %}
                     </div>
                 </div>
              
-                <div class="me-3">
+                <a href="{% url 'dashboard:user_profile' %}" class="me-3">
                     <p class="m-0 p-0 text-end">{{request.user.get_name}}</p>
                     <p class="m-0 p-0 text-end text text-muted"><small
                             class="m-0 p-0">{{request.user.get_title}}</small></p>
-                </div>
-                <div class="avatar">
+                </a>
+                <a href="{% url 'dashboard:user_profile' %}" class="avatar">
                     <img src="{{request.user.get_photo_url}}" alt="User's picture">
-                </div>
+                </a>
             </div>
         </nav>
         {% block breadcrumb %}

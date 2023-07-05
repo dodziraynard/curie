@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
 
     <title>{% block page_title %}Home{% endblock %} | LMS</title>
-<script defer src="/static/js/vendor.b1572f288ed62926d4a6.bundle.js"></script><script defer src="/static/js/main.d59b8d0352113b36b5e3.bundle.js"></script></head>
+<script defer src="/static/js/vendor.b1572f288ed62926d4a6.bundle.js"></script><script defer src="/static/js/main.b4dc663c5df721e94b4d.bundle.js"></script></head>
 
 <body>
     {% include 'dashboard/modals/general_deletion_modal.html' %}
@@ -252,21 +252,21 @@
                     <div class="nav-drop-down">
                         {% for notification in request.user_notifications %}
                         <a href="/" class="drop-down-item">
-                            <p class="m-0 p-0">Pending tasks</p>
-                            <small class="m-0 p-0 text-muted">You have 3 pending tasks</small>
+                            <p class="m-0 p-0">{{notification.title}}</p>
+                            <small class="m-0 p-0 text-muted">{{notification.message}}</small>
                         </a>
                         {% endfor %}
                     </div>
                 </div>
              
-                <div class="me-3">
+                <a href="{% url 'dashboard:user_profile' %}" class="me-3">
                     <p class="m-0 p-0 text-end">{{request.user.get_name}}</p>
                     <p class="m-0 p-0 text-end text text-muted"><small
                             class="m-0 p-0">{{request.user.get_title}}</small></p>
-                </div>
-                <div class="avatar">
+                </a>
+                <a href="{% url 'dashboard:user_profile' %}" class="avatar">
                     <img src="{{request.user.get_photo_url}}" alt="User's picture">
-                </div>
+                </a>
             </div>
         </nav>
         {% block breadcrumb %}

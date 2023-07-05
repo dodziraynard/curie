@@ -69,6 +69,7 @@ class AddRequestObjects(object):
         """
         Log the different pages visited by user.
         """
-        request.user_notifications = SystemNotification.objects.filter(
-            user=request.user)
+        if request.user.is_authenticated:
+            request.user_notifications = SystemNotification.objects.filter(
+                user=request.user)
         return self.get_response(request)

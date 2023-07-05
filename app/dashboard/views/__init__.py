@@ -16,3 +16,4 @@ from .subjects import *
 from .inventory import *
 from .personal import *
 from .tasks import *
+from .user_profile import *
