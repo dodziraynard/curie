@@ -1,0 +1,22 @@
+{% extends 'dashboard/user_profile/index.html' %}
+{% block page_title %}User Profile{% endblock %}
+{% block active-sidebar-item-id %}{%endblock%}
+
+{% block sub_content %}
+<div class="mx-auto my-3 col-md-6 card">
+    <div class="card-body">
+        <form action="" class="needs-validation" method="POST" novalidate>
+            {% csrf_token %}
+            <p>Photo</p>
+            
+            <div class="form-group">
+                <input type="file" name="photo" id="photo" class="form-control">
+            </div>
+            
+            <div class="mt-4 form-group">
+                <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

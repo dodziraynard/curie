@@ -1,0 +1,29 @@
+{% extends 'templates/dashboard/base_template.html' %}
+{% block page_title %}User Profile{% endblock %}
+{% block active-sidebar-item-id %}{%endblock%}
+
+{% block content %}
+<div class="d-flex page-menus">
+    <div class="col-md-3 side-bar">
+       <a href="{% url 'dashboard:user_profile_profile' %}" class="menu-item d-block">
+            <h6 class="m-0">Photo</h6>
+            <p class="text-muted m-0">Update your profile photo.</p>
+       </a>
+       <a href="{% url 'dashboard:user_profile' %}" class="menu-item d-block">
+            <h6 class="m-0">Bio Data</h6>
+            <p class="text-muted m-0">Update your names and gender.</p>
+        </a>
+       <a href="" class="menu-item d-block">
+            <h6 class="m-0">Password</h6>
+            <p class="text-muted m-0">Change password</p>
+        </a>
+    </div>
+    <div class="col-md-9">
+        {% block sub_content %}
+
+        {%endblock%}
+
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends 'dashboard/user_profile/index.html' %}
+{% block page_title %}User Profile{% endblock %}
+{% block active-sidebar-item-id %}{%endblock%}
+
+{% block sub_content %}
+<div class="m-3 card">
+    <div class="card-body">
+        <form action="" class="needs-validation" method="POST" novalidate>
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-5 form-group my-3">
+                    <label for="name">Surname</label>
+                    <input class="form-control" placeholder="Surname" value="{{surname}}" type="text" name="surname"
+                        id="surname" required>
+                    <div class="invalid-feedback">
+                        Please this field is required.
+                    </div>
+                </div>
+                <div class="col-md-7 form-group my-3">
+                    <label for="name">Other Names</label>
+                    <input class="form-control" placeholder="Other Names" value="{{other_names}}" type="text" name="other_names"
+                        id="other_names" required>
+                    <div class="invalid-feedback">
+                        Please this field is required.
+                    </div>
+                </div>
+            </div>
+    
+            <div class="row">
+                <div class="col-md-5 form-group my-3">
+                    <label for="name">Gender</label>
+                    <select name="gender" id="gender" class="form-select" required>
+                        <option value="">Choose gender</option>
+                        <option value="male" {% if gender == 'male' %}selected{% endif %}>Male</option>
+                        <option value="female" {% if gender == 'female' %}selected{% endif %}>Female</option>
+                    </select>
+                    <div class="invalid-feedback">
+                        Please this field is required.
+                    </div>
+                </div>
+    
+                <div class="col-md-7 form-group my-3">
+                    <label for="other_names">Phone</label>
+                    <input class="form-control" placeholder="Phone" value="{{phone}}" type="text" name="phone" id="type"
+                        required>
+                    <div class="invalid-feedback">
+                        Please this field is required.
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4 form-group">
+                <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
