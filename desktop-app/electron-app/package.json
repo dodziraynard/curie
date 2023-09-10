@@ -1,0 +1,14 @@
+{
+  "name": "eduvara-app",
+  "version": "1.0.0",
+  "description": "A desktop application for Eduvara",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Eduvara",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^25.2.0"
+  }
+}

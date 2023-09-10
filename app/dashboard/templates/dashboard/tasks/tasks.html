@@ -42,7 +42,7 @@
                 <div class="form-group d-none d-md-block" style="min-width: 20vw;">
                     <input type="search" value="{{query}}" placeholder="Enter user's name or message" name="query" id="query" class="form-control">
                 </div>
-                <select class="form-select" name="session" id="session">
+                <select class="form-select" name="session_id" id="session_id">
                     <option value="">Select Session</option>
                     {% for session in sessions %}
                     <option value="{{session.id}}" {% if session.id == school.current_session.id  %} selected {% endif %}>{{session.name}}</option>

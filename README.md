@@ -45,3 +45,34 @@ Then run the commands below to run the static files preprocessors.
 npm start
 
 ```
+To set setup the desktop app, run the following commands
+
+```bash
+branch into feat-desktop-app
+cd desktop-app/react-app
+```
+Install the required dependencies.
+```bash
+npm i
+```
+Then start the dev server
+```bash
+npm run dev
+```
+Whiles the dev server is on, copy the URL and do the following:
+```bash
+cd desktop-app/electron-app
+```
+Install the dependencies
+```bash
+npm i
+```
+Now, paste the React dev server link in this location inside the main.js file.
+``` bash
+win.loadURL(' http://127.0.0.1:5173/')
+```
+Finally, run the command:
+```bash
+npm start
+```
+
