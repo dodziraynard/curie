@@ -57,7 +57,7 @@ npm i
 ```
 Then start the dev server
 ```bash
-npm start
+npm run dev
 ```
 Whiles the dev server is on, copy the URL and do the following:
 ```bash
