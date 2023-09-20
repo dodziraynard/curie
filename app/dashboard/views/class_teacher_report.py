@@ -52,7 +52,7 @@ class ClassTeacherSessionReportDataView(PermissionRequiredMixin, View):
             return redirect("dashboard:class_teacher_report_filter")
 
         promotion_history = StudentPromotionHistory.objects.filter(
-            session=session, new_class=klass)
+            session__academic_year=session.academic_year, new_class=klass)
         students = promotion_history.values_list("student", flat=True)
 
         for student_id in students:
