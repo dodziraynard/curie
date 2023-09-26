@@ -416,9 +416,13 @@ class SendBillNotification(PermissionRequiredMixin, View):
                                        "").replace(" ",
                                                    "").replace("\r",
                                                                "").split(",")
+        excluded_student_ids = request.POST.get("excluded_student_ids",
+                                       "").replace(" ",
+                                                   "").replace("\r",
+                                                               "").split(",")
         session = get_object_or_404(SchoolSession, pk=session_id)
         students = Student.objects.filter(
-            completed=False, deleted=False, klass_id__in=class_ids)
+            completed=False, deleted=False, klass_id__in=class_ids).exclude(student_id__in=excluded_student_ids)
         including_students = Student.objects.filter(
             student_id__in=student_ids, deleted=False)
 
