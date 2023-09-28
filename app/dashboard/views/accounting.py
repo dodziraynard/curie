@@ -264,9 +264,6 @@ class CreateUpdatePayments(PermissionRequiredMixin, View):
         student = get_object_or_404(Student, student_id=student_id)
         note = request.POST.get("note")
         amount = request.POST.get("amount")
-
-        print("amount", amount)
-
         transaction = Transaction.objects.create(
             account=student.user.account,
             amount=amount,

@@ -429,8 +429,7 @@ class ResetAcademicRecord(PermissionRequiredMixin, View):
                                         subject=subject)
         result = records.delete()
         if result:
-            messages.info(request, "Record deleted.")
-            return redirect("dashboard:academic_record_selection")
+            messages.info(request, "Records deleted.")
         else:
-            messages.info(request, "Record not found.")
-        return redirect(request.META.get("HTTP_REFERER"))
+            messages.info(request, "Records not found.")
+        return redirect("dashboard:academic_record_selection")
