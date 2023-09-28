@@ -68,7 +68,7 @@ class AssistantHeadSessionReportDataView(PermissionRequiredMixin, View):
             return redirect("dashboard:assistant_head_report_filter")
 
         promotion_history = StudentPromotionHistory.objects.filter(
-            session=session)
+            session__academic_year=session.academic_year)
         students = promotion_history.values_list("student", flat=True)
 
         for student_id in students:
