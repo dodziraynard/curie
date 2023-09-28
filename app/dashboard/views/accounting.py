@@ -212,7 +212,8 @@ class PaymentsView(PermissionRequiredMixin, View):
         status = request.GET.get("status")
         transactions = Transaction.objects.all()
         if query:
-            transactions = transactions.filter(fullname__icontains=query)
+            transactions = transactions.filter(
+                Q(fullname__icontains=query) | Q(student__student_id=query))
         if status:
             transactions = transactions.filter(status__icontains=status)
         if from_date:
@@ -264,9 +265,12 @@ class CreateUpdatePayments(PermissionRequiredMixin, View):
         note = request.POST.get("note")
         amount = request.POST.get("amount")
 
+        print("amount",amount)
+
         transaction = Transaction.objects.create(
             account=student.user.account,
             amount=amount,
+            student=student,
             note=note,
             initiated_by=request.user,
             status="success",
@@ -305,4 +309,3 @@ class GeneralReportStatusView(View):
             "filename": filename,
         }
         return render(request, self.template_name, context)
-

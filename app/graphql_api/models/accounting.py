@@ -109,6 +109,7 @@ class Transaction(BaseModel):
     phone_number = models.CharField(max_length=20, blank=True, null=True)
     network = models.CharField(max_length=255, blank=True, null=True)
     fullname = models.CharField(max_length=255, blank=True, null=True)
+    student = models.ForeignKey("dashboard.Student", null=True, blank=True, on_delete=models.CASCADE)
     response_data = models.TextField(blank=True, null=True)
     note = models.TextField(blank=True, null=True)
     initiated_by = models.ForeignKey("accounts.User",
