@@ -1,0 +1,40 @@
+{% extends 'templates/dashboard/base_template.html' %}
+{% block page_title %}Student Invoices{% endblock %}
+{% block active-sidebar-item-id %}accounting{%endblock%}
+
+{% block breadcrumb %}
+<section class="breadcrumb">
+    <a href="{% url 'dashboard:index' %}" class="">Home <i class="bi bi-chevron-right"></i></a>
+    <a href="" class="active">Student Invoices</a>
+</section>
+{% endblock %}
+
+{% block content %}
+<h4 class="page-header"><i class='icon bx bx-group'></i> {{invoice.name}}</h4>
+<section class="card my-3">
+    <div class="card-body">
+        <div class="col-12 mx-auto" style="overflow-x: auto;">
+            <table class="table data-table">
+                <thead class="bg-primary text-light">
+                    <tr>
+                        <th>S/N</th>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in invoice_items %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{item.name}}</td>
+                        <td>{{item.type|title}}</td>
+                        <td>{{item.amount }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

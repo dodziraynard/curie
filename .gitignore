@@ -144,3 +144,5 @@ app/scripts.py
 #Electron
 desktop-app/electron-app/node_modules
 desktop-app/react-app/node_modules
+
+scripts

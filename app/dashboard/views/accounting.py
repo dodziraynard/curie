@@ -265,7 +265,7 @@ class CreateUpdatePayments(PermissionRequiredMixin, View):
         note = request.POST.get("note")
         amount = request.POST.get("amount")
 
-        print("amount",amount)
+        print("amount", amount)
 
         transaction = Transaction.objects.create(
             account=student.user.account,
@@ -307,5 +307,52 @@ class GeneralReportStatusView(View):
         context = {
             "task_id": task_id,
             "filename": filename,
+        }
+        return render(request, self.template_name, context)
+
+
+class StudentInvoicesView(PermissionRequiredMixin, View):
+    template_name = "dashboard/accounting/student_invoices.html"
+    permission_required = [
+        "setup.manage_accounting",
+    ]
+
+    @method_decorator(login_required(login_url="accounts:login"))
+    def get(self, request, student_id):
+        query = request.GET.get("query")
+        from_date = request.GET.get("from_date")
+        to_date = request.GET.get("to_date")
+
+        student = get_object_or_404(Student, student_id=student_id)
+        invoices = student.invoices.all()
+
+        if query:
+            invoices = invoices.filter(name__icontains=query)
+        if from_date:
+            invoices = invoices.filter(created_at__gte=from_date)
+        if to_date:
+            invoices = invoices.filter(created_at__lte=to_date)
+        invoices = invoices.order_by("-created_at")
+        context = {
+            "invoices": invoices,
+            "student": student,
+            **{k: v
+               for k, v in request.GET.items()}
+        }
+        return render(request, self.template_name, context)
+
+
+class StudentInvoiceDetailView(PermissionRequiredMixin, View):
+    template_name = "dashboard/accounting/student_invoice_details.html"
+    permission_required = [
+        "setup.manage_accounting",
+    ]
+
+    @method_decorator(login_required(login_url="accounts:login"))
+    def get(self, request, student_id, invoice_id):
+        invoice = get_object_or_404(Invoice, id=invoice_id)
+        context = {
+            "invoice": invoice,
+            "invoice_items": invoice.invoice_items.filter(deleted=False)
         }
         return render(request, self.template_name, context)
