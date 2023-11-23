@@ -26,7 +26,7 @@ class StudentsView(PermissionRequiredMixin, View):
     def get(self, request):
         query = request.GET.get("query")
         class_id = request.GET.get("class_id")
-        students = Student.objects.filter(deleted=False).order_by("-created_at")
+        students = Student.objects.filter(deleted=False, completed=False).order_by("-created_at")
         courses = Course.objects.all().order_by("name")
         houses = House.objects.all().order_by("name")
         tracks = Track.objects.all().order_by("name")
