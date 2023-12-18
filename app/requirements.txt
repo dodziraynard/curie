@@ -19,3 +19,4 @@ django-celery-beat>=2.5.0
 redis>=3.5.3
 graphene_django>=3.0.0
 num2words>=0.5.1
+ipython>=8.11.0
