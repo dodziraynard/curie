@@ -286,9 +286,8 @@ class AcademicRecordDataView(PermissionRequiredMixin, View):
         subject = get_object_or_404(Subject, id=subject)
         classes = Klass.objects.filter(id__in=classes)
 
-        students = Student.objects.filter(start_date__lte=session.start_date,
-                                          deleted=False,
-                                          end_date__gte=session.end_date)
+        students = Student.objects.filter(deleted=False,
+                                          completed=False)
         if classes:
             students = students.filter(klass__in=classes)
         if subject.is_elective:
