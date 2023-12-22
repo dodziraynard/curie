@@ -11,7 +11,7 @@ class AppQuerySet(QuerySet):
 
 class AppManager(Manager):
     def get_queryset(self):
-        return AppQuerySet(self.model, using=self._db).exclude(deleted=True)
+        return AppQuerySet(self.model, using=self._db) #.exclude(deleted=True)
 
 
 class BaseModel(models.Model):

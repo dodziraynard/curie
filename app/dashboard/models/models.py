@@ -119,8 +119,7 @@ class Student(BaseModel):
         else:
             new_stage = self.klass.stage + step
             new_class = Klass.objects.filter(stage=new_stage,
-                                             stream=self.klass.stream,
-                                             course=self.klass.course).first()
+                                             stream=self.klass.stream).first()
             if not new_class:
                 return False, False
             old_class = self.klass
