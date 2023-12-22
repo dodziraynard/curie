@@ -56,7 +56,7 @@ class Student(BaseModel):
     sms_number = models.CharField(max_length=10, null=True, blank=True)
     completed = models.BooleanField(default=False, db_index=True)
     user = models.OneToOneField(
-        User, related_name="student", on_delete=models.PROTECT)
+        User, related_name="student", on_delete=models.CASCADE)
     last_promotion_date = models.DateField(default=timezone.now)
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
@@ -167,7 +167,7 @@ class Klass(BaseModel):
     stream = models.CharField(max_length=5)
     course = models.ForeignKey("Course",
                                related_name="classes",
-                               on_delete=models.PROTECT)
+                               on_delete=models.CASCADE)
 
     def course_name(self):
         return self.course.name
@@ -236,7 +236,7 @@ class Subject(BaseModel):
                                    related_name="subjects",
                                    null=True,
                                    blank=True,
-                                   on_delete=models.PROTECT)
+                                   on_delete=models.CASCADE)
     is_elective = models.BooleanField()
 
     class Meta:
@@ -273,7 +273,7 @@ class Staff(BaseModel):
     teaching = models.BooleanField(default=True)
     user = models.OneToOneField(User,
                                 related_name="staff",
-                                on_delete=models.PROTECT)
+                                on_delete=models.CASCADE)
 
     class Meta:
         db_table = "staff"
@@ -319,16 +319,16 @@ class Record(BaseModel):
     total_exam_score = models.IntegerField(default=100, blank=True, null=True)
     total_class_score = models.IntegerField(default=100, blank=True, null=True)
     total = models.IntegerField(blank=True, null=True)
-    subject = models.ForeignKey("Subject", on_delete=models.PROTECT)
+    subject = models.ForeignKey("Subject", on_delete=models.CASCADE)
     updated_by = models.ForeignKey(User,
                                    blank=True,
                                    null=True,
                                    related_name="records",
-                                   on_delete=models.PROTECT)
+                                   on_delete=models.CASCADE)
     grade = models.CharField(max_length=5, blank=True, null=True)
     remark = models.CharField(max_length=20, blank=True, null=True)
     session = models.ForeignKey(SchoolSession,
-                                on_delete=models.PROTECT,
+                                on_delete=models.CASCADE,
                                 null=True)
     group_tag = models.CharField(
         max_length=100, null=True, blank=True, db_index=True)
@@ -428,43 +428,43 @@ class SubjectMapping(BaseModel):
 
 
 class SessionReport(BaseModel):
-    student = models.ForeignKey("Student", on_delete=models.PROTECT)
+    student = models.ForeignKey("Student", on_delete=models.CASCADE)
     session = models.ForeignKey(SchoolSession,
                                 on_delete=models.SET_NULL,
                                 null=True)
     klass = models.ForeignKey("Klass",
                               null=True,
                               blank=True,
-                              on_delete=models.PROTECT)
+                              on_delete=models.CASCADE)
     attendance = models.IntegerField(default=0, null=True, blank=True)
     total_attendance = models.IntegerField(default=0, null=True, blank=True)
     attitude = models.ForeignKey(Attitude,
                                  null=True,
                                  blank=True,
-                                 on_delete=models.PROTECT)
+                                 on_delete=models.CASCADE)
     interest = models.ForeignKey(Interest,
                                  null=True,
                                  blank=True,
-                                 on_delete=models.PROTECT)
+                                 on_delete=models.CASCADE)
     conduct = models.ForeignKey(Conduct,
                                 null=True,
                                 blank=True,
-                                on_delete=models.PROTECT)
+                                on_delete=models.CASCADE)
     assistant_head_signature = models.ImageField(
         upload_to="uploads/signatures", null=True, blank=True)
     signed_by = models.ForeignKey(Staff,
-                                  on_delete=models.PROTECT,
+                                  on_delete=models.CASCADE,
                                   null=True,
                                   blank=True)
     class_teacher_remark = models.ForeignKey(Remark,
                                              null=True,
                                              blank=True,
-                                             on_delete=models.PROTECT)
+                                             on_delete=models.CASCADE)
     house_master_remark = models.ForeignKey(Remark,
                                             null=True,
                                             blank=True,
                                             related_name="house_master_remark",
-                                            on_delete=models.PROTECT)
+                                            on_delete=models.CASCADE)
     promotion = models.CharField(max_length=200, null=True, blank=True)
 
     class Meta:
@@ -542,7 +542,7 @@ class Notification(models.Model):
     purpose = models.CharField(max_length=50, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    initiated_by = models.ForeignKey(User, on_delete=models.PROTECT)
+    initiated_by = models.ForeignKey(User, on_delete=models.CASCADE)
     response_data = models.TextField(null=True, blank=True)
 
     def send(self):
@@ -582,7 +582,7 @@ class Inventory(BaseModel):
         max_length=50, default="available", choices=INVENTORY_STATUS_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    created_by = models.ForeignKey(User, on_delete=models.PROTECT)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     deleted = models.BooleanField(default=False)
 
     def __str__(self):
@@ -602,8 +602,8 @@ class Issuance(BaseModel):
         ("overdue", "overdue"),
     ]
     recipient = models.ForeignKey(
-        User, related_name="issued_items", on_delete=models.PROTECT)
-    item = models.ForeignKey(Inventory, on_delete=models.PROTECT)
+        User, related_name="issued_items", on_delete=models.CASCADE)
+    item = models.ForeignKey(Inventory, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=0)
     status = models.CharField(
         max_length=50, default="pending", choices=ISSUANCE_STATUS_CHOICES)
@@ -611,8 +611,8 @@ class Issuance(BaseModel):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     issued_by = models.ForeignKey(
-        User, related_name="items_issued", on_delete=models.PROTECT)
-    updated_by = models.ForeignKey(User, on_delete=models.PROTECT)
+        User, related_name="items_issued", on_delete=models.CASCADE)
+    updated_by = models.ForeignKey(User, on_delete=models.CASCADE)
     expiry_date = models.DateTimeField(null=True, blank=True)
     deleted = models.BooleanField(default=False)
 
