@@ -8,6 +8,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.core.exceptions import PermissionDenied
+from django.core.exceptions import MultipleObjectsReturned
 
 from dashboard.models import (Klass, Record, Staff, Student,
                               StudentPromotionHistory, Subject, SubjectMapping)
@@ -49,16 +50,25 @@ class SubjectMappingView(PermissionRequiredMixin, View):
         for class_ in classes:
             subjects = class_.course.subjects.filter(deleted=False)
             for subject in subjects:
-                mapping, created = SubjectMapping.objects.get_or_create(
-                    klass=class_, subject=subject, session=current_session)
-                if created:
-                    previous_mapping = SubjectMapping.objects.filter(
-                        klass=class_, subject=subject).exclude(
-                            session=current_session).order_by(
-                                "-created_at").first()
-                    if previous_mapping:
-                        mapping.staff = previous_mapping.staff
-                        mapping.save()
+                try:
+                    mapping, created = SubjectMapping.objects.get_or_create(
+                        klass=class_, subject=subject, session=current_session)
+                    if created:
+                        previous_mapping = SubjectMapping.objects.filter(
+                            klass=class_, subject=subject).exclude(
+                                session=current_session).order_by(
+                                    "-created_at").first()
+                        if previous_mapping:
+                            mapping.staff = previous_mapping.staff
+                            mapping.save()
+                except MultipleObjectsReturned:
+                    preserve = SubjectMapping.objects.filter(
+                        klass=class_, subject=subject, session=current_session).first()
+                    SubjectMapping.objects.filter(
+                        klass=class_,
+                        subject=subject,
+                        session=current_session
+                    ).exclude(id=preserve.id).delete(hard=True)
 
         mappings = SubjectMapping.objects.filter(session=current_session)
         context = {
@@ -317,7 +327,7 @@ class AcademicRecordDataView(PermissionRequiredMixin, View):
 
         records = Record.objects.filter(
             session=session, student__in=students,
-             deleted=False,
+            deleted=False,
             subject=subject).order_by("student__user__surname")
 
         context = {
@@ -364,7 +374,7 @@ class AcademicRecordDataView(PermissionRequiredMixin, View):
         # Updating records
         group_tag = str(time.time_ns())
         for record_id, class_id, class_score, exam_score in zip(
-                record_ids, classes, class_scores, exam_scores):            
+                record_ids, classes, class_scores, exam_scores):
             record = get_object_or_404(Record, id=record_id)
             klass = get_object_or_404(Klass, id=class_id)
 
@@ -378,17 +388,22 @@ class AcademicRecordDataView(PermissionRequiredMixin, View):
                     )
                     return redirect(request.META.get("HTTP_REFERER"))
 
-            record.total_class_score = int(total_class_score) if total_class_score.isdigit() else None
-            record.total_exam_score = int(total_exam_score) if total_exam_score.isdigit() else None
-            record.class_score = int(class_score) if class_score.isdigit() else None
-            record.exam_score = int(exam_score) if exam_score.isdigit() else None
+            record.total_class_score = int(
+                total_class_score) if total_class_score.isdigit() else None
+            record.total_exam_score = int(
+                total_exam_score) if total_exam_score.isdigit() else None
+            record.class_score = int(
+                class_score) if class_score.isdigit() else None
+            record.exam_score = int(
+                exam_score) if exam_score.isdigit() else None
             record.klass = klass
             record.group_tag = group_tag
             record.updated_by = request.user
             record.save()
 
         # Compute position for this group
-        record = Record.objects.filter(group_tag=group_tag,  deleted=False).first()
+        record = Record.objects.filter(
+            group_tag=group_tag,  deleted=False).first()
         if record:
             record.compute_position()
 
