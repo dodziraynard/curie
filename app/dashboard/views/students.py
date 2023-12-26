@@ -26,7 +26,7 @@ class StudentsView(PermissionRequiredMixin, View):
     def get(self, request):
         query = request.GET.get("query")
         class_id = request.GET.get("class_id")
-        students = Student.objects.filter(deleted=False, completed=False).order_by("-created_at")
+        students = Student.objects.filter(deleted=False).order_by("-created_at")
         courses = Course.objects.all().order_by("name")
         houses = House.objects.all().order_by("name")
         tracks = Track.objects.all().order_by("name")
@@ -38,6 +38,8 @@ class StudentsView(PermissionRequiredMixin, View):
                 Q(student_id__icontains=query)
                 | Q(user__surname__icontains=query)
                 | Q(user__other_names__icontains=query))
+        else:
+            students = students.filter(completed=False)
         if class_id:
             students = students.filter(klass__id=class_id)
 

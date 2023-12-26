@@ -100,6 +100,8 @@ class Student(BaseModel):
                 self.end_date = datetime.today() + timedelta(
                     days=COMPLETE_SCHOOL_DURATION -
                     (self.klass.stage - 1) * 365.25)
+        if self.completed:
+            self.klass = True
         super().save(*args, **kwargs)
 
     def my_class(self):
