@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-from typing import Iterable, Optional
 
 import requests
 from django.conf import settings
@@ -115,6 +114,7 @@ class Student(BaseModel):
         final_stage = Klass.objects.order_by("-stage").first().stage
         self.last_promotion_date = timezone.now()
         if self.klass.stage + step > final_stage:
+            self.klass = None
             self.completed = True
         else:
             new_stage = self.klass.stage + step
