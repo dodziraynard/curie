@@ -108,7 +108,9 @@ class Student(BaseModel):
         return self.klass.name
 
     def class_options(self):
-        return Klass.objects.filter(course=self.klass.course)
+        if self.klass:
+            return Klass.objects.filter(course=self.klass.course)
+        return Klass.objects.none()
 
     def promote(self, step):
         if self.completed:
