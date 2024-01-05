@@ -126,7 +126,7 @@ def generate_bulk_pdf_report(self,
         if not student:
             continue
         st_records = records.filter(
-            student__student_id=student_id).order_by("subject__name")
+            student__student_id=student_id).distinct("subject__name").order_by("subject__name")
         st_reports = session_reports.filter(
             student__student_id=student_id).first()
 
