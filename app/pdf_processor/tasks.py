@@ -113,7 +113,7 @@ def generate_bulk_pdf_report(self,
         deleted=False, pk=session_id).first()
     records = Record.objects.filter(deleted=False).filter(
         Q(session=session, klass_id__in=classes)
-        | Q(session=session, student__student_id__in=student_ids))
+        | Q(session=session, student__student_id__in=student_ids)).exclude(total=None)
 
     student_ids = set(records.values_list("student__student_id", flat=True))
 

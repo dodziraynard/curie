@@ -45,9 +45,14 @@ class AssistantHeadSessionReportDataView(PermissionRequiredMixin, View):
         students = promotion_history.values_list("student", flat=True)
 
         for student_id in students:
-            SessionReport.objects.get_or_create(student_id=student_id,
-                                                deleted=False,
-                                                session=session)
+            try:
+                SessionReport.objects.get_or_create(student_id=student_id,
+                                                    deleted=False,
+                                                    session=session)
+            except Exception as _:
+                SessionReport.objects.filter(student_id=student_id,
+                                             deleted=False,
+                                             session=session).delete()
 
         reports = SessionReport.objects.filter(student__in=students,
                                                deleted=False,
