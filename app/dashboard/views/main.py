@@ -1,5 +1,6 @@
 import base64
 import time
+import logging
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -22,11 +23,13 @@ from lms.utils.functions import crop_image
 from celery.result import AsyncResult
 from django.http import StreamingHttpResponse
 
+logger = logging.getLogger("django")
+
 
 class IndexView(PermissionRequiredMixin, View):
     template_name = "dashboard/index.html"
     permission_required = [
-        
+
     ]
 
     @method_decorator(login_required(login_url="accounts:login"))
@@ -232,7 +235,8 @@ class StreamTaskStatusView(View):
                 try:
                     if result.info:
                         self.link = result.info.get("link") or self.link
-                        data = str(result.info.get("current", "")) + "/" + str(result.info.get("total", "")) + " " + result.info.get("info", "")
+                        data = str(result.info.get("current", "")) + "/" + str(
+                            result.info.get("total", "")) + " " + result.info.get("info", "")
                     if result.status == "SUCCESS":
                         yield 'data: DONE %s\n\n' % self.link
                         break
@@ -242,5 +246,9 @@ class StreamTaskStatusView(View):
                     if retry_count > 20:
                         break
                     retry_count += 1
+                    logging.error("StreamTaskStatusView", str(e))
+
+                except Exception as e:
+                    logging.error("StreamTaskStatusView", str(e))
         return StreamingHttpResponse(get_task_progress(),
                                      content_type='text/event-stream')
