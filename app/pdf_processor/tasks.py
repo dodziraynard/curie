@@ -131,7 +131,7 @@ def generate_bulk_pdf_report(self,
             student__student_id=student_id).first()
 
         average_pos = "N/A"
-        results = Record.objects.filter(klass=student.klass, deleted=False).exclude(total=None).values(
+        results = records.filter(klass=student.klass, deleted=False).exclude(total=None).values(
             'student__student_id').annotate(total_record=Sum('total')).order_by("-total_record")
         totals = sorted([-record["total_record"] for record in results])
         for result in results:
