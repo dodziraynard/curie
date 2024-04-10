@@ -85,7 +85,7 @@ class Student(BaseModel):
             last_id = int(last_student.student_id[2:])
 
         next_id = last_id + 1
-        return "GE" + str(next_id).zfill(6)
+        return prefix + str(next_id).zfill(6)
 
     def get_balance(self):
         return self.user.account.balance
