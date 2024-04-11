@@ -78,14 +78,14 @@ class Student(BaseModel):
     @classmethod
     def generate_student_id(cls):
         prefix = "GE" + str(datetime.today().year)[-2:]
-        last_id = 0
+        last_id = int(str(datetime.today().year)[-2:])*1000000
         last_student = cls.objects.filter(
             student_id__startswith=prefix).order_by("-created_at").first()
         if last_student:
             last_id = int(last_student.student_id[2:])
 
         next_id = last_id + 1
-        return prefix + str(next_id).zfill(6)
+        return "GE" + str(next_id).zfill(6)
 
     def get_balance(self):
         return self.user.account.balance
