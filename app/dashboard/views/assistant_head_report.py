@@ -56,6 +56,7 @@ class AssistantHeadSessionReportDataView(PermissionRequiredMixin, View):
 
         reports = SessionReport.objects.filter(student__in=students,
                                                deleted=False,
+                                               student__completed=False,
                                                session=session).order_by("klass", "student__user__surname")
         context = {
             "reports": reports,

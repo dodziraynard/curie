@@ -62,6 +62,7 @@ class ClassTeacherSessionReportDataView(PermissionRequiredMixin, View):
 
         reports = SessionReport.objects.filter(student__in=students,
                                                student__deleted=False,
+                                               student__completed=False,
                                                klass=klass,
                                                session=session)
         context = {
