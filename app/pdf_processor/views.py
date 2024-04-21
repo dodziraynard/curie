@@ -75,8 +75,7 @@ class PersonalAcadmicReport(PermissionRequiredMixin, View):
 
     @method_decorator(login_required(login_url="accounts:login"))
     def get(self, request):
-        session_id = SchoolSession.objects.first().id or request.GET.get(
-            "session")
+        session_id = request.GET.get("session") or SchoolSession.objects.first().id
         session = get_object_or_404(SchoolSession, pk=session_id)
         try:
             student_id = request.user.student.student_id
