@@ -101,7 +101,7 @@ class Student(BaseModel):
                     days=COMPLETE_SCHOOL_DURATION -
                     (self.klass.stage - 1) * 365.25)
         if self.completed:
-            self.klass = True
+            self.klass = None
         super().save(*args, **kwargs)
 
     def my_class(self):
