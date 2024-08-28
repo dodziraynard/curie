@@ -532,8 +532,10 @@ class StudentPromotionHistory(BaseModel):
 
     @classmethod
     def get_class(cls, student: Student, session: SchoolSession):
-        promostion_history = cls.objects.filter(
-            student=student, session=session).first()
+        promostion_history = StudentPromotionHistory.objects.filter(
+            student=student,
+            session__next_start_date__lte=session.next_start_date,
+            ).order_by("-session__next_start_date").first()
         if promostion_history:
             return promostion_history.new_class
         return student.klass

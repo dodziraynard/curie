@@ -35,7 +35,7 @@ class SingleAcademicRecordReportView(PermissionRequiredMixin, View):
             deleted=False, session=session,
             student__student_id=student_id).first()
         klass = StudentPromotionHistory.get_class(student, session)
-        
+
         average_position = "N/A"
         results = Record.objects.filter(klass=klass, deleted=False).exclude(
             total=None).values('student__student_id').annotate(
@@ -83,7 +83,6 @@ class PersonalAcadmicReport(PermissionRequiredMixin, View):
         session = get_object_or_404(SchoolSession, pk=session_id)
         try:
             student_id = request.user.student.student_id
-            request.user.student.klass
             klass = StudentPromotionHistory.get_class(request.user.student,
                                                       session)
         except User.student.RelatedObjectDoesNotExist:
