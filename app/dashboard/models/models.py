@@ -352,7 +352,7 @@ class Record(BaseModel):
 
     @property
     def rank(self):
-        return f"{self.position}/{self.roll_no}"
+        return f"{self.position}/{self.roll_no}" if (self.position and self.roll_no) else "N/A"
 
     def get_class_score(self):
         if self.class_score:
