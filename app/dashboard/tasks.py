@@ -6,10 +6,10 @@ from logging import Logger
 from celery import shared_task
 from django.urls import reverse
 from django.db.models import Q
-from dashboard.models import Klass, Notification, Record, Student, Subject, SubjectMapping, Task
+from dashboard.models import Klass, Notification, Record, Student, Subject, SubjectMapping, Task, StudentPromotionHistory
 from graphql_api.models.accounting import Invoice, InvoiceItem, Transaction
-from lms.utils.constants import (InvoiceItemType, InvoiceStatus, TaskStatus, TaskType,
-                                 TransactionDirection)
+from lms.utils.constants import (InvoiceItemType, InvoiceStatus, TaskStatus,
+                                 TaskType, TransactionDirection)
 from setup.models import School
 
 logger = Logger("system")
@@ -37,8 +37,7 @@ def update_students_account(total_affected_student_ids, invoice_id):
     invoice.status = InvoiceStatus.PENDING.value
     invoice.save()
     students = Student.objects.filter(
-        deleted=False,
-        student_id__in=total_affected_student_ids)
+        deleted=False, student_id__in=total_affected_student_ids)
 
     for student in students:
         total_in = 0
@@ -52,8 +51,9 @@ def update_students_account(total_affected_student_ids, invoice_id):
             else:
                 total_out += transaction.amount
 
-        invoice_items = InvoiceItem.objects.filter(
-            invoice__students=student, deleted=False, invoice__deleted=False)
+        invoice_items = InvoiceItem.objects.filter(invoice__students=student,
+                                                   deleted=False,
+                                                   invoice__deleted=False)
         for item in invoice_items:
             if item.type.lower() == InvoiceItemType.CREDIT.value:
                 total_in += item.amount
@@ -73,20 +73,22 @@ def create_or_update_user_academic_record_tasks():
     students = Student.objects.filter(deleted=False, completed=False)
     class_subject_pending_count = defaultdict(int)
     for student in students:
+        klass = StudentPromotionHistory.get_class(student, current_session)
         subjects = student.get_subjects()
         for subject in subjects:
             valid_record_exists = Record.objects.exclude(Q(class_score=None) | Q(exam_score=None))\
                 .filter(deleted=False,
-                        klass=student.klass,
+                        klass=klass,
                         student=student, subject=subject, session=current_session).exists()
-            key = "|".join([student.klass.class_id, subject.code])
+            key = "|".join([klass.class_id, subject.code])
             class_subject_pending_count[key] += not valid_record_exists
 
     for key, pending_count in class_subject_pending_count.items():
         class_class_id, subject_code = key.split("|")
-        klass = Klass.objects.filter(class_id=class_class_id, deleted=False).first()
-        subject = Subject.objects.filter(
-            code=subject_code, deleted=False).first()
+        klass = Klass.objects.filter(class_id=class_class_id,
+                                     deleted=False).first()
+        subject = Subject.objects.filter(code=subject_code,
+                                         deleted=False).first()
         mapping = mappings.filter(subject=subject, klass=klass).first()
         if not mapping:
             logger.info(f"No mapping for {mapping}")
@@ -96,12 +98,13 @@ def create_or_update_user_academic_record_tasks():
         redirect_link = reverse("dashboard:academic_record_data") + \
             f"?session={current_session.id}&subject={subject.id}&classes={klass.id}"
         user = mapping.staff.user if mapping.staff else None
-        task, created = Task.objects.get_or_create(assigned_to=user,
-                                                   session=current_session,
-                                                   deleted=False,
-                                                   task_code=task_code,
-                                                   task_type=TaskType.ACADEMIC_RECORD.value,
-                                                   )
+        task, created = Task.objects.get_or_create(
+            assigned_to=user,
+            session=current_session,
+            deleted=False,
+            task_code=task_code,
+            task_type=TaskType.ACADEMIC_RECORD.value,
+        )
         if pending_count > 0:
             message = f"You have {pending_count} records pending upload for {subject.name} in {klass.name}."
             task.status = TaskStatus.PENDING.value

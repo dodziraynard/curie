@@ -9,7 +9,7 @@ from celery import shared_task
 import logging
 from collections import namedtuple
 import django
-from dashboard.models import Notification, Record, SessionReport, Student
+from dashboard.models import Notification, Record, SessionReport, Student, StudentPromotionHistory
 from django.db.models import Q
 from django.db.models import Sum
 
@@ -130,8 +130,10 @@ def generate_bulk_pdf_report(self,
         st_reports = session_reports.filter(
             student__student_id=student_id).first()
 
+        klass = StudentPromotionHistory.get_class(student, session)
+
         average_pos = "N/A"
-        results = records.filter(klass=student.klass, deleted=False).exclude(total=None).values(
+        results = records.filter(klass=klass, deleted=False).exclude(total=None).values(
             'student__student_id').annotate(total_record=Sum('total')).order_by("-total_record")
         totals = sorted([-record["total_record"] for record in results])
         for result in results:
