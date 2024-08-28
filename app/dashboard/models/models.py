@@ -108,7 +108,7 @@ class Student(BaseModel):
         return self.klass.name
 
     def class_options(self):
-        return Klass.objects.filter().order_by("stage")
+        return Klass.objects.filter(deleted=False).order_by("stage")
 
     def promote(self, step):
         if self.completed:
