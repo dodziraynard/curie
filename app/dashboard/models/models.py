@@ -532,14 +532,23 @@ class StudentPromotionHistory(BaseModel):
 
     @classmethod
     def get_class(cls, student: Student, session: SchoolSession):
-        promostion_history = StudentPromotionHistory.objects.filter(
+        promotion_history = cls.objects.filter(
             student=student,
             session__next_start_date__lte=session.next_start_date,
             ).order_by("-session__next_start_date").first()
-        if promostion_history:
-            return promostion_history.new_class
+        if promotion_history:
+            return promotion_history.new_class
         return student.klass
 
+    @classmethod
+    def get_students(cls, session, classes):
+        promotion_history_session = cls.objects.filter(
+            session__next_start_date__lte=session.next_start_date,
+            ).order_by("-session__next_start_date").first()
+        students = set(StudentPromotionHistory.objects.filter(
+            session=promotion_history_session.session,
+            new_class__in=classes).values_list("student_id", flat=True))
+        return Student.objects.filter(id__in=students, deleted=False, completed=False)
 
 class Notification(models.Model):
     PURPOSE_CHOICES = [

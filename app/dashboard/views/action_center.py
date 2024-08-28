@@ -63,12 +63,12 @@ class SubjectMappingView(PermissionRequiredMixin, View):
                             mapping.save()
                 except MultipleObjectsReturned:
                     preserve = SubjectMapping.objects.filter(
-                        klass=class_, subject=subject, session=current_session).first()
+                        klass=class_, subject=subject,
+                        session=current_session).first()
                     SubjectMapping.objects.filter(
-                        klass=class_,
-                        subject=subject,
-                        session=current_session
-                    ).exclude(id=preserve.id).delete(hard=True)
+                        klass=class_, subject=subject,
+                        session=current_session).exclude(
+                            id=preserve.id).delete(hard=True)
 
         mappings = SubjectMapping.objects.filter(session=current_session)
         context = {
@@ -296,10 +296,9 @@ class AcademicRecordDataView(PermissionRequiredMixin, View):
         subject = get_object_or_404(Subject, id=subject)
         classes = Klass.objects.filter(id__in=classes)
 
-        students = Student.objects.filter(deleted=False,
-                                          completed=False)
+        students = Student.objects.none()
         if classes:
-            students = students.filter(klass__in=classes)
+            students = StudentPromotionHistory.get_students(session, classes)
         if subject.is_elective:
             students = students.filter(electives=subject)
 
@@ -322,11 +321,13 @@ class AcademicRecordDataView(PermissionRequiredMixin, View):
                                                            subject=subject,
                                                            session=session)
             if created:
-                record.klass = student.klass
+                record.klass = StudentPromotionHistory.get_class(
+                    student, session)
                 record.save()
 
         records = Record.objects.filter(
-            session=session, student__in=students,
+            session=session,
+            student__in=students,
             deleted=False,
             subject=subject).order_by("student__user__surname")
 
@@ -402,8 +403,8 @@ class AcademicRecordDataView(PermissionRequiredMixin, View):
             record.save()
 
         # Compute position for this group
-        record = Record.objects.filter(
-            group_tag=group_tag,  deleted=False).first()
+        record = Record.objects.filter(group_tag=group_tag,
+                                       deleted=False).first()
         if record:
             record.compute_position()
 
