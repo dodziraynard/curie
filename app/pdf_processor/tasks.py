@@ -142,6 +142,8 @@ def generate_bulk_pdf_report(self,
                 average_pos = num2words(pos, to="ordinal_num")
                 break
         data.append((st_records, st_reports, average_pos))
+    
+    data.sort(key = lambda item: item[0].first().klass.stage)
 
     context = {
         "session": session,

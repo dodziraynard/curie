@@ -237,7 +237,7 @@ class RevertPromotionView(PermissionRequiredMixin, View):
                 history.student.klass = history.old_class
                 history.student.completed = False
                 history.student.save()
-                history.delete()
+                history.delete(hard=True)
 
         messages.success(request, "Promotion has been reverted.")
         return redirect(request.META.get("HTTP_REFERER"))
@@ -315,12 +315,14 @@ class AcademicRecordDataView(PermissionRequiredMixin, View):
         # Get the academic records for the selected classes
         for student in students:
             record, created = Record.objects.get_or_create(student=student,
-                                                           deleted=False,
                                                            subject=subject,
                                                            session=session)
             if created:
                 record.klass = StudentPromotionHistory.get_class(
                     student, session)
+                record.save()
+            if record.deleted:
+                record.deleted = False
                 record.save()
 
         records = Record.objects.filter(

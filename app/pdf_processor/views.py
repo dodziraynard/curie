@@ -178,7 +178,7 @@ class BulkAcademicRecordReportView(PermissionRequiredMixin, View):
 
             data.append((st_records, st_reports, average_pos))
 
-        data.sort(lambda item: item[0].first().klass)
+        data.sort(key = lambda item: item[0].first().klass.stage)
 
         context = {
             "session": session,
