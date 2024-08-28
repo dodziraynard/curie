@@ -9,8 +9,8 @@ from dashboard.models.utils import BaseModel
 from lms.utils.constants import TaskStatus, TaskType
 
 from lms.utils.functions import get_current_session
-from setup.models import (Attitude, Conduct, GradingSystem,
-                          Interest, Remark, SchoolSession, Track)
+from setup.models import (Attitude, Conduct, GradingSystem, Interest, Remark,
+                          SchoolSession, Track)
 
 User = get_user_model()
 
@@ -529,6 +529,14 @@ class StudentPromotionHistory(BaseModel):
 
     def __str__(self):
         return f"{self.student.get_full_name()} - {self.new_class} {self.old_class}"
+
+    @classmethod
+    def get_class(cls, student: Student, session: SchoolSession):
+        promostion_history = cls.objects.filter(
+            student=student, session=session).first()
+        if promostion_history:
+            return promostion_history.new_class
+        return student.klass
 
 
 class Notification(models.Model):

@@ -10,7 +10,7 @@ from django.views import View
 from accounts.models import User
 from django.db.models import Sum
 
-from dashboard.models import Record, SessionReport, Student
+from dashboard.models import Record, SessionReport, Student, StudentPromotionHistory
 from setup.models import School, SchoolSession
 from num2words import num2words
 
@@ -28,29 +28,32 @@ class SingleAcademicRecordReportView(PermissionRequiredMixin, View):
         session = get_object_or_404(SchoolSession, pk=session_id)
         student = get_object_or_404(Student, student_id=student_id)
         records = Record.objects.filter(deleted=False).filter(
-            session=session,
-            deleted=False,
+            session=session, deleted=False,
             student__student_id=student_id).order_by("subject__name")
 
         session_report = SessionReport.objects.filter(
-            deleted=False,
-            session=session, student__student_id=student_id).first()
+            deleted=False, session=session,
+            student__student_id=student_id).first()
+        klass = StudentPromotionHistory.get_class(student, session)
+        
         average_position = "N/A"
-        results = Record.objects.filter(klass=student.klass, deleted=False).exclude(total=None).values(
-            'student__student_id').annotate(total_record=Sum('total'))
+        results = Record.objects.filter(klass=klass, deleted=False).exclude(
+            total=None).values('student__student_id').annotate(
+                total_record=Sum('total'))
         totals = sorted([-record["total_record"] for record in results])
         for result in results:
             if result.get("student__student_id") == student_id:
-                pos = bisect.bisect_left(totals, -result.get("total_record")) + 1
+                pos = bisect.bisect_left(totals,
+                                         -result.get("total_record")) + 1
                 average_position = num2words(pos, to="ordinal_num")
                 break
-            
+
         context = {
             "session": session,
             "session_report": session_report,
             "school": School.objects.first(),
             "records": records,
-            "average_position":average_position,
+            "average_position": average_position,
             "current_time": timezone.now(),
         }
 
@@ -75,11 +78,14 @@ class PersonalAcadmicReport(PermissionRequiredMixin, View):
 
     @method_decorator(login_required(login_url="accounts:login"))
     def get(self, request):
-        session_id = request.GET.get("session") or SchoolSession.objects.first().id
+        session_id = request.GET.get(
+            "session") or SchoolSession.objects.first().id
         session = get_object_or_404(SchoolSession, pk=session_id)
         try:
             student_id = request.user.student.student_id
-            klass = request.user.student.klass
+            request.user.student.klass
+            klass = StudentPromotionHistory.get_class(request.user.student,
+                                                      session)
         except User.student.RelatedObjectDoesNotExist:
             raise Http404()
         records = Record.objects.filter(deleted=False).filter(
@@ -91,17 +97,19 @@ class PersonalAcadmicReport(PermissionRequiredMixin, View):
         data = []
         st_records = records.filter(
             student__student_id=student_id).order_by("subject__name")
-        
+
         average_pos = "N/A"
-        results = Record.objects.filter(klass=klass, deleted=False).exclude(total=None).values(
-            'student__student_id').annotate(total_record=Sum('total')).order_by("-total_record")
+        results = Record.objects.filter(klass=klass, deleted=False).exclude(
+            total=None).values('student__student_id').annotate(
+                total_record=Sum('total')).order_by("-total_record")
         totals = sorted([-record["total_record"] for record in results])
         for result in results:
             if result.get("student__student_id") == student_id:
-                pos = bisect.bisect_left(totals, -result.get("total_record")) + 1
+                pos = bisect.bisect_left(totals,
+                                         -result.get("total_record")) + 1
                 average_pos = num2words(pos, to="ordinal_num")
                 break
-            
+
         st_reports = session_reports.filter(
             student__student_id=student_id).first()
         data.append((st_records, st_reports, average_pos))
@@ -156,12 +164,16 @@ class BulkAcademicRecordReportView(PermissionRequiredMixin, View):
                 student__student_id=student_id).first()
 
             average_pos = "N/A"
-            results = Record.objects.filter(klass=student.klass, deleted=False).exclude(total=None).values(
-                'student__student_id').annotate(total_record=Sum('total')).order_by("-total_record")
+            klass = StudentPromotionHistory.get_class(student, session)
+            results = Record.objects.filter(
+                klass=klass, deleted=False).exclude(
+                    total=None).values('student__student_id').annotate(
+                        total_record=Sum('total')).order_by("-total_record")
             totals = sorted([-record["total_record"] for record in results])
             for result in results:
                 if result.get("student__student_id") == student_id:
-                    pos = bisect.bisect_left(totals, -result.get("total_record")) + 1
+                    pos = bisect.bisect_left(totals,
+                                             -result.get("total_record")) + 1
                     average_pos = num2words(pos, to="ordinal_num")
                     break
 
