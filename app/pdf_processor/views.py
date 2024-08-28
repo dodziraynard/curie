@@ -217,7 +217,7 @@ class PersonalTranscriptionView(PermissionRequiredMixin, View):
             student__student_id=student_id)
 
         session_ids = records.values_list("session", flat=True)
-        sessions = SchoolSession.objects.filter(id__in=session_ids)
+        sessions = SchoolSession.objects.filter(id__in=session_ids).order_by("-next_start_date")
         data = []
         for session in sessions:
             session_records = records.filter(session=session)
