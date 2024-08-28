@@ -268,7 +268,7 @@ class AcademicRecordSelectionView(PermissionRequiredMixin, View):
             classes = classes.filter(id__in=class_ids).distinct()
             subjects = subjects.filter(id__in=subject_ids).distinct()
         context = {
-            "sessions": sessions.order_by("id"),
+            "sessions": sessions.order_by("-id"),
             "classes": classes.order_by("stage"),
             "subjects": subjects.order_by("name")
         }
@@ -299,8 +299,6 @@ class AcademicRecordDataView(PermissionRequiredMixin, View):
         students = Student.objects.none()
         if classes:
             students = StudentPromotionHistory.get_students(session, classes)
-        if subject.is_elective:
-            students = students.filter(electives=subject)
 
         # Validate user
         if not request.user.has_perm("setup.manage_other_report"):
