@@ -536,7 +536,7 @@ class StudentPromotionHistory(BaseModel):
             ).order_by("-session__next_start_date").first()
         if promotion_history:
             return promotion_history.new_class
-        return student.klass
+        return None
 
     @classmethod
     def get_students(cls, session, classes):

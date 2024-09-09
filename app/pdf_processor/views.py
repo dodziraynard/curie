@@ -87,6 +87,7 @@ class PersonalAcadmicReport(PermissionRequiredMixin, View):
                                                       session)
         except User.student.RelatedObjectDoesNotExist:
             raise Http404()
+        
         st_records = Record.objects.filter(deleted=False).filter(
             session=session, klass=klass, student__student_id=student_id).order_by("subject__name")
 
