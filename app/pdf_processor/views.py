@@ -87,20 +87,18 @@ class PersonalAcadmicReport(PermissionRequiredMixin, View):
                                                       session)
         except User.student.RelatedObjectDoesNotExist:
             raise Http404()
-        records = Record.objects.filter(deleted=False).filter(
-            Q(session=session)
-            | Q(session=session, student__student_id=student_id))
+        st_records = Record.objects.filter(deleted=False).filter(
+            session=session, klass=klass, student__student_id=student_id).order_by("subject__name")
 
         session_reports = SessionReport.objects.filter(session=session)
 
         data = []
-        st_records = records.filter(
-            student__student_id=student_id).order_by("subject__name")
 
         average_pos = "N/A"
-        results = Record.objects.filter(klass=klass, session=session, deleted=False).exclude(
-            total=None).values('student__student_id').annotate(
-                total_record=Sum('total')).order_by("-total_record")
+        results = Record.objects.filter(
+            klass=klass, session=session, deleted=False).exclude(
+                total=None).values('student__student_id').annotate(
+                    total_record=Sum('total')).order_by("-total_record")
         totals = sorted([-record["total_record"] for record in results])
         for result in results:
             if result.get("student__student_id") == student_id:
@@ -178,7 +176,7 @@ class BulkAcademicRecordReportView(PermissionRequiredMixin, View):
 
             data.append((st_records, st_reports, average_pos))
 
-        data.sort(key = lambda item: item[0].first().klass.stage)
+        data.sort(key=lambda item: item[0].first().klass.stage)
 
         context = {
             "session": session,
@@ -217,7 +215,8 @@ class PersonalTranscriptionView(PermissionRequiredMixin, View):
             student__student_id=student_id)
 
         session_ids = records.values_list("session", flat=True)
-        sessions = SchoolSession.objects.filter(id__in=session_ids).order_by("-next_start_date")
+        sessions = SchoolSession.objects.filter(
+            id__in=session_ids).order_by("-next_start_date")
         data = []
         for session in sessions:
             session_records = records.filter(session=session)
