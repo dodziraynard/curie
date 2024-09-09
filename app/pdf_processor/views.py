@@ -98,7 +98,7 @@ class PersonalAcadmicReport(PermissionRequiredMixin, View):
             student__student_id=student_id).order_by("subject__name")
 
         average_pos = "N/A"
-        results = Record.objects.filter(klass=klass, deleted=False).exclude(
+        results = Record.objects.filter(klass=klass, session=session, deleted=False).exclude(
             total=None).values('student__student_id').annotate(
                 total_record=Sum('total')).order_by("-total_record")
         totals = sorted([-record["total_record"] for record in results])
@@ -164,7 +164,7 @@ class BulkAcademicRecordReportView(PermissionRequiredMixin, View):
 
             average_pos = "N/A"
             klass = StudentPromotionHistory.get_class(student, session)
-            results = Record.objects.filter(
+            results = records.objects.filter(
                 klass=klass, deleted=False).exclude(
                     total=None).values('student__student_id').annotate(
                         total_record=Sum('total')).order_by("-total_record")
