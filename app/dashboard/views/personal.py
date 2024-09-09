@@ -19,7 +19,8 @@ class PesonalAcademicRecord(PermissionRequiredMixin, View):
     @method_decorator(login_required(login_url="accounts:login"))
     def get(self, request):
         session_ids = Record.objects.filter(
-            student__user=request.user).values_list("session", flat=True)
+            student__user=request.user).exclude(total=None).values_list(
+                "session", flat=True)
         sessions = SchoolSession.objects.filter(id__in=session_ids).distinct()
         context = {
             "sessions": sessions,
@@ -53,8 +54,10 @@ class MyInvoicesView(PermissionRequiredMixin, View):
         invoices = invoices.order_by("-created_at")
         context = {
             "invoices": invoices,
-            **{k: v
-               for k, v in request.GET.items()}
+            **{
+                k: v
+                for k, v in request.GET.items()
+            }
         }
         return render(request, self.template_name, context)
 
